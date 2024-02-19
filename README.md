@@ -2,10 +2,10 @@
 
 ## People
 
-- ** Tom van Heek ** - Intern/Developer
-- ** Gustavo Carniel (DAF) ** - Product owner
-- ** Ema Mladenovska (Fontys) ** - Assesor
-- ** Mark Mestrom (Fontys) ** - Internship coordinator
+- **Tom van Heek** - Intern/Developer
+- **Gustavo Carniel (DAF)** - Product owner
+- **Ema Mladenovska (Fontys)** - Assesor
+- **Mark Mestrom (Fontys)** - Internship coordinator
 
 ## Project description
 
