@@ -1,0 +1,4 @@
+Wire,Diam,Color,Type,Code_no,Length,Connector_1,Port_1,Term_1,Seal_1,Wire_connection,Term_2,Seal_2,Connector_2,Port_2,Variant,Bundle,Loc_1,Loc_2,
+1113.1,1.5,RD,litzed,761980,1200,A070,1,1267697,1258969,A070:1 to AJ-01A-2,,,AJ-01A-2,,1873 18515,1780456 1780457 1802790 1876602 1897075 1925425 2136504,13 P,8 P,
+
+WireName, CrossSectionalArea, Color, Material, WireNote (part_no), WireNote (length), End1NodeName, End1Route, ?, ?, combination of End1NodeName & End1Route & End2NodeName, NULL, NULL, End2NodeName, ?, ?, ?, ?    
