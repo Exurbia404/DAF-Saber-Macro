@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 
 namespace Section5PoC
 {
@@ -16,20 +9,15 @@ namespace Section5PoC
     {
         private static Extractor extractor;
         private static List<Wire> extractedWires;
-        private static ExcelHandler excelHandler;
         private static WCSPP_Convertor wcsppConvertor;
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
             extractor = new Extractor();
             extractedWires = extractor.ExtractSection5FromTextFile(SelectTxtFilePath());
-            excelHandler = new ExcelHandler();
             wcsppConvertor = new WCSPP_Convertor();
-
-            // Your existing code to extract wires and create WCSPPConvertor instance
-            // ...
 
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");

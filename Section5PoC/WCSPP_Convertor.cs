@@ -68,11 +68,38 @@ namespace Section5PoC
 
             foreach (Wire wire in listToConvert)
             {
-                WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Route, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
+                WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
+                wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
+                wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
                 convertedList.Add(wCSPP_Wire);
             }
             
             return convertedList;
+        }
+
+        static string GetValueFromInputString(string input, int keyIndex)
+        {
+            string[] keyValuePairs = input.Split(',');
+
+            int currentIndex = 0;
+
+            foreach (string pair in keyValuePairs)
+            {
+                string[] keyValue = pair.Split('=');
+
+                if (keyValue.Length == 2)
+                {
+                    if (currentIndex == keyIndex)
+                    {
+                        return keyValue[1].Trim();
+                    }
+
+                    currentIndex++;
+                }
+            }
+
+            // If the specified index is out of range, you might want to handle this case accordingly
+            return "Index out of range";
         }
 
     }
