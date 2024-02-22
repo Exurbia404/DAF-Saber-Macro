@@ -7,8 +7,11 @@ namespace Section5PoC
 {
     internal class Program
     {
-        private static Extractor extractor;
         private static List<Wire> extractedWires;
+        private static List<Component> extractedComponents;
+        
+        
+        private static Extractor extractor;
         private static WCSPP_Convertor wcsppConvertor;
 
         public static void Main()
@@ -16,8 +19,12 @@ namespace Section5PoC
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
             extractor = new Extractor();
-            extractedWires = extractor.ExtractSection5FromTextFile(SelectTxtFilePath());
             wcsppConvertor = new WCSPP_Convertor();
+
+            string textFilePath = SelectTxtFilePath();
+
+            extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+            extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
 
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");
@@ -29,7 +36,7 @@ namespace Section5PoC
                 switch (choice)
                 {
                     case 1:
-                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires);
+                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents);
                         Console.WriteLine("Opening in Excel...");
                         break;
 

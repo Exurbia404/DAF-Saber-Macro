@@ -10,7 +10,7 @@ namespace Section5PoC
     public class Extractor
     {
         
-        public List<Wire> ExtractSection5FromTextFile(string filePath)
+        public List<Wire> ExtractWiresFromFile(string filePath)
         {
             List<Wire> wireList = new List<Wire>();
             string sectionStart = "%Section 5";
@@ -28,7 +28,7 @@ namespace Section5PoC
                 if (isInSection5)
                 {
                     // Process lines between Section 5 and Section 6
-                    Wire wireObject = ExtractSection5ObjectFromString(line);
+                    Wire wireObject = ExtractWireObjectFromString(line);
                     wireList.Add(wireObject);
                 }
 
@@ -42,8 +42,41 @@ namespace Section5PoC
             return wireList;
         }
 
+        public List<Component> ExtractComponentsFromFile(string filePath)
+        {
+            List<Component> componentList = new List<Component>();
+            string sectionStart = "%Section 6";
+            string sectionEnd = "%Section 7";
+            bool isInSection6 = false;
 
-        private Wire  ExtractSection5ObjectFromString(string inputString)
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 6
+                    break;
+                }
+
+                if (isInSection6)
+                {
+                    // Process lines between Section 6 and Section 7
+                    Component componentObject = ExtractComponentObjectFromString(line);
+                    componentList.Add(componentObject);
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 6
+                    isInSection6 = true;
+                }
+            }
+
+            //Right here you have all components, they need to be combined before it satisfies _parts.txt format
+            return componentList;
+        }
+
+
+        private Wire  ExtractWireObjectFromString(string inputString)
         {
             string[] fields = inputString.Split(':');
 
@@ -77,6 +110,38 @@ namespace Section5PoC
             };
 
             return wireObject;
+        }
+
+        private Component ExtractComponentObjectFromString(string inputString)
+        {
+            string[] fields = inputString.Split(':');
+
+            // Create a new Component object and set its properties based on the fields
+            Component componentObject = new Component
+            {
+                NodeName = GetStringAtIndex(fields, 0),
+                CavityName = GetStringAtIndex(fields, 1),
+                WireName = GetStringAtIndex(fields, 2),
+                SequenceNumber = GetStringAtIndex(fields, 3),
+                ComponentTypeCode = GetStringAtIndex(fields, 4),
+                CircuitOption = GetStringAtIndex(fields, 5),
+                ServiceFunction = GetStringAtIndex(fields, 6),
+                Route = GetStringAtIndex(fields, 7),
+                PartNumber1 = GetStringAtIndex(fields, 8),
+                Quantity = GetStringAtIndex(fields, 9),
+                CrossSectionalArea = GetStringAtIndex(fields, 10),
+                PartNumber2 = GetStringAtIndex(fields, 11),
+                PartNumber3 = GetStringAtIndex(fields, 12),
+                SelectTerminal = GetStringAtIndex(fields, 13),
+                Seal = GetStringAtIndex(fields, 14),
+                Plugged = GetStringAtIndex(fields, 15),
+                BlockNumber = GetStringAtIndex(fields, 16),
+                TerminationMethod = GetStringAtIndex(fields, 17),
+                MaterialCode = GetStringAtIndex(fields, 18),
+                ComponentTypeCode2 = GetStringAtIndex(fields, 19),
+            };
+
+            return componentObject;
         }
 
         private static string GetStringAtIndex(string[] fields, int index)

@@ -37,15 +37,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\Component.cs" />
-    <Compile Include="Component\WCSPP_Component.cs" />
+    <Compile Include="Component_Folder\Component.cs" />
+    <Compile Include="Component_Folder\WCSPP_Component.cs" />
     <Compile Include="ExcelHandler.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Serialisation.cs" />
     <Compile Include="WCSPP_Convertor.cs" />
-    <Compile Include="Wire\WCSPP_Wire.cs" />
-    <Compile Include="Wire\Wire.cs" />
+    <Compile Include="Wire_Folder\WCSPP_Wire.cs" />
+    <Compile Include="Wire_Folder\Wire.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EPPlus, Version=7.0.9.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">

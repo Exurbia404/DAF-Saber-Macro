@@ -12,38 +12,46 @@ namespace Section5PoC
 {
     public class ExcelHandler
     {
-        public void CreateExcelSheet<T>(List<T> extractedWires)
+        public void CreateExcelSheet(List<WCSPP_Wire> extractedWires, List<WCSPP_Component> extractedComponents)
         {
             try
             {
                 using (var package = new ExcelPackage())
                 {
-                    // Add a worksheet to the Excel package
-                    var worksheet = package.Workbook.Worksheets.Add("Wires");
+                    // Add a worksheet for Wires
+                    var wireWorksheet = package.Workbook.Worksheets.Add("Wires");
 
-                    // Write column headers
-                    WriteHeaders(worksheet, extractedWires);
+                    // Write column headers for wires
+                    WriteHeaders(wireWorksheet, extractedWires);
 
                     // Write wire data
-                    WriteDataToSheet(worksheet, extractedWires);
-                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-                    AddAutoFilterButtons(worksheet);
+                    WriteDataToSheet(wireWorksheet, extractedWires);
+                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(wireWorksheet);
 
+                    // Add a worksheet for Components
+                    var componentWorksheet = package.Workbook.Worksheets.Add("Components");
+
+                    // Write column headers for components
+                    WriteHeaders(componentWorksheet, extractedComponents);
+
+                    // Write component data
+                    WriteDataToSheet(componentWorksheet, extractedComponents);
+                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo("Wires.xlsx"));
+                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
 
-                    Process.Start("Wires.xlsx");
+                    Process.Start("ExtractedData.xlsx");
                 }
 
                 Console.WriteLine("Excel file created successfully.");
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
         }
 
         static void AddAutoFilterButtons(ExcelWorksheet worksheet)
