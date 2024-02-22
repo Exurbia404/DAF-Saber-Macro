@@ -28,7 +28,37 @@ namespace Section5PoC
             excelHandler = new ExcelHandler();
             wcsppConvertor = new WCSPP_Convertor();
 
-            wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires);
+            // Your existing code to extract wires and create WCSPPConvertor instance
+            // ...
+
+            Console.WriteLine("Choose an option:");
+            Console.WriteLine("1. Open in Excel");
+            Console.WriteLine("2. Write to Text File");
+            Console.Write("Enter the number of your choice: ");
+
+            if (int.TryParse(Console.ReadLine(), out int choice))
+            {
+                switch (choice)
+                {
+                    case 1:
+                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires);
+                        Console.WriteLine("Opening in Excel...");
+                        break;
+
+                    case 2:
+                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires);
+                        Console.WriteLine("Writing to Text File...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+            }
 
             Console.ReadLine();
         }
@@ -39,7 +69,9 @@ namespace Section5PoC
         {
             // Get the directory where the executable is located
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
-            string[] txtFiles = Directory.GetFiles(exePath, "*.txt");
+            string inputFolderPath = Path.Combine(exePath, "data", "input");
+
+            string[] txtFiles = Directory.GetFiles(inputFolderPath, "*.txt");
 
             if (txtFiles.Length > 0)
             {
