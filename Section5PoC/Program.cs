@@ -17,6 +17,7 @@ namespace Section5PoC
         private static Extractor extractor;
         private static List<Wire> extractedWires;
         private static ExcelHandler excelHandler;
+        private static WCSPP_Convertor wcsppConvertor;
 
         public static void Main(string[] args)
         {
@@ -25,8 +26,9 @@ namespace Section5PoC
             extractor = new Extractor();
             extractedWires = extractor.ExtractSection5FromTextFile(SelectTxtFilePath());
             excelHandler = new ExcelHandler();
+            wcsppConvertor = new WCSPP_Convertor();
 
-            excelHandler.CreateExcelSheet(extractedWires);
+            wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires);
 
             Console.ReadLine();
         }

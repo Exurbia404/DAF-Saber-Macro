@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Section5PoC
 {
     public class ExcelHandler
     {
-        public void CreateExcelSheet(List<Wire> extractedWires)
+        public void CreateExcelSheet<T>(List<T> extractedWires)
         {
             try
             {
@@ -21,10 +22,10 @@ namespace Section5PoC
                     var worksheet = package.Workbook.Worksheets.Add("Wires");
 
                     // Write column headers
-                    WriteHeaders(worksheet);
+                    WriteHeaders(worksheet, extractedWires);
 
                     // Write wire data
-                    WriteData(worksheet, extractedWires);
+                    WriteDataToSheet(worksheet, extractedWires);
                     worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(worksheet);
 
@@ -51,58 +52,62 @@ namespace Section5PoC
             worksheet.Cells["A1:" + worksheet.Dimension.End.Address].AutoFilter = true;
         }
 
-        static void WriteHeaders(ExcelWorksheet worksheet)
+        static void WriteHeaders<T>(ExcelWorksheet worksheet, List<T> objects)
         {
-            // Assuming your wire class has properties like WireName, WireOption, etc.
-            string[] headers = {
-                "WireName (30)", "WireOption (200)", "WireType (30)", "Color (30)",
-                "CrossSectionalArea", "Material (30)", "UserModule (30)", "MulticoreName (30)",
-                "End1NodeName (10)", "End1Route (10)", "End1Cavity (10)", "End1MaterialCode (4)",
-                "End2NodeName (10)", "End2Route (10)", "End2Cavity (10)", "End2MaterialCode (4)",
-                "IncludeOnBOM", "IncludeOnChart", "WireTag (30)", "WireNote (100)",
-                "WireLengthChangeType", "WireLengthChangeValue", "AssemblyItemNumber", "MulticoreOption (30)"
-            };
-
-
-            for (int i = 0; i < headers.Length; i++)
+            if (objects.Count == 0)
             {
-                worksheet.Cells[1, i + 1].Value = headers[i];
+                // Handle the case where the list is empty
+                return;
+            }
+
+            PropertyInfo[] properties = objects[0].GetType().GetProperties();
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                string header = $"{properties[i].Name} ({GetMaxLength(objects, properties[i])})";
+                worksheet.Cells[1, i + 1].Value = header;
             }
         }
 
-        static void WriteData(ExcelWorksheet worksheet, List<Wire> wires)
+        static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
         {
-            for (int row = 0; row < wires.Count; row++)
+            // Assuming the property is a string type, you may want to modify this logic
+            // based on the actual data type of the property.
+            int maxLength = property.Name.Length;
+
+            foreach (var obj in objects)
             {
-                var wire = wires[row];
+                object value = property.GetValue(obj);
+                if (value != null)
+                {
+                    int length = value.ToString().Length;
+                    if (length > maxLength)
+                    {
+                        maxLength = length;
+                    }
+                }
+            }
 
-                // Assuming your wire class has properties like WireName, WireOption, etc.
-                worksheet.Cells[row + 2, 1].Value = wire.WireName;
-                worksheet.Cells[row + 2, 2].Value = wire.WireOption;
-                worksheet.Cells[row + 2, 3].Value = wire.WireType;
-                worksheet.Cells[row + 2, 4].Value = wire.Color;
-                worksheet.Cells[row + 2, 5].Value = wire.CrossSectionalArea;
-                worksheet.Cells[row + 2, 6].Value = wire.Material;
-                worksheet.Cells[row + 2, 7].Value = wire.UserModule;
-                worksheet.Cells[row + 2, 8].Value = wire.MulticoreName;
-                worksheet.Cells[row + 2, 9].Value = wire.End1NodeName;
-                worksheet.Cells[row + 2, 10].Value = wire.End1Route;
-                worksheet.Cells[row + 2, 11].Value = wire.End1Cavity;
-                worksheet.Cells[row + 2, 12].Value = wire.End1MaterialCode;
-                worksheet.Cells[row + 2, 13].Value = wire.End2NodeName;
-                worksheet.Cells[row + 2, 14].Value = wire.End2Route;
-                worksheet.Cells[row + 2, 15].Value = wire.End2Cavity;
-                worksheet.Cells[row + 2, 16].Value = wire.End2MaterialCode;
-                worksheet.Cells[row + 2, 17].Value = wire.IncludeOnBOM;
-                worksheet.Cells[row + 2, 18].Value = wire.IncludeOnChart;
-                worksheet.Cells[row + 2, 19].Value = wire.WireTag;
-                worksheet.Cells[row + 2, 20].Value = wire.WireNote;
-                worksheet.Cells[row + 2, 21].Value = wire.WireLengthChangeType;
-                worksheet.Cells[row + 2, 22].Value = wire.WireLengthChangeValue;
-                worksheet.Cells[row + 2, 23].Value = wire.AssemblyItemNumber;
-                worksheet.Cells[row + 2, 24].Value = wire.MulticoreOption;
+            return maxLength;
+        }
 
-                // ... add other properties ...
+        static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects)
+        {
+            if (objects.Count == 0)
+            {
+                // Handle the case where the list is empty
+                return;
+            }
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            for (int row = 0; row < objects.Count; row++)
+            {
+                for (int col = 0; col < properties.Length; col++)
+                {
+                    var propertyValue = properties[col].GetValue(objects[row]);
+                    worksheet.Cells[row + 2, col + 1].Value = propertyValue;
+                }
             }
         }
     }
