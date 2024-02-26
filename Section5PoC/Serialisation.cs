@@ -13,8 +13,6 @@ namespace Section5PoC
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-
-
             // Get the current date and time in a format suitable for including in a file name
             string dateTimeString = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
@@ -54,7 +52,7 @@ namespace Section5PoC
                 {
                     // Format the line with object properties
                     string line = $"{wcsppComponent.Name},{wcsppComponent.Part_no},,{wcsppComponent.Passive},{wcsppComponent.Instruction},{wcsppComponent.Variant},{wcsppComponent.Bundle}," +
-                        $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,{wcsppComponent.EndText}";
+                                $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,,,{wcsppComponent.EndText} ";
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }

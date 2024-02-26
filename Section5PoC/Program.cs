@@ -9,6 +9,7 @@ namespace Section5PoC
     {
         private static List<Wire> extractedWires;
         private static List<Component> extractedComponents;
+        private static string extractedBundles;
         
         
         private static Extractor extractor;
@@ -25,23 +26,26 @@ namespace Section5PoC
 
             extractedWires = extractor.ExtractWiresFromFile(textFilePath);
             extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+            extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");
             Console.WriteLine("2. Write to Text File");
             Console.Write("Enter the number of your choice: ");
 
+
+            //TODO: maybe rewrite this seems dirty
             if (int.TryParse(Console.ReadLine(), out int choice))
             {
                 switch (choice)
                 {
                     case 1:
-                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents);
+                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                         Console.WriteLine("Opening in Excel...");
                         break;
 
                     case 2:
-                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents);
+                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles);
                         Console.WriteLine("Writing to Text File...");
                         break;
 

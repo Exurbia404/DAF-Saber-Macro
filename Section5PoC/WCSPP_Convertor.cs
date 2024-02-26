@@ -21,12 +21,14 @@ namespace Section5PoC
             serialisation = new Serialisation();    
         }
 
-        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert)
+
+        //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
+        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles)
         {
             serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert), ConvertComponentToWCSPP(componentsToConvert));
         }
 
-        public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert) 
+        public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles) 
         {
             wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert), ConvertComponentToWCSPP(componentsToConvert));
         }

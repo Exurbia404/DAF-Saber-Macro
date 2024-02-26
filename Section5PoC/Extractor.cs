@@ -3,13 +3,63 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Section5PoC
 {
     public class Extractor
     {
-        
+
+        public string ExtractBundlesFromFile(string filePath)
+        {
+            string sectionStart = "%Section 3";
+            string sectionEnd = "%Section 4";
+            bool isInSection3 = false;
+            string foundBundles = "";
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection3)
+                {
+                    // Process lines between Section 3 and Section 4
+                    string bundle = ExtractFirstEntryFromString(line);
+
+                    if (!string.IsNullOrEmpty(bundle))
+                    {
+                        // Add a space before appending subsequent bundles
+                        if (!string.IsNullOrEmpty(foundBundles))
+                        {
+                            foundBundles += " ";
+                        }
+
+                        foundBundles += bundle;
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection3 = true;
+                }
+            }
+
+            return foundBundles;
+        }
+
+        private string ExtractFirstEntryFromString(string line)
+        {
+            // Assuming the first entry is any sequence of characters until the first colon
+            var match = Regex.Match(line, @"^([^:]+):");
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
         public List<Wire> ExtractWiresFromFile(string filePath)
         {
             List<Wire> wireList = new List<Wire>();
@@ -138,7 +188,7 @@ namespace Section5PoC
                 BlockNumber = GetStringAtIndex(fields, 16),
                 TerminationMethod = GetStringAtIndex(fields, 17),
                 MaterialCode = GetStringAtIndex(fields, 18),
-                ComponentTypeCode2 = GetStringAtIndex(fields, 19),
+                ComponentTypeCode2 = RemoveCurlyBraces(GetStringAtIndex(fields, 19)),
             };
 
             return componentObject;
@@ -147,6 +197,17 @@ namespace Section5PoC
         private static string GetStringAtIndex(string[] fields, int index)
         {
             return index < fields.Length ? fields[index].Trim() : "";
+        }
+
+        private string RemoveCurlyBraces(string input)
+        {
+            if (input.StartsWith("{") && input.EndsWith("}"))
+            {
+                // Remove the curly braces
+                return input.Substring(1, input.Length - 2);
+            }
+
+            return input;
         }
     }
 }
