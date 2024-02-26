@@ -54,7 +54,7 @@ namespace Section5PoC
                 {
                     // Format the line with object properties
                     string line = $"{wcsppComponent.Name},{wcsppComponent.Part_no},,{wcsppComponent.Passive},{wcsppComponent.Instruction},{wcsppComponent.Variant},{wcsppComponent.Bundle}," +
-                        $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,";
+                        $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,{wcsppComponent.EndText}";
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }

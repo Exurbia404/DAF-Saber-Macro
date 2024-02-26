@@ -20,7 +20,8 @@ namespace Section5PoC
         //Can i rename this to location without breaking another program?
         public string Lokation { get; set; }
 
-        //9 spaces after this when writing ending with a , 
+        //9 spaces after this when writing ending with a ,
+        public string EndText { get; set; }
 
         public WCSPP_Component() { }
 
