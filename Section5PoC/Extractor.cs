@@ -164,6 +164,8 @@ namespace Section5PoC
 
         private Component ExtractComponentObjectFromString(string inputString)
         {
+            //TODO: i am not extracting the entire object from the string, do i need to?
+
             string[] fields = inputString.Split(':');
 
             // Create a new Component object and set its properties based on the fields

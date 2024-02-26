@@ -58,25 +58,26 @@ namespace Section5PoC
 
             foreach (Component component in componentsToConvert)
             {
-                WCSPP_Component wCSPP_Component = new WCSPP_Component
+                if (component.ComponentTypeCode == "CONNECTOR")
                 {
-                    Name = component.NodeName,
-                    Part_no = component.PartNumber2,
-                    Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
-                    Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
-                    Variant = component.CircuitOption,
-                    Bundle = bundles,
-                    Description = "?",
-                    Lokation = "?",
-                    EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
+                    // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
+                    WCSPP_Component wCSPP_Component = new WCSPP_Component
+                    {
+                        Name = component.NodeName,
+                        Part_no = component.PartNumber2,
+                        Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
+                        Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
+                        Variant = component.CircuitOption,
+                        Bundle = bundles,
+                        Description = "?",
+                        Lokation = "?",
+                        EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
 
 
-                    // Set other properties here as needed
-                };
-
-                // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
-
-                convertedList.Add(wCSPP_Component);
+                        // Set other properties here as needed
+                    };
+                    convertedList.Add(wCSPP_Component);
+                }
             }
 
             return convertedList;
@@ -117,7 +118,7 @@ namespace Section5PoC
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
                                     component.ComponentTypeCode == "PASSIVES" &&
-                                    IsOnlyLetters(component.PartNumber2))
+                                    !HasNumbers(component.PartNumber2))
                 .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
@@ -130,12 +131,6 @@ namespace Section5PoC
         private bool HasNumbers(string input)
         {
             return input.Any(char.IsDigit);
-        }
-
-        // Helper function to check if a string contains only letters
-        private bool IsOnlyLetters(string input)
-        {
-            return input.All(c => char.IsLetter(c) || c == '-');
         }
 
         static string GetValueFromInputString(string input, int keyIndex)
