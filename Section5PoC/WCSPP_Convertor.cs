@@ -25,7 +25,7 @@ namespace Section5PoC
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
         public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles)
         {
-            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
+            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles);
         }
 
         public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles) 
@@ -69,8 +69,8 @@ namespace Section5PoC
                         Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
                         Variant = component.CircuitOption,
                         Bundle = bundles,
-                        Description = "?",
-                        Lokation = "?",
+                        Description = "",
+                        Lokation = "",
                         EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
 
 
@@ -80,7 +80,7 @@ namespace Section5PoC
                 }
             }
 
-            return convertedList;
+            return convertedList.OrderBy(component => component.Name).ToList(); ;
         }
 
         private string GetPassivesForComponent(List<Component> fullList, string componentName)
@@ -89,7 +89,7 @@ namespace Section5PoC
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
                                     component.ComponentTypeCode == "PASSIVES" &&
-                                    HasNumbers(component.PartNumber2))
+                                    StartsWithNumber(component.PartNumber2))
                 .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
@@ -103,7 +103,7 @@ namespace Section5PoC
             // Filter components based on ComponentName and ServiceFunction
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
-                                    component.ComponentTypeCode == "PASSIVES")
+                                    component.ComponentTypeCode == "CONNECTOR")
                 .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
@@ -118,7 +118,7 @@ namespace Section5PoC
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
                                     component.ComponentTypeCode == "PASSIVES" &&
-                                    !HasNumbers(component.PartNumber2))
+                                    !StartsWithNumber(component.PartNumber2))
                 .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
@@ -127,7 +127,18 @@ namespace Section5PoC
             return result;
         }
 
-        // Helper function to check if a string contains numbers
+        private bool StartsWithNumber(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                // Handle empty or null strings
+                return false;
+            }
+
+            char firstChar = input[0];
+            return char.IsDigit(firstChar);
+        }
+
         private bool HasNumbers(string input)
         {
             return input.Any(char.IsDigit);

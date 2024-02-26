@@ -43,6 +43,7 @@
     <Compile Include="Extractor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Serialisation.cs" />
+    <Compile Include="TestingSuite.cs" />
     <Compile Include="WCSPP_Convertor.cs" />
     <Compile Include="Wire_Folder\WCSPP_Wire.cs" />
     <Compile Include="Wire_Folder\Wire.cs" />
