@@ -188,7 +188,7 @@ namespace Section5PoC
                 BlockNumber = GetStringAtIndex(fields, 16),
                 TerminationMethod = GetStringAtIndex(fields, 17),
                 MaterialCode = GetStringAtIndex(fields, 18),
-                ComponentTypeCode2 = RemoveCurlyBraces(GetStringAtIndex(fields, 19)),
+                ComponentTypeCode2 = GetLastValueBetweenColons(inputString),
             };
 
             return componentObject;
@@ -208,6 +208,23 @@ namespace Section5PoC
             }
 
             return input;
+        }
+
+        private string GetLastValueBetweenColons(string input)
+        {
+            // Split the input string by colons
+            string[] parts = input.Split(':');
+
+            // Find the last non-empty value
+            for (int i = parts.Length - 1; i >= 0; i--)
+            {
+                if (!string.IsNullOrWhiteSpace(parts[i]))
+                {
+                    return parts[i].Trim(); // Trim to remove any leading or trailing spaces
+                }
+            }
+
+            return string.Empty; // Return empty string if no value is found
         }
     }
 }

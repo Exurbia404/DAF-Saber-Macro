@@ -68,7 +68,7 @@ namespace Section5PoC
                     Bundle = bundles,
                     Description = "?",
                     Lokation = "?",
-                    EndText = component.ComponentTypeCode2
+                    EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
 
 
                     // Set other properties here as needed
@@ -84,7 +84,7 @@ namespace Section5PoC
 
         private string GetPassivesForComponent(List<Component> fullList, string componentName)
         {
-            // Filter components based on ComponentName and CircuitOption, and PartNumber2 contains numbers
+            // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains numbers
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
                                     component.ComponentTypeCode == "PASSIVES" &&
@@ -97,15 +97,23 @@ namespace Section5PoC
             return result;
         }
 
-        // Helper function to check if a string contains numbers
-        private bool HasNumbers(string input)
+        private string GetEndTextForComponent(List<Component> fullList, string componentName)
         {
-            return input.Any(char.IsDigit);
+            // Filter components based on ComponentName and ServiceFunction
+            var filteredComponents = fullList
+                .Where(component => component.NodeName == componentName &&
+                                    component.ComponentTypeCode == "PASSIVES")
+                .ToList();
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.ComponentTypeCode2));
+
+            return result;
         }
 
         private string GetInstructionForComponent(List<Component> fullList, string componentName)
         {
-            // Filter components based on ComponentName and CircuitOption, and PartNumber2 contains only letters
+            // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains only letters
             var filteredComponents = fullList
                 .Where(component => component.NodeName == componentName &&
                                     component.ComponentTypeCode == "PASSIVES" &&
@@ -116,6 +124,12 @@ namespace Section5PoC
             string result = string.Join(" ", filteredComponents.Select(component => component.PartNumber2));
 
             return result;
+        }
+
+        // Helper function to check if a string contains numbers
+        private bool HasNumbers(string input)
+        {
+            return input.Any(char.IsDigit);
         }
 
         // Helper function to check if a string contains only letters
