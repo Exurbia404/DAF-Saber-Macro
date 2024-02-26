@@ -25,15 +25,15 @@ namespace Section5PoC
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
         public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles)
         {
-            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert), ConvertComponentToWCSPP(componentsToConvert));
+            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
         }
 
         public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles) 
         {
-            wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert), ConvertComponentToWCSPP(componentsToConvert));
+            wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
         }
 
-        private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert)
+        private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert, string bundles)
         {
             List<WCSPP_Wire> convertedList = new List<WCSPP_Wire>();
 
@@ -42,6 +42,7 @@ namespace Section5PoC
                 WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
+                wCSPP_Wire.Bundle = bundles;
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
 
@@ -51,7 +52,7 @@ namespace Section5PoC
             return convertedList;
         }
 
-        private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert)
+        private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, string bundles)
         {
             List<WCSPP_Component> convertedList = new List<WCSPP_Component>();
 
@@ -64,7 +65,7 @@ namespace Section5PoC
                     Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
                     Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
                     Variant = component.CircuitOption,
-                    Bundle = "?",
+                    Bundle = bundles,
                     Description = "?",
                     Lokation = "?",
                     EndText = component.ComponentTypeCode2
