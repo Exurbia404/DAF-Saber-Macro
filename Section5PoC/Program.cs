@@ -41,7 +41,7 @@ namespace Section5PoC
                         break;
 
                     case 2:
-                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires);
+                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents);
                         Console.WriteLine("Writing to Text File...");
                         break;
 

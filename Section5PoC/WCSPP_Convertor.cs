@@ -13,45 +13,17 @@ namespace Section5PoC
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
         ExcelHandler wcsppExcelHandler;
+        Serialisation serialisation;
 
         public WCSPP_Convertor() 
         {
             wcsppExcelHandler = new ExcelHandler();
+            serialisation = new Serialisation();    
         }
 
-        public void ConvertListToWCSPPTextFile(List<Wire> listToConvert)
+        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert)
         {
-            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-
-
-            // Get the current date and time in a format suitable for including in a file name
-            string dateTimeString = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-
-            // Combine with the desired subdirectories and file name
-            string filePath = Path.Combine(exeDirectory, "data", "output", $"output_{dateTimeString}.txt");
-
-            List<WCSPP_Wire> convertedList = ConvertWireToWCSPP(listToConvert);
-
-            // Create or overwrite the file
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                // Write the header line
-                writer.WriteLine("Wire,Diam,Color,Type,Code_no,Length,Connector_1,Port_1,Term_1,Seal_1,Wire_connection,Term_2,Seal_2,Connector_2,Port_2,Variant,Bundle,Loc_1,Loc_2,");
-
-                // Write each WCSPP_Wire object to the file
-                foreach (var wcsppWire in convertedList)
-                {
-                    // Format the line with object properties
-                    string line = $"{wcsppWire.Wire},{wcsppWire.Diameter},{wcsppWire.Color},{wcsppWire.Type},{wcsppWire.Code_no},{wcsppWire.Length}," +
-                                  $"{wcsppWire.Connector_1},{wcsppWire.Port_1},{wcsppWire.Term_1},{wcsppWire.Seal_1},{wcsppWire.Wire_connection}," +
-                                  $"{wcsppWire.Term_2},{wcsppWire.Seal_2},{wcsppWire.Connector_2},{wcsppWire.Port_2},{wcsppWire.Variant},{wcsppWire.Bundle}," +
-                                  $"{wcsppWire.Loc_1},{wcsppWire.Loc_2},";
-
-                    // Write the formatted line to the file
-                    writer.WriteLine(line);
-                }
-            }
+            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert), ConvertComponentToWCSPP(componentsToConvert));
         }
 
         public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert) 
@@ -87,12 +59,13 @@ namespace Section5PoC
                 {
                     Name = component.NodeName,
                     Part_no = component.PartNumber2,
-                    Passive = "?",
+                    Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
                     Instruction = "?",
                     Variant = component.CircuitOption,
                     Bundle = "?",
                     Description = "?",
                     Lokation = "?",
+
 
                     // Set other properties here as needed
                 };
@@ -103,6 +76,20 @@ namespace Section5PoC
             }
 
             return convertedList;
+        }
+
+        //CircuitOption describes whether or not it's passive or not
+        private string GetPassivesForComponent(List<Component> fullList, string componentName)
+        {
+            // Filter components based on ComponentName and CircuitOption
+            var filteredComponents = fullList
+                .Where(component => component.NodeName == componentName && component.ComponentTypeCode == "PASSIVES")
+                .ToList();
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.PartNumber2));
+
+            return result;
         }
 
         static string GetValueFromInputString(string input, int keyIndex)
