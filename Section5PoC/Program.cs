@@ -10,7 +10,7 @@ namespace Section5PoC
     {
         private static List<Wire> extractedWires;
         private static List<Component> extractedComponents;
-        private static string extractedBundles;
+        private static List<Bundle> extractedBundles;
         
         
         private static Extractor extractor;
@@ -78,6 +78,7 @@ namespace Section5PoC
             }
 
             Console.ReadLine();
+            Main();
         }
 
         

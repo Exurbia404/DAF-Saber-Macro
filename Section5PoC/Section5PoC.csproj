@@ -37,6 +37,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bundle.cs" />
     <Compile Include="Component_Folder\Component.cs" />
     <Compile Include="Component_Folder\WCSPP_Component.cs" />
     <Compile Include="ExcelHandler.cs" />

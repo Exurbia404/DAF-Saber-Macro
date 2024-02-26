@@ -11,12 +11,13 @@ namespace Section5PoC
     public class Extractor
     {
 
-        public string ExtractBundlesFromFile(string filePath)
+        public List<Bundle> ExtractBundlesFromFile(string filePath)
         {
             string sectionStart = "%Section 3";
             string sectionEnd = "%Section 4";
             bool isInSection3 = false;
-            string foundBundles = "";
+            
+            List<Bundle> foundBundles = new List<Bundle>();
 
             foreach (string line in File.ReadLines(filePath))
             {
@@ -28,18 +29,11 @@ namespace Section5PoC
 
                 if (isInSection3)
                 {
+                    Bundle bundle = ExtractBundleFromString(line);
                     // Process lines between Section 3 and Section 4
-                    string bundle = ExtractFirstEntryFromString(line);
-
-                    if (!string.IsNullOrEmpty(bundle))
+                    if (bundle != null)
                     {
-                        // Add a space before appending subsequent bundles
-                        if (!string.IsNullOrEmpty(foundBundles))
-                        {
-                            foundBundles += " ";
-                        }
-
-                        foundBundles += bundle;
+                        foundBundles.Add(bundle);
                     }
                 }
 
@@ -49,8 +43,31 @@ namespace Section5PoC
                     isInSection3 = true;
                 }
             }
-
             return foundBundles;
+        }
+
+        private Bundle ExtractBundleFromString(string input)
+        {
+            {
+                Bundle bundle = new Bundle();
+
+                // Split the input string using ':' as the delimiter
+                string[] fields = input.Split(':');
+
+                // Assign fields to properties
+                if (fields.Length >= 1) bundle.VariantNumber = fields[0].Trim();
+                if (fields.Length >= 2) bundle.Issue = fields[1].Trim();
+                if (fields.Length >= 3) bundle.Date = fields[2].Trim();
+
+                // Check if there are references separated by '|'
+                if (fields.Length >= 4)
+                {
+                    string[] referencesArray = fields[16].Split('|');
+                    bundle.References = referencesArray.Select(reference => reference.Trim()).ToArray();
+                }
+
+                return bundle;
+            }
         }
 
         private string ExtractFirstEntryFromString(string line)

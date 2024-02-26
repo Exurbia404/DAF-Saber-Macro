@@ -21,20 +21,42 @@ namespace Section5PoC
         static string exePath = AppDomain.CurrentDomain.BaseDirectory;
         string originalFolder = Path.Combine(exePath, "data", "original");
         string generatedFolder = Path.Combine(exePath, "data", "output");
+        string inputFolder = Path.Combine(exePath, "data", "input");
 
+        private static Extractor extractor;
+        private static WCSPP_Convertor wcsppConvertor;
 
         public TestingSuite()
         {
-            
+            extractor = new Extractor();
+            wcsppConvertor = new WCSPP_Convertor();
         }
 
         public void StartComponentsTest()
         {
+            ConvertFilesForTest();
+
             Dictionary<string, double> similarityPercentages = CompareFiles(originalFolder, generatedFolder);
 
             foreach (var entry in similarityPercentages)
             {
                 Console.WriteLine($"Similarity Percentage for Set {entry.Key}: {entry.Value}%");
+            }
+        }
+
+        private void ConvertFilesForTest()
+        {
+            string[] files = Directory.GetFiles(inputFolder, "*.txt");
+
+            foreach (string filePath in files)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+                List<Wire> extractedWires = extractor.ExtractWiresFromFile(filePath);
+                List<Component> extractedComponents = extractor.ExtractComponentsFromFile(filePath);
+                List<Bundle> extractedBundles = extractor.ExtractBundlesFromFile(filePath);
+
+                wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
             }
         }
 

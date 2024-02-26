@@ -10,7 +10,7 @@ namespace Section5PoC
     public class Serialisation
     {
         //TODO: this won't allow for 1780456-09 only 1780456, this has to be amended
-        public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, string extractedBundles, string fileName)
+        public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, List<Bundle> extractedBundles, string fileName)
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
 

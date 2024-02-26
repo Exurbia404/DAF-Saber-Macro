@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,17 +24,17 @@ namespace Section5PoC
 
 
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
-        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles, string fileName)
+        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles, string fileName)
         {
             serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles, fileName);
         }
 
-        public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, string extractedBundles) 
+        public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles) 
         {
             wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
         }
 
-        private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert, string bundles)
+        private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert, List<Bundle> bundles)
         {
             List<WCSPP_Wire> convertedList = new List<WCSPP_Wire>();
 
@@ -42,7 +43,8 @@ namespace Section5PoC
                 WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
-                wCSPP_Wire.Bundle = bundles;
+
+                //wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, component.CircuitOption);
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
 
@@ -52,7 +54,7 @@ namespace Section5PoC
             return convertedList;
         }
 
-        private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, string bundles)
+        private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, List<Bundle> bundles)
         {
             List<WCSPP_Component> convertedList = new List<WCSPP_Component>();
 
@@ -68,7 +70,7 @@ namespace Section5PoC
                         Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
                         Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
                         Variant = component.CircuitOption,
-                        Bundle = bundles,
+                        Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
                         Description = "",
                         Lokation = "",
                         EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
@@ -81,6 +83,22 @@ namespace Section5PoC
             }
 
             return convertedList.OrderBy(component => component.Name).ToList(); ;
+        }
+
+        static string GetBundlesForVariant(List<Bundle> bundles, string variant)
+        {
+            // Split the variant into individual variants
+            string[] variantArray = variant.Split('/');
+
+            // Filter bundles where any of the variants is present in the references
+            IEnumerable<string> matchingVariants = bundles
+                .Where(bundle => variantArray.Any(v => bundle.References.Contains(v)))
+                .Select(bundle => bundle.VariantNumber);
+
+            // Concatenate matching variants into a single string
+            string result = string.Join(" ", matchingVariants);
+
+            return result;
         }
 
         private string GetPassivesForComponent(List<Component> fullList, string componentName)
@@ -137,11 +155,6 @@ namespace Section5PoC
 
             char firstChar = input[0];
             return char.IsDigit(firstChar);
-        }
-
-        private bool HasNumbers(string input)
-        {
-            return input.Any(char.IsDigit);
         }
 
         static string GetValueFromInputString(string input, int keyIndex)
