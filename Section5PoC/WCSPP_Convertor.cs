@@ -145,6 +145,16 @@ namespace Section5PoC
             return result;
         }
 
+        private bool HasNumbers(string input)
+        {
+            return input.Any(char.IsDigit);
+        }
+
+        private bool HasLetters(string input)
+        {
+            return input.Any(char.IsLetter);
+        }
+
         private bool StartsWithNumber(string input)
         {
             if (string.IsNullOrEmpty(input))
