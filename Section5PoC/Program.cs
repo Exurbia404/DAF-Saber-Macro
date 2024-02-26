@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,6 +15,7 @@ namespace Section5PoC
         
         private static Extractor extractor;
         private static WCSPP_Convertor wcsppConvertor;
+        private static TestingSuite testingSuite;
 
         public static void Main()
         {
@@ -21,8 +23,10 @@ namespace Section5PoC
 
             extractor = new Extractor();
             wcsppConvertor = new WCSPP_Convertor();
+            testingSuite = new TestingSuite();
 
             string textFilePath = SelectTxtFilePath();
+            string fileName = Path.GetFileNameWithoutExtension(textFilePath).Replace("_DSI", "");
 
             extractedWires = extractor.ExtractWiresFromFile(textFilePath);
             extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
@@ -31,10 +35,9 @@ namespace Section5PoC
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");
             Console.WriteLine("2. Write to Text File");
+            Console.WriteLine("3. Test Conversion"); // New option
             Console.Write("Enter the number of your choice: ");
 
-
-            //TODO: maybe rewrite this seems dirty
             if (int.TryParse(Console.ReadLine(), out int choice))
             {
                 switch (choice)
@@ -45,12 +48,27 @@ namespace Section5PoC
                         break;
 
                     case 2:
-                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles);
+                        Stopwatch stopwatch = new Stopwatch();
+
+                        // Start the stopwatch
+                        stopwatch.Start();
+                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
+                        stopwatch.Stop();
                         Console.WriteLine("Writing to Text File...");
+                        // Get the elapsed time
+                        TimeSpan elapsedTime = stopwatch.Elapsed;
+
+                        // Print the elapsed time in milliseconds
+                        Console.WriteLine($"Elapsed Time: {elapsedTime.TotalMilliseconds} milliseconds");
+                        break;
+
+                    case 3:
+                        Console.WriteLine("Testing Conversion...");
+                        testingSuite.StartComponentsTest();
                         break;
 
                     default:
-                        Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+                        Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
                         break;
                 }
             }

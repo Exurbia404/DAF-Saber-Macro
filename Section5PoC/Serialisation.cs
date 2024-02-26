@@ -9,15 +9,13 @@ namespace Section5PoC
 {
     public class Serialisation
     {
-        //TODO: this won't allow for 1780456-9 only 1780456, this has to be amended
-        public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, string extractedBundles)
+        //TODO: this won't allow for 1780456-09 only 1780456, this has to be amended
+        public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, string extractedBundles, string fileName)
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            string firstSet = GetFirstSetOfNumbers(extractedBundles);
-
             // Construct the new file name
-            string newFileName = $"{firstSet}_generated_parts.txt";
+            string newFileName = $"{fileName}_generated_WCSPP.txt";
 
             // Combine with the desired subdirectories and file name
             string filePath = Path.Combine(exeDirectory, "data", "output", newFileName);
@@ -42,7 +40,7 @@ namespace Section5PoC
                 }
             }
 
-            newFileName = $"{firstSet}_generated_WCSPP.txt";
+            newFileName = $"{fileName}_generated_parts.txt";
 
 
             filePath = Path.Combine(exeDirectory, "data", "output", newFileName);
@@ -58,41 +56,11 @@ namespace Section5PoC
                 {
                     // Format the line with object properties
                     string line = $"{wcsppComponent.Name},{wcsppComponent.Part_no},,{wcsppComponent.Passive},{wcsppComponent.Instruction},{wcsppComponent.Variant},{wcsppComponent.Bundle}," +
-                                $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText} ";
+                                $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText}";
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
             }
         }
-
-        private string GetFirstSetOfNumbers(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                // Handle empty or null strings
-                return string.Empty;
-            }
-
-            // Split the string by spaces
-            string[] sets = input.Split(' ');
-
-            // Find the first set that contains only numbers
-            foreach (string set in sets)
-            {
-                if (IsOnlyNumbers(set))
-                {
-                    return set;
-                }
-            }
-
-            return string.Empty; // Return empty string if no valid set is found
-        }
-
-        // Helper function to check if a string consists of only numbers
-        private bool IsOnlyNumbers(string input)
-        {
-            return input.All(char.IsDigit);
-        }
-
     }
 }
