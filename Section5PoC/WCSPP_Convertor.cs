@@ -44,7 +44,7 @@ namespace Section5PoC
                 WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
-                wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, wire.CircuitOption);
+                wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, wire.WireOption);
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
 
