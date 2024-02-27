@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Section5PoC
@@ -43,8 +44,7 @@ namespace Section5PoC
                 WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
-
-                //wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, component.CircuitOption);
+                wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, wire.CircuitOption);
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
 
@@ -67,18 +67,18 @@ namespace Section5PoC
                     {
                         Name = component.NodeName,
                         Part_no = component.PartNumber2,
-                        Passive = GetPassivesForComponent(componentsToConvert, component.NodeName),
+                        Passive = GetPassivesForComponent(componentsToConvert, component.NodeName, GetEndTextForComponent(componentsToConvert, component.NodeName)),
                         Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
                         Variant = component.CircuitOption,
                         Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
                         Description = "",
                         Lokation = "",
                         EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
-
-
+    
                         // Set other properties here as needed
                     };
-                    convertedList.Add(wCSPP_Component);
+
+                convertedList.Add(wCSPP_Component);
                 }
             }
 
@@ -101,13 +101,16 @@ namespace Section5PoC
             return result;
         }
 
-        private string GetPassivesForComponent(List<Component> fullList, string componentName)
+        private string GetPassivesForComponent(List<Component> fullList, string componentName, string endText)
         {
             // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains numbers
             var filteredComponents = fullList
-                .Where(component => component.NodeName == componentName &&
-                                    component.ComponentTypeCode == "PASSIVES" &&
-                                    StartsWithNumber(component.PartNumber2))
+                .Where(component =>
+                    component.NodeName == componentName &&
+                    component.ComponentTypeCode == "PASSIVES" &&
+                    StartsWithNumber(component.PartNumber2) &&
+                    (component.PartNumber2.Length >= 7) &&
+                    component.ComponentTypeCode2 == endText)
                 .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
@@ -132,12 +135,25 @@ namespace Section5PoC
 
         private string GetInstructionForComponent(List<Component> fullList, string componentName)
         {
-            // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains only letters
+            //Include the component if:
+            //  -NodeName matches a specified name.
+            //  -ComponentTypeCode is "PASSIVES".
+            //  - If PartNumber2 doesn't start with a number OR starts with a number:
+            //    - Include if ComponentTypeCode2 is not "additional instructions".
+            //    - Include if PartNumber2 is not equal to NodeName.
+            //  - PartNumber2 contains letters.
+
             var filteredComponents = fullList
-                .Where(component => component.NodeName == componentName &&
-                                    component.ComponentTypeCode == "PASSIVES" &&
-                                    !StartsWithNumber(component.PartNumber2))
-                .ToList();
+            .Where(component =>
+                component.NodeName == componentName &&
+                component.ComponentTypeCode == "PASSIVES" &&
+                (
+                    (!StartsWithNumber(component.PartNumber2)) ||
+                    (StartsWithNumber(component.PartNumber2) && (IsAlphanumericEqual(component.PartNumber2, component.NodeName) || IsStringPresent(component.PartNumber2, component.NodeName))
+                )) &&
+                HasLetters(component.PartNumber2) &&
+                component.ComponentTypeCode2 != "additional instructions")
+            .ToList();
 
             // Extract PartNumber2 and concatenate them with a space in between
             string result = string.Join(" ", filteredComponents.Select(component => component.PartNumber2));
@@ -153,6 +169,18 @@ namespace Section5PoC
         private bool HasLetters(string input)
         {
             return input.Any(char.IsLetter);
+        }
+
+        bool IsStringPresent(string str1, string str2)
+        {
+            // Implement this function to check if str1 is present in str2
+            return str2.IndexOf(str1, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        bool IsAlphanumericEqual(string str1, string str2)
+        {
+            // Implement this function to check if two alphanumeric strings are equal
+            return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
         }
 
         private bool StartsWithNumber(string input)
