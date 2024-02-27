@@ -17,11 +17,19 @@ namespace Section5PoC
         ExcelHandler wcsppExcelHandler;
         Serialisation serialisation;
 
-        public WCSPP_Convertor() 
+        private static List<Wire> wiresToConvert;
+        private static List<Component> componentsToConvert;
+
+        public WCSPP_Convertor(List<Wire> wires, List<Component> components) 
         {
             wcsppExcelHandler = new ExcelHandler();
-            serialisation = new Serialisation();    
+            serialisation = new Serialisation();
+
+            wiresToConvert = wires;
+            componentsToConvert = components;
         }
+
+        public WCSPP_Convertor() { }
 
 
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
@@ -41,17 +49,94 @@ namespace Section5PoC
 
             foreach (Wire wire in wiresToConvert)
             {
-                WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", "?", "?", "?", "?", "?", "?");
+                WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", wire.End2NodeName, wire.End2Cavity, "?", "?", "?", "?");
+                
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
+                
                 wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, wire.WireOption);
+                
+                wCSPP_Wire.Connector_2 = wire.End2NodeName;
+                
+                //Set Connector 1 info
+                wCSPP_Wire.Term_1 = FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
+                wCSPP_Wire.Seal_1 = FindSealCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
+
+
+                //Set Connector 2 info
+                wCSPP_Wire.Term_2 = FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
+                wCSPP_Wire.Seal_2 = FindSealCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
+
+                wCSPP_Wire.Variant = GetWireVariants(wire.WireOption);
+                wCSPP_Wire.Wire_connection = GetWireConnection(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
 
                 convertedList.Add(wCSPP_Wire);
             }
             
             return convertedList;
+        }
+
+        private string GetWireConnection(string connector_1, string port_1, string connector_2, string port_2)
+        {
+            // Combine the info into the specified format
+            string result = $"{connector_1}{(string.IsNullOrEmpty(port_1) ? "" : $":{port_1}")} to {connector_2}{(string.IsNullOrEmpty(port_2) ? "" : $":{port_2}")}";
+
+            return result;
+        }
+
+        private string GetWireVariants(string variantString)
+        {
+            // Replace '/' with a space
+
+            return variantString.Replace('/', ' '); ;
+        }
+
+        public static string FindTerminalCode(string connector, string port_1)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = componentsToConvert
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "TERM")
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        public static string FindSealCode(string connector, string port_1)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = componentsToConvert
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "SEAL")
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
         }
 
         private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, List<Bundle> bundles)

@@ -21,16 +21,17 @@ namespace Section5PoC
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
-            extractor = new Extractor();
-            wcsppConvertor = new WCSPP_Convertor();
-            testingSuite = new TestingSuite();
-
             string textFilePath = SelectTxtFilePath();
             string fileName = Path.GetFileNameWithoutExtension(textFilePath).Replace("_DSI", "");
+
+            extractor = new Extractor();
 
             extractedWires = extractor.ExtractWiresFromFile(textFilePath);
             extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
             extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+
+            wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+            testingSuite = new TestingSuite();
 
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");
