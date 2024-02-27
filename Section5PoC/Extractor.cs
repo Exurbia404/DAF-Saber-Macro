@@ -207,7 +207,7 @@ namespace Section5PoC
                 BlockNumber = GetStringAtIndex(fields, 16),
                 TerminationMethod = GetStringAtIndex(fields, 17),
                 MaterialCode = GetStringAtIndex(fields, 18),
-                ComponentTypeCode2 = GetLastValueBetweenColons(inputString),
+                ComponentTypeCode2 = GetLastValueBetweenColons1(inputString),
             };
 
             return componentObject;
@@ -241,6 +241,22 @@ namespace Section5PoC
                 {
                     return parts[i].Trim(); // Trim to remove any leading or trailing spaces
                 }
+            }
+
+            return string.Empty; // Return empty string if no value is found
+        }
+
+        //TODO: see if this does not bite me in the ass
+        private string GetLastValueBetweenColons1(string input)
+        {
+            // Split the input string by colons
+            string[] parts = input.Split(':');
+
+            // Find the last value excluding consecutive colons and those within curly braces
+            if (parts.Length >= 2)
+            {
+                // Return the second-to-last non-empty value
+                return parts[parts.Length - 2].Trim(); // Trim to remove any leading or trailing spaces
             }
 
             return string.Empty; // Return empty string if no value is found

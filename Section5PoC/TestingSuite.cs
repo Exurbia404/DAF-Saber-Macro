@@ -56,6 +56,7 @@ namespace Section5PoC
                 List<Component> extractedComponents = extractor.ExtractComponentsFromFile(filePath);
                 List<Bundle> extractedBundles = extractor.ExtractBundlesFromFile(filePath);
 
+                wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
                 wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
             }
         }

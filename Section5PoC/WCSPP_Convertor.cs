@@ -57,19 +57,20 @@ namespace Section5PoC
                 wCSPP_Wire.Bundle = GetBundlesForVariant(bundles, wire.WireOption);
                 
                 wCSPP_Wire.Connector_2 = wire.End2NodeName;
-                
+                wCSPP_Wire.Variant = GetWireVariants(wire.WireOption);
+
                 //Set Connector 1 info
-                wCSPP_Wire.Term_1 = FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
-                wCSPP_Wire.Seal_1 = FindSealCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
+                wCSPP_Wire.Term_1 = FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
+                wCSPP_Wire.Seal_1 = FindSealCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
 
 
                 //Set Connector 2 info
-                wCSPP_Wire.Term_2 = FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
-                wCSPP_Wire.Seal_2 = FindSealCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
+                wCSPP_Wire.Term_2 = FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);
+                wCSPP_Wire.Seal_2 = FindSealCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);
 
                 //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
 
-                wCSPP_Wire.Variant = GetWireVariants(wire.WireOption);
+                
                 wCSPP_Wire.Wire_connection = GetWireConnection(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
 
                 convertedList.Add(wCSPP_Wire);
@@ -93,14 +94,15 @@ namespace Section5PoC
             return variantString.Replace('/', ' '); ;
         }
 
-        public static string FindTerminalCode(string connector, string port_1)
+        public static string FindTerminalCode(string connector, string port_1, string wireVariants)
         {
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = componentsToConvert
                 .Where(component =>
                     component.NodeName == connector &&
                     component.CavityName == port_1 &&
-                    component.ComponentTypeCode == "TERM")
+                    component.ComponentTypeCode == "TERM" &&
+                    VariantIsPresent(component.CircuitOption, wireVariants))
                 .ToList();
 
             if (filteredComponents.Count == 0)
@@ -116,14 +118,15 @@ namespace Section5PoC
             return filteredComponents[0].PartNumber2;
         }
 
-        public static string FindSealCode(string connector, string port_1)
+        public static string FindSealCode(string connector, string port_1, string wireVariants)
         {
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = componentsToConvert
                 .Where(component =>
                     component.NodeName == connector &&
                     component.CavityName == port_1 &&
-                    component.ComponentTypeCode == "SEAL")
+                    component.ComponentTypeCode == "SEAL" &&
+                    VariantIsPresent(component.CircuitOption, wireVariants))
                 .ToList();
 
             if (filteredComponents.Count == 0)
@@ -137,6 +140,26 @@ namespace Section5PoC
 
             // Return the code of the found component
             return filteredComponents[0].PartNumber2;
+        }
+
+        private static bool VariantIsPresent(string componentVariants, string wireVariants)
+        {
+            // Split wireVariants into an array
+            string[] wireVariantArray = wireVariants.Split(' ');
+
+            // Split componentVariants into an array using '/'
+            string[] componentVariantArray = componentVariants.Split('/');
+
+            // Check if any wire variant is present in component variants
+            foreach (string wireVariant in wireVariantArray)
+            {
+                if (componentVariantArray.Contains(wireVariant))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, List<Bundle> bundles)
