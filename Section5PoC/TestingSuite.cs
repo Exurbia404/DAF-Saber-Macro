@@ -72,7 +72,7 @@ namespace Section5PoC
             {
                 // Extract the base name without extension (e.g., 1780456-09)
                 string baseName = Path.GetFileNameWithoutExtension(originalFile);
-                baseName = baseName.Replace("_Parts", "");
+                baseName = baseName.ToLower().Replace("_parts", "");
 
                 // Construct the corresponding generated file names
                 string generatedPartsFile = $"{baseName}_generated_parts.txt";
