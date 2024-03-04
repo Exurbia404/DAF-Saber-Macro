@@ -73,6 +73,7 @@ namespace Section5PoC.Presentation
                 {
                     // Extract folder name and path
                     string folderName = Path.GetFileName(subfolder);
+                    Console.WriteLine(folderName);
 
                     // Add to lists
                     folderPaths.Add(subfolder);
