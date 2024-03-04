@@ -28,9 +28,11 @@ namespace Section5PoC.Presentation
         public Form1()
         {
             extractor = new Extractor();
+            folderNames = new List<string>();
+            folderPaths = new List<string>();   
 
             InitializeComponent();
-            //GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
+            GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
             AddNamesToListBox();
         }
 
