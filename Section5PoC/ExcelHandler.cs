@@ -54,13 +54,13 @@ namespace Section5PoC
             }
         }
 
-        static void AddAutoFilterButtons(ExcelWorksheet worksheet)
+        private static void AddAutoFilterButtons(ExcelWorksheet worksheet)
         {
             // Assuming headers are in the first row (row 1)
             worksheet.Cells["A1:" + worksheet.Dimension.End.Address].AutoFilter = true;
         }
 
-        static void WriteHeaders<T>(ExcelWorksheet worksheet, List<T> objects)
+        private static void WriteHeaders<T>(ExcelWorksheet worksheet, List<T> objects)
         {
             if (objects.Count == 0)
             {
@@ -77,7 +77,7 @@ namespace Section5PoC
             }
         }
 
-        static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
+        private static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
         {
             // Assuming the property is a string type, you may want to modify this logic
             // based on the actual data type of the property.
@@ -99,7 +99,7 @@ namespace Section5PoC
             return maxLength;
         }
 
-        static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects)
+        private static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects)
         {
             if (objects.Count == 0)
             {

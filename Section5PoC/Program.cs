@@ -84,7 +84,7 @@ namespace Section5PoC
 
         
 
-        static string SelectTxtFilePath()
+        private static string SelectTxtFilePath()
         {
             // Get the directory where the executable is located
             string exePath = AppDomain.CurrentDomain.BaseDirectory;

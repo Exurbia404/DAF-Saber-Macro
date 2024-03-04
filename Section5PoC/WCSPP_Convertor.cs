@@ -14,8 +14,8 @@ namespace Section5PoC
         //WCSPP contains:
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
-        ExcelHandler wcsppExcelHandler;
-        Serialisation serialisation;
+        private ExcelHandler wcsppExcelHandler;
+        private Serialisation serialisation;
 
         private static List<Wire> wiresToConvert;
         private static List<Component> componentsToConvert;
@@ -94,7 +94,7 @@ namespace Section5PoC
             return variantString.Replace('/', ' '); ;
         }
 
-        public static string FindTerminalCode(string connector, string port_1, string wireVariants)
+        private static string FindTerminalCode(string connector, string port_1, string wireVariants)
         {
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = componentsToConvert
@@ -118,7 +118,7 @@ namespace Section5PoC
             return filteredComponents[0].PartNumber2;
         }
 
-        public static string FindSealCode(string connector, string port_1, string wireVariants)
+        private static string FindSealCode(string connector, string port_1, string wireVariants)
         {
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = componentsToConvert
@@ -193,7 +193,7 @@ namespace Section5PoC
             return convertedList.OrderBy(component => component.Name).ToList(); ;
         }
 
-        static string GetBundlesForVariant(List<Bundle> bundles, string variant)
+        private static string GetBundlesForVariant(List<Bundle> bundles, string variant)
         {
             // Split the variant into individual variants
             string[] variantArray = variant.Split('/');
@@ -279,13 +279,13 @@ namespace Section5PoC
             return input.Any(char.IsLetter);
         }
 
-        bool IsStringPresent(string str1, string str2)
+        private bool IsStringPresent(string str1, string str2)
         {
             // Implement this function to check if str1 is present in str2
             return str2.IndexOf(str1, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        bool IsAlphanumericEqual(string str1, string str2)
+        private bool IsAlphanumericEqual(string str1, string str2)
         {
             // Implement this function to check if two alphanumeric strings are equal
             return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
@@ -303,7 +303,7 @@ namespace Section5PoC
             return char.IsDigit(firstChar);
         }
 
-        static string GetValueFromInputString(string input, int keyIndex)
+        private static string GetValueFromInputString(string input, int keyIndex)
         {
             string[] keyValuePairs = input.Split(',');
 
