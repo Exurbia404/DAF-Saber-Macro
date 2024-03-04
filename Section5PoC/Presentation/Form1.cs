@@ -48,10 +48,12 @@ namespace Section5PoC.Presentation
         {
             try
             {
+                schematicsListBox.Items.Add("test");
                 foreach (string name in folderNames)
                 {
                     schematicsListBox.Items.Add(name);
                 }
+                schematicsListBox.Refresh();
             }
             catch (Exception ex)
             {
