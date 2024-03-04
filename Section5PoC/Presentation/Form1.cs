@@ -100,13 +100,20 @@ namespace Section5PoC.Presentation
 
         private void ExtractAndOpenExcel(string textFilePath)
         {
-            extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-            extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-            extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+            try
+            {
+                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-            convertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+                convertor = new WCSPP_Convertor(extractedWires, extractedComponents);
 
-            convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+                convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }
