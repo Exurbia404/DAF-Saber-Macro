@@ -20,10 +20,16 @@ namespace Section5PoC
 
         public static void Main()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+
             Form1 myForm = new Form1();
             myForm.Show();  // Show the form
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+            Console.ReadLine();
+        }
+
+        public void ConsoleProgram()
+        {
 
             string textFilePath = SelectTxtFilePath();
             string fileName = Path.GetFileNameWithoutExtension(textFilePath).Replace("_DSI", "");
@@ -85,7 +91,6 @@ namespace Section5PoC
             Console.ReadLine();
             Main();
         }
-
         
 
         private static string SelectTxtFilePath()
