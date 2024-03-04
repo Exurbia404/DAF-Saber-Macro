@@ -109,8 +109,8 @@ namespace Section5PoC.Presentation
 
                     // Do something with the latest .txt file, for example, display its path
                     Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
-                    string fileName = Path.GetFileNameWithoutExtension(latestTxtFile).Replace("_DSI", "");
-                    ExtractAndOpenExcel(fileName);
+                    //string fileName = Path.GetFileNameWithoutExtension(latestTxtFile).Replace("_DSI", "");
+                    ExtractAndOpenExcel(latestTxtFile);
                 }
                 else
                 {
