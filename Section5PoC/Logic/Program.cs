@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
+using Section5PoC.Presentation;
 
 namespace Section5PoC
 {
@@ -19,6 +20,9 @@ namespace Section5PoC
 
         public static void Main()
         {
+            Form1 myForm = new Form1();
+            myForm.Show();  // Show the form
+
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
             string textFilePath = SelectTxtFilePath();
