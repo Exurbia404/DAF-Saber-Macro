@@ -30,7 +30,7 @@ namespace Section5PoC.Presentation
             extractor = new Extractor();
 
             InitializeComponent();
-            GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
+            //GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
             AddNamesToListBox();
         }
 
