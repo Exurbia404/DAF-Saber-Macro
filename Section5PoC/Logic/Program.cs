@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using Section5PoC.Presentation;
+using System;
+using System.Windows.Forms;
 
 namespace Section5PoC
 {
@@ -24,6 +26,7 @@ namespace Section5PoC
 
             Form1 myForm = new Form1();
             myForm.Show();  // Show the form
+            Application.Run(myForm);
 
             Console.ReadLine();
         }

@@ -29,18 +29,33 @@ namespace Section5PoC.Presentation
         {
             extractor = new Extractor();
             folderNames = new List<string>();
-            folderPaths = new List<string>();   
-
-            InitializeComponent();
-            GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
-            AddNamesToListBox();
+            folderPaths = new List<string>();
+            try
+            {
+                InitializeComponent();
+                GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
+                AddNamesToListBox();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
+
+            
 
         private void AddNamesToListBox()
         {
-            foreach(string name in folderNames)
+            try
             {
-                schematicsListBox.Items.Add(name);
+                foreach (string name in folderNames)
+                {
+                    schematicsListBox.Items.Add(name);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
@@ -68,7 +83,7 @@ namespace Section5PoC.Presentation
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
-       
+
 
         private void schematicsListBox_DoubleClick_1(object sender, EventArgs e)
         {
@@ -100,17 +115,26 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private void ExtractAndOpenExcel(string textFilePath)
+        private async void ExtractAndOpenExcel(string textFilePath)
         {
             try
             {
-                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                // Show a loading indicator or notify the user about the ongoing operation
+                // (e.g., display a ProgressBar or disable UI controls)
 
-                convertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+                // Run the time-consuming code asynchronously
+                await Task.Run(() =>
+                {
+                    extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                    extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                    extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+
+                    convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+                });
+
+                // Update the UI or perform any post-operation tasks
             }
             catch (Exception ex)
             {
