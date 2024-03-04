@@ -108,7 +108,7 @@ namespace Section5PoC.Presentation
                     string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
 
                     // Do something with the latest .txt file, for example, display its path
-                    MessageBox.Show($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                    Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
                     string fileName = Path.GetFileNameWithoutExtension(latestTxtFile).Replace("_DSI", "");
                     ExtractAndOpenExcel(fileName);
                 }
