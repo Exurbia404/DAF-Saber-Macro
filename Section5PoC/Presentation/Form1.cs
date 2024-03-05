@@ -46,7 +46,7 @@ namespace Section5PoC.Presentation
                 }
                 InitializeComponent();
                 GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
-                AddNamesToListBox();
+                AddNamesToListBox(folderPaths, folderNames);
             }
             catch (Exception ex)
             {
@@ -56,15 +56,16 @@ namespace Section5PoC.Presentation
 
             
 
-        private void AddNamesToListBox()
+        private void AddNamesToListBox(List<string> filteredFolderPaths, List<string> filteredFolderNames)
         {
+            schematicsListBox.Items.Clear();
             try
             {
                 //Sorts the files by last update time for user convenience
-                folderPaths = folderPaths.OrderByDescending(f => new DirectoryInfo(f).LastWriteTime).ToList();
-                folderNames = folderPaths.Select(path => Path.GetFileName(path)).ToList();
+                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => new DirectoryInfo(f).LastWriteTime).ToList();
+                filteredFolderNames = filteredFolderNames.Select(path => Path.GetFileName(path)).ToList();
 
-                foreach (string name in folderNames)
+                foreach (string name in filteredFolderNames)
                 {
                     schematicsListBox.Items.Add(name);
                 }
@@ -228,6 +229,29 @@ namespace Section5PoC.Presentation
             {
                 MessageBox.Show($"Invalid index or folder path.");
             }
+        }
+
+        private void searchSchematicTextBox_TextChanged(object sender, EventArgs e)
+        {
+            // Get the search text
+            string searchText = searchSchematicTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
+
+            // Filter folderPaths and folderNames based on the search text
+            List<string> filteredFolderPaths = folderPaths
+                .Where(path => Path.GetFileName(path).ToLower().Contains(searchText))
+                .ToList();
+
+            List<string> filteredFolderNames = folderNames
+                .Where(name => name.ToLower().Contains(searchText))
+                .ToList();
+
+            // Call AddNamesToListBox with the filtered lists
+            AddNamesToListBox(filteredFolderPaths, filteredFolderNames);
+        }
+
+        private void searchVersionTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
