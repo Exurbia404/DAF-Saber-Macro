@@ -50,6 +50,9 @@ namespace Section5PoC.Presentation
         {
             try
             {
+                //Sorts the files by last update time for user convenience
+                folderNames.OrderByDescending(f => new FileInfo(f).LastWriteTime).First();
+
                 foreach (string name in folderNames)
                 {
                     schematicsListBox.Items.Add(name);
@@ -113,9 +116,6 @@ namespace Section5PoC.Presentation
 
                 // Search for the latest .txt file containing "_DSI" in the selected folder
                 string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-                
-                //Sorts the files by last update time for user convenience
-                txtFiles.OrderByDescending(f => new FileInfo(f).LastWriteTime).First();
 
                 if (txtFiles.Length > 0)
                 {
