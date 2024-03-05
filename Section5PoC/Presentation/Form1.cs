@@ -131,9 +131,12 @@ namespace Section5PoC.Presentation
         {
             try
             {
-                foreach(string version in foundVersions)
+                foreach (string version in foundVersions)
                 {
-                    versionsListBox.Items.Add(version);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(version);
+                    string modifiedFileName = fileNameWithoutExtension.Replace("_DSI", "");
+
+                    versionsListBox.Items.Add(modifiedFileName);
                 }
             }
             catch (Exception ex)
