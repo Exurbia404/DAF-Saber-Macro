@@ -16,29 +16,23 @@ namespace Section5PoC
         {
             try
             {
+                // Start the stopwatch
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // Close any existing instances of "ExtractedData.xlsx"
+                foreach (var process in Process.GetProcessesByName("EXCEL"))
+                {
+                    if (process.MainWindowTitle.Contains("ExtractedData.xlsx"))
+                    {
+                        process.Kill();
+                        process.WaitForExit(); // Wait for the process to exit before continuing
+                    }
+                }
+
                 using (var package = new ExcelPackage())
                 {
-                    // Add a worksheet for Wires
-                    var wireWorksheet = package.Workbook.Worksheets.Add("Wires");
-
-                    // Write column headers for wires
-                    WriteHeaders(wireWorksheet, extractedWires);
-
-                    // Write wire data
-                    WriteDataToSheet(wireWorksheet, extractedWires);
-                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
-                    AddAutoFilterButtons(wireWorksheet);
-
-                    // Add a worksheet for Components
-                    var componentWorksheet = package.Workbook.Worksheets.Add("Components");
-
-                    // Write column headers for components
-                    WriteHeaders(componentWorksheet, extractedComponents);
-
-                    // Write component data
-                    WriteDataToSheet(componentWorksheet, extractedComponents);
-                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
-                    AddAutoFilterButtons(componentWorksheet);
+                    // Your existing code...
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));
@@ -46,7 +40,10 @@ namespace Section5PoC
                     Process.Start("ExtractedData.xlsx");
                 }
 
-                Console.WriteLine("Excel file created successfully.");
+                // Stop the stopwatch
+                stopwatch.Stop();
+
+                Console.WriteLine($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed}");
             }
             catch (Exception ex)
             {

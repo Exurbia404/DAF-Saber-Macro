@@ -155,6 +155,7 @@ namespace Section5PoC.Presentation
 
         private void ShowDifferentVersions(string[] foundVersions)
         {
+            versionsListBox.Items.Clear();
             try
             {
                 foreach (string version in foundVersions)
