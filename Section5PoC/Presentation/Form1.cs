@@ -18,6 +18,8 @@ namespace Section5PoC.Presentation
         private List<string> folderNames;
         private List<string> folderPaths;
 
+        private List<string> loadedVersionPaths;
+
         private Extractor extractor;
         private WCSPP_Convertor convertor;
 
@@ -146,6 +148,7 @@ namespace Section5PoC.Presentation
             {
                 foreach (string version in foundVersions)
                 {
+                    loadedVersionPaths.Add(version);
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(version);
                     string modifiedFileName = fileNameWithoutExtension.Replace("_DSI", "");
 
@@ -190,10 +193,10 @@ namespace Section5PoC.Presentation
             // Get the selected index
             int selectedIndex = versionsListBox.SelectedIndex;
 
-            if (selectedIndex >= 0 && selectedIndex < folderPaths.Count)
+            if (selectedIndex >= 0 && selectedIndex < loadedVersionPaths.Count)
             {
                 // Get the corresponding folder path
-                string selectedFolderPath = folderPaths[selectedIndex];
+                string selectedFolderPath = loadedVersionPaths[selectedIndex];
 
                 // Search for the .txt files containing "_DSI" in the selected folder
                 string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
