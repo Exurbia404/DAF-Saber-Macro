@@ -32,7 +32,27 @@ namespace Section5PoC
 
                 using (var package = new ExcelPackage())
                 {
-                    // Your existing code...
+                    // Add a worksheet for Wires
+                    var wireWorksheet = package.Workbook.Worksheets.Add("Wires");
+
+                    // Write column headers for wires
+                    WriteHeaders(wireWorksheet, extractedWires);
+
+                    // Write wire data
+                    WriteDataToSheet(wireWorksheet, extractedWires);
+                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(wireWorksheet);
+
+                    // Add a worksheet for Components
+                    var componentWorksheet = package.Workbook.Worksheets.Add("Components");
+
+                    // Write column headers for components
+                    WriteHeaders(componentWorksheet, extractedComponents);
+
+                    // Write component data
+                    WriteDataToSheet(componentWorksheet, extractedComponents);
+                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));

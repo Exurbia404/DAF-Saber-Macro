@@ -213,7 +213,7 @@ namespace Section5PoC.Presentation
 
                 // Search for the .txt files containing "_DSI" in the selected folder
                 string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-                string selectedVersion = txtFiles[selectedSchematicIndex];
+                string selectedVersion = txtFiles[selectedIndex];
 
                 if (selectedVersion != null)
                 {
