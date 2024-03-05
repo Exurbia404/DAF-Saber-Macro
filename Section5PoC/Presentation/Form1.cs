@@ -48,7 +48,6 @@ namespace Section5PoC.Presentation
         {
             try
             {
-                schematicsListBox.Items.Add("test");
                 foreach (string name in folderNames)
                 {
                     schematicsListBox.Items.Add(name);
@@ -75,17 +74,28 @@ namespace Section5PoC.Presentation
                 {
                     // Extract folder name and path
                     string folderName = Path.GetFileName(subfolder);
-                    folderNames.Add(folderName);
-                    Console.WriteLine(folderName);
 
-                    // Add to lists
-                    folderPaths.Add(subfolder);
+                    // Check if the folder name is 7 or 8 numbers long
+                    if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                    {
+                        folderNames.Add(folderName);
+                        Console.WriteLine(folderName);
+
+                        // Add to lists
+                        folderPaths.Add(subfolder);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Helper method to check if a string is numeric
+        private static bool IsNumeric(string str)
+        {
+            return int.TryParse(str, out _);
         }
 
 
@@ -101,6 +111,9 @@ namespace Section5PoC.Presentation
 
                 // Search for the latest .txt file containing "_DSI" in the selected folder
                 string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+                
+                //Sorts the files by last update time for user convenience
+                txtFiles.OrderByDescending(f => new FileInfo(f).LastWriteTime).First();
 
                 if (txtFiles.Length > 0)
                 {
