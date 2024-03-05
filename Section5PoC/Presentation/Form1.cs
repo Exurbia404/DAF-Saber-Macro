@@ -32,6 +32,7 @@ namespace Section5PoC.Presentation
             extractor = new Extractor();
             folderNames = new List<string>();
             folderPaths = new List<string>();
+
             try
             {
                 InitializeComponent();
@@ -51,7 +52,8 @@ namespace Section5PoC.Presentation
             try
             {
                 //Sorts the files by last update time for user convenience
-                folderNames.OrderByDescending(f => new FileInfo(f).LastWriteTime).First();
+                folderPaths = folderPaths.OrderByDescending(f => new DirectoryInfo(f).LastWriteTime).ToList();
+                folderNames = folderPaths.Select(path => Path.GetFileName(path)).ToList();
 
                 foreach (string name in folderNames)
                 {
@@ -84,7 +86,6 @@ namespace Section5PoC.Presentation
                     if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                     {
                         folderNames.Add(folderName);
-                        Console.WriteLine(folderName);
 
                         // Add to lists
                         folderPaths.Add(subfolder);
