@@ -104,18 +104,41 @@ namespace Section5PoC.Presentation
 
                 if (txtFiles.Length > 0)
                 {
-                    // Sort files by creation time and get the latest one
-                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    
 
-                    // Do something with the latest .txt file, for example, display its path
-                    Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
-                    //string fileName = Path.GetFileNameWithoutExtension(latestTxtFile).Replace("_DSI", "");
-                    ExtractAndOpenExcel(latestTxtFile);
+                    if(txtFiles.Length == 1)
+                    {
+                        // Sort files by creation time and get the latest one
+                        string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                        ExtractAndOpenExcel(latestTxtFile);
+                        // Do something with the latest .txt file, for example, display its path
+                        Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                    }
+                    else 
+                    {
+                        ShowDifferentVersions(txtFiles);
+                    }
+                    
                 }
                 else
                 {
                     MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
                 }
+            }
+        }
+
+        private void ShowDifferentVersions(string[] foundVersions)
+        {
+            try
+            {
+                foreach(string version in foundVersions)
+                {
+                    versionsListBox.Items.Add(version);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
@@ -143,6 +166,36 @@ namespace Section5PoC.Presentation
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        private void versionsListBox_DoubleClick(object sender, EventArgs e)
+        {
+            // Get the selected index
+            int selectedIndex = versionsListBox.SelectedIndex;
+
+            if (selectedIndex >= 0 && selectedIndex < folderPaths.Count)
+            {
+                // Get the corresponding folder path
+                string selectedFolderPath = folderPaths[selectedIndex];
+
+                // Search for the .txt files containing "_DSI" in the selected folder
+                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+
+                if (selectedIndex < txtFiles.Length)
+                {
+                    // Extract and open Excel with the selected index
+                    ExtractAndOpenExcel(txtFiles[selectedIndex]);
+                    Console.WriteLine($"Opening .txt file at index {selectedIndex} in {selectedFolderPath}");
+                }
+                else
+                {
+                    MessageBox.Show($"Invalid index selected.");
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Invalid index or folder path.");
             }
         }
     }
