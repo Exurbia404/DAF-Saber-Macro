@@ -14,6 +14,7 @@ namespace Section5PoC.Presentation
     public partial class Form1 : Form
     {
         private string BuildOfMaterialsFolder = @"U:\Data\SaberWiP\2_Users\designs\BSA\Boms";
+        private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
         private List<string> folderNames;
         private List<string> folderPaths;
@@ -29,12 +30,20 @@ namespace Section5PoC.Presentation
 
         public Form1()
         {
+            string computerName = Environment.MachineName;
+            Console.WriteLine($"Computer Name: {computerName}");
+
             extractor = new Extractor();
             folderNames = new List<string>();
             folderPaths = new List<string>();
+            loadedVersionPaths = new List<string>();
 
             try
             {
+                if(computerName == "EXURBIA")
+                {
+                    BuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
+                }
                 InitializeComponent();
                 GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
                 AddNamesToListBox();
@@ -193,19 +202,21 @@ namespace Section5PoC.Presentation
         {
             // Get the selected index
             int selectedIndex = versionsListBox.SelectedIndex;
+            int selectedSchematicIndex = schematicsListBox.SelectedIndex;
 
             if (selectedIndex >= 0 && selectedIndex < loadedVersionPaths.Count)
             {
                 // Get the corresponding folder path
-                string selectedFolderPath = loadedVersionPaths[selectedIndex];
+                string selectedFolderPath = folderPaths[selectedSchematicIndex];
 
                 // Search for the .txt files containing "_DSI" in the selected folder
                 string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+                string selectedVersion = txtFiles[selectedSchematicIndex];
 
-                if (selectedIndex < txtFiles.Length)
+                if (selectedVersion != null)
                 {
                     // Extract and open Excel with the selected index
-                    ExtractAndOpenExcel(txtFiles[selectedIndex]);
+                    ExtractAndOpenExcel(selectedVersion);
                     Console.WriteLine($"Opening .txt file at index {selectedIndex} in {selectedFolderPath}");
                 }
                 else
