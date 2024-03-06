@@ -63,7 +63,7 @@ namespace Section5PoC
                 // Stop the stopwatch
                 stopwatch.Stop();
 
-                Console.WriteLine($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed}");
+                Console.WriteLine($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
             catch (Exception ex)
             {

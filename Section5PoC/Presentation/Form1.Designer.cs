@@ -28,79 +28,91 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listLabel = new System.Windows.Forms.Label();
+            this.bundlesListLabel = new System.Windows.Forms.Label();
+            this.bundlesListBox = new System.Windows.Forms.ListBox();
+            this.searchBundlesTextBox = new System.Windows.Forms.TextBox();
+            this.schematicsSearchTextBox = new System.Windows.Forms.TextBox();
             this.schematicsListBox = new System.Windows.Forms.ListBox();
-            this.versionsListBox = new System.Windows.Forms.ListBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.searchSchematicTextBox = new System.Windows.Forms.TextBox();
-            this.searchVersionTextBox = new System.Windows.Forms.TextBox();
+            this.schematicsListLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listLabel
+            // bundlesListLabel
             // 
-            this.listLabel.AutoSize = true;
-            this.listLabel.Location = new System.Drawing.Point(19, 20);
-            this.listLabel.Name = "listLabel";
-            this.listLabel.Size = new System.Drawing.Size(93, 13);
-            this.listLabel.TabIndex = 0;
-            this.listLabel.Text = "found schematics:";
+            this.bundlesListLabel.AutoSize = true;
+            this.bundlesListLabel.Font = new System.Drawing.Font("Arial", 15F, System.Drawing.FontStyle.Bold);
+            this.bundlesListLabel.Location = new System.Drawing.Point(17, 88);
+            this.bundlesListLabel.Name = "bundlesListLabel";
+            this.bundlesListLabel.Size = new System.Drawing.Size(94, 24);
+            this.bundlesListLabel.TabIndex = 0;
+            this.bundlesListLabel.Text = "Bundels:";
+            // 
+            // bundlesListBox
+            // 
+            this.bundlesListBox.Font = new System.Drawing.Font("Arial", 10F);
+            this.bundlesListBox.FormattingEnabled = true;
+            this.bundlesListBox.ItemHeight = 16;
+            this.bundlesListBox.Location = new System.Drawing.Point(21, 144);
+            this.bundlesListBox.Name = "bundlesListBox";
+            this.bundlesListBox.Size = new System.Drawing.Size(234, 372);
+            this.bundlesListBox.TabIndex = 1;
+            this.bundlesListBox.DoubleClick += new System.EventHandler(this.schematicsListBox_DoubleClick_1);
+            // 
+            // searchBundlesTextBox
+            // 
+            this.searchBundlesTextBox.Font = new System.Drawing.Font("Arial", 10F);
+            this.searchBundlesTextBox.Location = new System.Drawing.Point(21, 115);
+            this.searchBundlesTextBox.Name = "searchBundlesTextBox";
+            this.searchBundlesTextBox.Size = new System.Drawing.Size(234, 23);
+            this.searchBundlesTextBox.TabIndex = 4;
+            this.searchBundlesTextBox.Text = "search:";
+            this.searchBundlesTextBox.TextChanged += new System.EventHandler(this.searchBundlesTextBox_TextChanged);
+            this.searchBundlesTextBox.Enter += new System.EventHandler(this.searchBundlesTextBox_Enter);
+            this.searchBundlesTextBox.Leave += new System.EventHandler(this.searchBundlesTextBox_Leave);
+            // 
+            // schematicsSearchTextBox
+            // 
+            this.schematicsSearchTextBox.Font = new System.Drawing.Font("Arial", 10F);
+            this.schematicsSearchTextBox.Location = new System.Drawing.Point(358, 115);
+            this.schematicsSearchTextBox.Name = "schematicsSearchTextBox";
+            this.schematicsSearchTextBox.Size = new System.Drawing.Size(234, 23);
+            this.schematicsSearchTextBox.TabIndex = 7;
+            this.schematicsSearchTextBox.Text = "search:";
+            this.schematicsSearchTextBox.TextChanged += new System.EventHandler(this.schematicsSearchTextBox_TextChanged);
             // 
             // schematicsListBox
             // 
+            this.schematicsListBox.Font = new System.Drawing.Font("Arial", 10F);
             this.schematicsListBox.FormattingEnabled = true;
-            this.schematicsListBox.Location = new System.Drawing.Point(22, 62);
+            this.schematicsListBox.ItemHeight = 16;
+            this.schematicsListBox.Location = new System.Drawing.Point(358, 144);
             this.schematicsListBox.Name = "schematicsListBox";
-            this.schematicsListBox.Size = new System.Drawing.Size(234, 381);
-            this.schematicsListBox.TabIndex = 1;
-            this.schematicsListBox.DoubleClick += new System.EventHandler(this.schematicsListBox_DoubleClick_1);
+            this.schematicsListBox.Size = new System.Drawing.Size(234, 372);
+            this.schematicsListBox.TabIndex = 6;
             // 
-            // versionsListBox
+            // schematicsListLabel
             // 
-            this.versionsListBox.FormattingEnabled = true;
-            this.versionsListBox.Location = new System.Drawing.Point(262, 62);
-            this.versionsListBox.Name = "versionsListBox";
-            this.versionsListBox.Size = new System.Drawing.Size(234, 381);
-            this.versionsListBox.TabIndex = 2;
-            this.versionsListBox.DoubleClick += new System.EventHandler(this.versionsListBox_DoubleClick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(259, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "found versions:";
-            // 
-            // searchSchematicTextBox
-            // 
-            this.searchSchematicTextBox.Location = new System.Drawing.Point(22, 36);
-            this.searchSchematicTextBox.Name = "searchSchematicTextBox";
-            this.searchSchematicTextBox.Size = new System.Drawing.Size(234, 20);
-            this.searchSchematicTextBox.TabIndex = 4;
-            this.searchSchematicTextBox.TextChanged += new System.EventHandler(this.searchSchematicTextBox_TextChanged);
-            // 
-            // searchVersionTextBox
-            // 
-            this.searchVersionTextBox.Location = new System.Drawing.Point(262, 36);
-            this.searchVersionTextBox.Name = "searchVersionTextBox";
-            this.searchVersionTextBox.Size = new System.Drawing.Size(234, 20);
-            this.searchVersionTextBox.TabIndex = 5;
-            this.searchVersionTextBox.TextChanged += new System.EventHandler(this.searchVersionTextBox_TextChanged);
+            this.schematicsListLabel.AutoSize = true;
+            this.schematicsListLabel.Font = new System.Drawing.Font("Arial", 15F, System.Drawing.FontStyle.Bold);
+            this.schematicsListLabel.Location = new System.Drawing.Point(354, 88);
+            this.schematicsListLabel.Name = "schematicsListLabel";
+            this.schematicsListLabel.Size = new System.Drawing.Size(94, 24);
+            this.schematicsListLabel.TabIndex = 5;
+            this.schematicsListLabel.Text = "Bundels:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(529, 464);
-            this.Controls.Add(this.searchVersionTextBox);
-            this.Controls.Add(this.searchSchematicTextBox);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.versionsListBox);
+            this.ClientSize = new System.Drawing.Size(1008, 537);
+            this.Controls.Add(this.schematicsSearchTextBox);
             this.Controls.Add(this.schematicsListBox);
-            this.Controls.Add(this.listLabel);
+            this.Controls.Add(this.schematicsListLabel);
+            this.Controls.Add(this.searchBundlesTextBox);
+            this.Controls.Add(this.bundlesListBox);
+            this.Controls.Add(this.bundlesListLabel);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -108,11 +120,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label listLabel;
+        private System.Windows.Forms.Label bundlesListLabel;
+        private System.Windows.Forms.ListBox bundlesListBox;
+        private System.Windows.Forms.TextBox searchBundlesTextBox;
+        private System.Windows.Forms.TextBox schematicsSearchTextBox;
         private System.Windows.Forms.ListBox schematicsListBox;
-        private System.Windows.Forms.ListBox versionsListBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox searchSchematicTextBox;
-        private System.Windows.Forms.TextBox searchVersionTextBox;
+        private System.Windows.Forms.Label schematicsListLabel;
     }
 }

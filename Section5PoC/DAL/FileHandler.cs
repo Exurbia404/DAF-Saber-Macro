@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Section5PoC
 {
-    public class Serialisation
+    public class FileHandler
     {
         public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, List<Bundle> extractedBundles, string fileName)
         {
@@ -62,6 +62,16 @@ namespace Section5PoC
                     writer.WriteLine(line);
                 }
             }
+        }
+
+        public void LoadFile()
+        {
+
+        }
+
+        public void LoadFilesFromFolder()
+        {
+
         }
     }
 }

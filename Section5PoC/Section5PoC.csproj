@@ -40,10 +40,11 @@
     <Compile Include="Logic\Bundle.cs" />
     <Compile Include="Logic\Component_Folder\Component.cs" />
     <Compile Include="Logic\Component_Folder\WCSPP_Component.cs" />
+    <Compile Include="Logic\DSI_Reference.cs" />
     <Compile Include="Presentation\ExcelHandler.cs" />
     <Compile Include="Logic\Extractor.cs" />
     <Compile Include="Logic\Program.cs" />
-    <Compile Include="DAL\Serialisation.cs" />
+    <Compile Include="DAL\FileHandler.cs" />
     <Compile Include="Logic\TestingSuite.cs" />
     <Compile Include="Logic\WCSPP_Convertor.cs" />
     <Compile Include="Logic\Wire_Folder\WCSPP_Wire.cs" />

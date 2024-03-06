@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Section5PoC.Presentation
 {
@@ -30,6 +31,8 @@ namespace Section5PoC.Presentation
 
         public Form1()
         {
+            InitializeComponent();
+
             string computerName = Environment.MachineName;
             Console.WriteLine($"Computer Name: {computerName}");
 
@@ -38,13 +41,14 @@ namespace Section5PoC.Presentation
             folderPaths = new List<string>();
             loadedVersionPaths = new List<string>();
 
+            searchBundlesTextBox_SetText();
+
             try
             {
                 if(computerName == "EXURBIA")
                 {
                     BuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                InitializeComponent();
                 GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
                 AddNamesToListBox(folderPaths, folderNames);
             }
@@ -58,7 +62,7 @@ namespace Section5PoC.Presentation
 
         private void AddNamesToListBox(List<string> filteredFolderPaths, List<string> filteredFolderNames)
         {
-            schematicsListBox.Items.Clear();
+            bundlesListBox.Items.Clear();
             try
             {
                 //Sorts the files by last update time for user convenience
@@ -67,9 +71,9 @@ namespace Section5PoC.Presentation
 
                 foreach (string name in filteredFolderNames)
                 {
-                    schematicsListBox.Items.Add(name);
+                    bundlesListBox.Items.Add(name);
                 }
-                schematicsListBox.Refresh();
+                bundlesListBox.Refresh();
             }
             catch (Exception ex)
             {
@@ -118,7 +122,7 @@ namespace Section5PoC.Presentation
         private void schematicsListBox_DoubleClick_1(object sender, EventArgs e)
         {
             // Get the selected index
-            int selectedIndex = schematicsListBox.SelectedIndex;
+            int selectedIndex = bundlesListBox.SelectedIndex;
 
             if (selectedIndex >= 0 && selectedIndex < folderPaths.Count)
             {
@@ -130,46 +134,16 @@ namespace Section5PoC.Presentation
 
                 if (txtFiles.Length > 0)
                 {
-                    
-
-                    if(txtFiles.Length == 1)
-                    {
-                        // Sort files by creation time and get the latest one
-                        string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
-                        ExtractAndOpenExcel(latestTxtFile);
-                        // Do something with the latest .txt file, for example, display its path
-                        Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
-                    }
-                    else 
-                    {
-                        ShowDifferentVersions(txtFiles);
-                    }
-                    
+                    // Sort files by creation time and get the latest one
+                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    ExtractAndOpenExcel(latestTxtFile);
+                    // Do something with the latest .txt file, for example, display its path
+                    Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
                 }
                 else
                 {
                     MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
                 }
-            }
-        }
-
-        private void ShowDifferentVersions(string[] foundVersions)
-        {
-            versionsListBox.Items.Clear();
-            try
-            {
-                foreach (string version in foundVersions)
-                {
-                    loadedVersionPaths.Add(version);
-                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(version);
-                    string modifiedFileName = fileNameWithoutExtension.Replace("_DSI", "");
-
-                    versionsListBox.Items.Add(modifiedFileName);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
@@ -200,43 +174,39 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private void versionsListBox_DoubleClick(object sender, EventArgs e)
+        private void searchBundlesTextBox_Enter(object sender, EventArgs e)
         {
-            // Get the selected index
-            int selectedIndex = versionsListBox.SelectedIndex;
-            int selectedSchematicIndex = schematicsListBox.SelectedIndex;
+            if (searchBundlesTextBox.ForeColor == Color.Black)
+                return;
+            searchBundlesTextBox.Text = "";
+            searchBundlesTextBox.ForeColor = Color.Black;
+        }
 
-            if (selectedIndex >= 0 && selectedIndex < loadedVersionPaths.Count)
+        protected void searchBundlesTextBox_SetText()
+        {
+            searchBundlesTextBox.Text = "Search:";
+            searchBundlesTextBox.ForeColor = Color.Gray;
+        }
+
+        private void searchBundlesTextBox_Leave(object sender, EventArgs e)
+        {
+            if (searchBundlesTextBox.Text.Trim() == "")
+                searchBundlesTextBox_SetText();
+        }
+
+        private void searchBundlesTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string searchText;
+            // Get the search text
+            if(searchBundlesTextBox.Text == "Search:")
             {
-                // Get the corresponding folder path
-                string selectedFolderPath = folderPaths[selectedSchematicIndex];
-
-                // Search for the .txt files containing "_DSI" in the selected folder
-                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-                string selectedVersion = txtFiles[selectedIndex];
-
-                if (selectedVersion != null)
-                {
-                    // Extract and open Excel with the selected index
-                    ExtractAndOpenExcel(selectedVersion);
-                    Console.WriteLine($"Opening .txt file at index {selectedIndex} in {selectedFolderPath}");
-                }
-                else
-                {
-                    MessageBox.Show($"Invalid index selected.");
-                }
+                searchText = "";
             }
             else
             {
-                MessageBox.Show($"Invalid index or folder path.");
+                searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
             }
-        }
-
-        private void searchSchematicTextBox_TextChanged(object sender, EventArgs e)
-        {
-            // Get the search text
-            string searchText = searchSchematicTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
-
+             
             // Filter folderPaths and folderNames based on the search text
             List<string> filteredFolderPaths = folderPaths
                 .Where(path => Path.GetFileName(path).ToLower().Contains(searchText))
@@ -250,7 +220,12 @@ namespace Section5PoC.Presentation
             AddNamesToListBox(filteredFolderPaths, filteredFolderNames);
         }
 
-        private void searchVersionTextBox_TextChanged(object sender, EventArgs e)
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            bundlesListBox.ClearSelected();
+        }
+
+        private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
         {
 
         }

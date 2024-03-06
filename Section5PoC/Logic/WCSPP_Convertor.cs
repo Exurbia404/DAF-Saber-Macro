@@ -15,7 +15,7 @@ namespace Section5PoC
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
         private ExcelHandler wcsppExcelHandler;
-        private Serialisation serialisation;
+        private FileHandler serialisation;
 
         private static List<Wire> wiresToConvert;
         private static List<Component> componentsToConvert;
@@ -23,7 +23,7 @@ namespace Section5PoC
         public WCSPP_Convertor(List<Wire> wires, List<Component> components) 
         {
             wcsppExcelHandler = new ExcelHandler();
-            serialisation = new Serialisation();
+            serialisation = new FileHandler();
 
             wiresToConvert = wires;
             componentsToConvert = components;
