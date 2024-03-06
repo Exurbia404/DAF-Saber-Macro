@@ -8,10 +8,10 @@ namespace Section5PoC.Logic
 {
     public class DSI_Reference
     {
-        public string YearWeek { get; private set; }
-        public string BundleNumber { get; private set; }
-        public string ProjectName { get; private set; }
-        public string Description { get; private set; }
+        public string YearWeek { get; set; }
+        public string BundleNumber { get; set; }
+        public string ProjectName { get; set; }
+        public string Description { get; set; }
         
         public DSI_Reference(string yearWeek, string bundleNumber, string projectName, string description) 
         {
@@ -20,6 +20,8 @@ namespace Section5PoC.Logic
             ProjectName = projectName;
             Description = description;
         }
+
+        public DSI_Reference() { }
 
         public override string ToString()
         {

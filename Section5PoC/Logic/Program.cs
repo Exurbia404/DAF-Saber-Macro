@@ -6,6 +6,7 @@ using System.IO;
 using Section5PoC.Presentation;
 using System;
 using System.Windows.Forms;
+using Section5PoC.DAL;
 
 namespace Section5PoC
 {
@@ -19,10 +20,12 @@ namespace Section5PoC
         private static Extractor extractor;
         private static WCSPP_Convertor wcsppConvertor;
         private static TestingSuite testingSuite;
+        private static ExcelImporter excelImporter;
 
         public static void Main()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+            excelImporter = new ExcelImporter();
 
             Form1 myForm = new Form1();
             myForm.Show();  // Show the form

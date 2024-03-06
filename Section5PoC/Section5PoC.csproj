@@ -37,6 +37,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\ExcelImporter.cs" />
     <Compile Include="Logic\Bundle.cs" />
     <Compile Include="Logic\Component_Folder\Component.cs" />
     <Compile Include="Logic\Component_Folder\WCSPP_Component.cs" />
