@@ -25,7 +25,6 @@ namespace Section5PoC
         public static void Main()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
-            excelImporter = new ExcelImporter();
 
             Form1 myForm = new Form1();
             myForm.Show();  // Show the form

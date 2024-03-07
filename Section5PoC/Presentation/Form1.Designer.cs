@@ -88,6 +88,7 @@
             this.schematicsListBox.Name = "schematicsListBox";
             this.schematicsListBox.Size = new System.Drawing.Size(234, 372);
             this.schematicsListBox.TabIndex = 6;
+            this.schematicsListBox.DoubleClick += new System.EventHandler(this.schematicsListBox_DoubleClick);
             // 
             // schematicsListLabel
             // 

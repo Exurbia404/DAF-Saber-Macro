@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Section5PoC.DAL;
+using Section5PoC.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,10 +26,12 @@ namespace Section5PoC.Presentation
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
+        private ExcelImporter excelImporter;
 
         private static List<Wire> extractedWires;
         private static List<Component> extractedComponents;
         private static List<Bundle> extractedBundles;
+        private static List<DSI_Reference> extractedReferences;
 
         public Form1()
         {
@@ -36,10 +40,13 @@ namespace Section5PoC.Presentation
             string computerName = Environment.MachineName;
             Console.WriteLine($"Computer Name: {computerName}");
 
+            excelImporter = new ExcelImporter();
             extractor = new Extractor();
+
             folderNames = new List<string>();
             folderPaths = new List<string>();
             loadedVersionPaths = new List<string>();
+            extractedReferences = excelImporter.DSIReferences;
 
             searchBundlesTextBox_SetText();
 
@@ -51,6 +58,9 @@ namespace Section5PoC.Presentation
                 }
                 GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
                 AddNamesToListBox(folderPaths, folderNames);
+
+                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+                AddSchematicsToListBox(schematicNames);
             }
             catch (Exception ex)
             {
@@ -81,7 +91,31 @@ namespace Section5PoC.Presentation
             }
         }
 
-        static void GetImmediateSubfolders(string folderPath, out List<string> folderNames, out List<string> folderPaths)
+        private void AddSchematicsToListBox(List<string> foundReferences)
+        {
+            schematicsListBox.Items.Clear();
+            try
+            {
+                // Use a HashSet to store unique ProjectNames
+                HashSet<string> uniqueProjectNames = new HashSet<string>();
+
+                foreach (string reference in foundReferences)
+                {
+                    // Check if the ProjectName is not already in the HashSet
+                    if (uniqueProjectNames.Add(reference))
+                    {
+                        // If it's a new ProjectName, add it to the ListBox
+                        schematicsListBox.Items.Add(reference);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        private static void GetImmediateSubfolders(string folderPath, out List<string> folderNames, out List<string> folderPaths)
         {
             folderNames = new List<string>();
             folderPaths = new List<string>();
@@ -228,6 +262,24 @@ namespace Section5PoC.Presentation
         private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void schematicsListBox_DoubleClick(object sender, EventArgs e)
+        {
+            // Get the selected ProjectName from schematicsListBox
+            string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
+
+            if (selectedSchematic != null)
+            {
+                // Filter the extractedReferences based on the selected ProjectName
+                List<string> bundleNumbers = extractedReferences
+                    .Where(reference => reference.ProjectName == selectedSchematic)
+                    .Select(reference => reference.BundleNumber)
+                    .ToList();
+
+                // Call AddSchematicsToListBox with the list of BundleNumbers
+                AddSchematicsToListBox(bundleNumbers);
+            }
         }
     }
 }

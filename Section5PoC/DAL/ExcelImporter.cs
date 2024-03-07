@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,10 @@ namespace Section5PoC.DAL
             string sheetName = "DATASET";
 
             List<DSI_Reference> foundReferences = new List<DSI_Reference>();
+
+            // Start the stopwatch
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             using (ExcelPackage package = new ExcelPackage(new System.IO.FileInfo(filePath)))
             {
@@ -71,7 +76,6 @@ namespace Section5PoC.DAL
                             };
 
                             foundReferences.Add(reference);
-                            Console.WriteLine(reference.YearWeek);
 
                             currentRow++;
                         }
@@ -82,6 +86,11 @@ namespace Section5PoC.DAL
                         Console.WriteLine($"No occurrences of the search term '{searchTerm}' found in the second row.");
                     }
 
+                    // Stop the stopwatch
+                    stopwatch.Stop();
+
+                    Console.WriteLine($"References imported in: {stopwatch.Elapsed.TotalSeconds}s");
+
                     return foundReferences;
                 }
                 else
@@ -90,6 +99,7 @@ namespace Section5PoC.DAL
                     return null;
                 }
             }
+
         }
 
     }
