@@ -13,16 +13,17 @@ namespace Section5PoC.DAL
     public class ExcelImporter
     {
         private string dsiDataSetLocation = @"C:\Users\tomvh\Documents\School\S5 - Internship\Original tool\Importeren_SABER_DATA.xlsm";
-
+        public List<DSI_Reference> DSIReferences;
         public ExcelImporter() 
         {
-            List<DSI_Reference> dataFromHiddenSheet = GetDataSetFromExcelSheet(dsiDataSetLocation);
+            DSIReferences = GetDataSetFromExcelSheet(dsiDataSetLocation);
         }
 
         private static List<DSI_Reference> GetDataSetFromExcelSheet(string filePath)
         {
             string searchTerm = "jrwk";
             string sheetName = "DATASET";
+
             List<DSI_Reference> foundReferences = new List<DSI_Reference>();
 
             using (ExcelPackage package = new ExcelPackage(new System.IO.FileInfo(filePath)))
@@ -53,6 +54,9 @@ namespace Section5PoC.DAL
                     {
                         int currentRow = rowToSearch + 1; // Start from the row beneath "jrwk"
 
+                        //Get the project name, from right next to the "jrwk" cell
+                        string projectName = worksheet.Cells[rowToSearch, columnIndex + 1].Text;
+                        
                         // Process rows until an empty cell is encountered
                         while (!string.IsNullOrEmpty(worksheet.Cells[currentRow, columnIndex].Text))
                         {
@@ -61,8 +65,9 @@ namespace Section5PoC.DAL
                             {
                                 YearWeek = worksheet.Cells[currentRow, columnIndex].Text,
                                 BundleNumber = worksheet.Cells[currentRow, columnIndex + 1].Text,
-                                ProjectName = worksheet.Cells[currentRow, columnIndex + 2].Text,
+                                ProjectName = projectName,
                                 Description = worksheet.Cells[currentRow, columnIndex + 3].Text
+                                // ^ Adjusted to get the value from the cell to the right of "jrwk"
                             };
 
                             foundReferences.Add(reference);
@@ -86,5 +91,6 @@ namespace Section5PoC.DAL
                 }
             }
         }
+
     }
 }
