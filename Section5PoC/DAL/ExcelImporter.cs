@@ -13,7 +13,7 @@ namespace Section5PoC.DAL
 {
     public class ExcelImporter
     {
-        private string dsiDataSetLocation = @"C:\Users\tomvh\Documents\School\S5 - Internship\Original tool\Importeren_SABER_DATA.xlsm";
+        private string dsiDataSetLocation = @"U:\Data\SaberWiP\3_Key_Users\www\Macro\Office10\Importeren_SABER_DATA.xlsm";
         public List<DSI_Reference> DSIReferences;
         public ExcelImporter() 
         {
