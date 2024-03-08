@@ -257,6 +257,9 @@ namespace Section5PoC.Presentation
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             bundlesListBox.ClearSelected();
+
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            AddSchematicsToListBox(schematicNames);
         }
 
         private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
