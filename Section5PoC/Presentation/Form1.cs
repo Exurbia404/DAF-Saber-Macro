@@ -70,7 +70,7 @@ namespace Section5PoC.Presentation
 
             
 
-        private void AddNamesToListBox(List<string> filteredFolderPaths, List<string> filteredFolderNames)
+        private void AddNamesToListBox(IEnumerable<string> filteredFolderPaths, IEnumerable<string> filteredFolderNames)
         {
             bundlesListBox.Items.Clear();
             try
@@ -240,15 +240,13 @@ namespace Section5PoC.Presentation
             {
                 searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
             }
-             
-            // Filter folderPaths and folderNames based on the search text
-            List<string> filteredFolderPaths = folderPaths
-                .Where(path => Path.GetFileName(path).ToLower().Contains(searchText))
-                .ToList();
 
-            List<string> filteredFolderNames = folderNames
-                .Where(name => name.ToLower().Contains(searchText))
-                .ToList();
+            // Filter folderPaths and folderNames based on the search text
+            IEnumerable<string> filteredFolderPaths = folderPaths
+                .Where(path => Path.GetFileName(path).IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
+
+            IEnumerable<string> filteredFolderNames = folderNames
+                .Where(name => name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
 
             // Call AddNamesToListBox with the filtered lists
             AddNamesToListBox(filteredFolderPaths, filteredFolderNames);
