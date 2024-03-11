@@ -139,40 +139,34 @@ namespace Section5PoC
             }
         }
 
+        static object GetCustomPropertyValue(ExcelPackage package, string propertyName)
+        {
+            // Get the custom properties XML
+            var customPropertiesXml = package.Workbook.Properties.CustomPropertiesXml;
+
+            // Check if the custom properties XML is not null
+            if (customPropertiesXml != null)
+            {
+                // Check if the property exists
+                var propertyNode = customPropertiesXml.SelectSingleNode($"/Properties/AppProperties[@name='{propertyName}']");
+                if (propertyNode != null)
+                {
+                    // Return the property value
+                    return propertyNode.InnerText;
+                }
+            }
+
+            // Return null if the property is not found
+            return null;
+        }
+
         static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
         {
-            // Get or create the extended properties XML
-            var extendedPropertiesXml = package.Workbook.Properties.ExtendedPropertiesXml;
+            // Get or create the DocumentSummaryInformation
+            var docSummaryInfo = package.Workbook.Properties;
 
-            // Load the XML into an XmlDocument
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(extendedPropertiesXml.InnerXml);
-
-            // Find or create the SensitivityLabel property
-            XmlNode sensitivityProperty = xmlDoc.SelectSingleNode("/Properties/AppProperties[@Application='SensitivityLabel']");
-            if (sensitivityProperty != null)
-            {
-                // Update existing SensitivityLabel property
-                sensitivityProperty.InnerText = sensitivityLabel.ToString();
-            }
-            else
-            {
-                // Create new SensitivityLabel property
-                sensitivityProperty = xmlDoc.CreateElement("Application", extendedPropertiesXml.NamespaceURI);
-                sensitivityProperty.InnerText = sensitivityLabel.ToString();
-
-                // Add the property to the extended properties XML
-                var appProperties = xmlDoc.SelectSingleNode("/Properties/AppProperties");
-                if (appProperties == null)
-                {
-                    appProperties = xmlDoc.CreateElement("AppProperties", extendedPropertiesXml.NamespaceURI);
-                    xmlDoc.SelectSingleNode("/Properties").AppendChild(appProperties);
-                }
-                appProperties.AppendChild(sensitivityProperty);
-            }
-
-            // Update the extended properties XML in the ExcelPackage
-            extendedPropertiesXml.InnerXml = xmlDoc.InnerXml;
+            // Set the Sensitivity Label custom property
+            docSummaryInfo.SetCustomPropertyValue("SensitivityLabel", sensitivityLabel.ToString());
         }
 
 
