@@ -5,8 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
+
 
 namespace Section5PoC
 {
@@ -53,6 +53,9 @@ namespace Section5PoC
                     WriteDataToSheet(componentWorksheet, extractedComponents);
                     componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
+
+                    // Set sensitivity label
+                    SetWorkbookSensitivityLabel(package, SensitivityLabel.General);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));
@@ -134,6 +137,50 @@ namespace Section5PoC
                     worksheet.Cells[row + 2, col + 1].Value = propertyValue;
                 }
             }
+        }
+
+        static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
+        {
+            // Get or create the extended properties XML
+            var extendedPropertiesXml = package.Workbook.Properties.ExtendedPropertiesXml;
+
+            // Load the XML into an XmlDocument
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(extendedPropertiesXml.InnerXml);
+
+            // Find or create the SensitivityLabel property
+            XmlNode sensitivityProperty = xmlDoc.SelectSingleNode("/Properties/AppProperties[@Application='SensitivityLabel']");
+            if (sensitivityProperty != null)
+            {
+                // Update existing SensitivityLabel property
+                sensitivityProperty.InnerText = sensitivityLabel.ToString();
+            }
+            else
+            {
+                // Create new SensitivityLabel property
+                sensitivityProperty = xmlDoc.CreateElement("Application", extendedPropertiesXml.NamespaceURI);
+                sensitivityProperty.InnerText = sensitivityLabel.ToString();
+
+                // Add the property to the extended properties XML
+                var appProperties = xmlDoc.SelectSingleNode("/Properties/AppProperties");
+                if (appProperties == null)
+                {
+                    appProperties = xmlDoc.CreateElement("AppProperties", extendedPropertiesXml.NamespaceURI);
+                    xmlDoc.SelectSingleNode("/Properties").AppendChild(appProperties);
+                }
+                appProperties.AppendChild(sensitivityProperty);
+            }
+
+            // Update the extended properties XML in the ExcelPackage
+            extendedPropertiesXml.InnerXml = xmlDoc.InnerXml;
+        }
+
+
+        public enum SensitivityLabel
+        {
+            General,
+            Confidential,
+            HighlyConfidential
         }
     }
 }
