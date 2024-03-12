@@ -19,10 +19,7 @@ namespace Section5PoC.Presentation
         private string BuildOfMaterialsFolder = @"U:\Data\SaberWiP\2_Users\designs\BSA\Boms";
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
-        private List<string> folderNames;
         private List<string> folderPaths;
-
-        private List<string> loadedVersionPaths;
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
@@ -43,9 +40,7 @@ namespace Section5PoC.Presentation
             excelImporter = new ExcelImporter();
             extractor = new Extractor();
 
-            folderNames = new List<string>();
             folderPaths = new List<string>();
-            loadedVersionPaths = new List<string>();
             extractedReferences = excelImporter.DSIReferences;
 
             searchBundlesTextBox_SetText();
@@ -56,8 +51,8 @@ namespace Section5PoC.Presentation
                 {
                     BuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
-                AddNamesToListBox(folderPaths, folderNames);
+                folderPaths = GetImmediateSubfolders(BuildOfMaterialsFolder);
+                AddNamesToBundlesListBox(folderPaths);
 
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
                 AddSchematicsToListBox(schematicNames);
@@ -68,21 +63,22 @@ namespace Section5PoC.Presentation
             }
         }
 
-            
 
-        private void AddNamesToListBox(IEnumerable<string> filteredFolderPaths, IEnumerable<string> filteredFolderNames)
+
+        private void AddNamesToBundlesListBox(IEnumerable<string> filteredFolderPaths)
         {
             bundlesListBox.Items.Clear();
             try
             {
-                //Sorts the files by last update time for user convenience
-                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => new DirectoryInfo(f).LastWriteTime).ToList();
-                filteredFolderNames = filteredFolderNames.Select(path => Path.GetFileName(path)).ToList();
+                // Sorts the folder names by their numeric value in descending order
+                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => int.Parse(Path.GetFileName(f))).ToList();
 
-                foreach (string name in filteredFolderNames)
+                foreach (string fullPath in filteredFolderPaths)
                 {
-                    bundlesListBox.Items.Add(name);
+                    string folderName = Path.GetFileName(fullPath);
+                    bundlesListBox.Items.Add(folderName);
                 }
+
                 bundlesListBox.Refresh();
             }
             catch (Exception ex)
@@ -115,9 +111,8 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private static void GetImmediateSubfolders(string folderPath, out List<string> folderNames, out List<string> folderPaths)
+        private List<string> GetImmediateSubfolders(string folderPath)
         {
-            folderNames = new List<string>();
             folderPaths = new List<string>();
 
             try
@@ -133,16 +128,16 @@ namespace Section5PoC.Presentation
                     // Check if the folder name is 7 or 8 numbers long
                     if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                     {
-                        folderNames.Add(folderName);
-
                         // Add to lists
                         folderPaths.Add(subfolder);
                     }
                 }
+                return folderPaths;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                return null;
             }
         }
 
@@ -156,29 +151,44 @@ namespace Section5PoC.Presentation
         private void schematicsListBox_DoubleClick_1(object sender, EventArgs e)
         {
             // Get the selected index
-            int selectedIndex = bundlesListBox.SelectedIndex;
+            string selectedBundle = bundlesListBox.SelectedItem.ToString();
 
-            if (selectedIndex >= 0 && selectedIndex < folderPaths.Count)
+            // Get the corresponding folder path
+            string selectedFolderPath = GetFilePath(selectedBundle);
+
+            // Search for the latest .txt file containing "_DSI" in the selected folder
+            string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+
+            if (txtFiles.Length > 0)
             {
-                // Get the corresponding folder path
-                string selectedFolderPath = folderPaths[selectedIndex];
+                // Sort files by creation time and get the latest one
+                string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                ExtractAndOpenExcel(latestTxtFile);
+                // Do something with the latest .txt file, for example, display its path
+                Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+            }
+            else
+            {
+                MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
+            }
+            
+        }
 
-                // Search for the latest .txt file containing "_DSI" in the selected folder
-                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+        private string GetFilePath(string inputName)
+        {
+            foreach (string folderPath in folderPaths)
+            {
+                string folderName = Path.GetFileName(folderPath);
 
-                if (txtFiles.Length > 0)
+                // Case-insensitive comparison
+                if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Sort files by creation time and get the latest one
-                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
-                    ExtractAndOpenExcel(latestTxtFile);
-                    // Do something with the latest .txt file, for example, display its path
-                    Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
-                }
-                else
-                {
-                    MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
+                    return folderPath;
                 }
             }
+
+            // No matching folder path found
+            return null;
         }
 
         private async void ExtractAndOpenExcel(string textFilePath)
@@ -245,19 +255,19 @@ namespace Section5PoC.Presentation
             IEnumerable<string> filteredFolderPaths = folderPaths
                 .Where(path => Path.GetFileName(path).IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
 
-            IEnumerable<string> filteredFolderNames = folderNames
-                .Where(name => name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
-
             // Call AddNamesToListBox with the filtered lists
-            AddNamesToListBox(filteredFolderPaths, filteredFolderNames);
+            AddNamesToBundlesListBox(filteredFolderPaths);
         }
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             bundlesListBox.ClearSelected();
-
-            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
-            AddSchematicsToListBox(schematicNames);
+            if (extractedReferences != null)
+            {
+                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+                AddSchematicsToListBox(schematicNames);
+            }
+            
         }
 
         private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
