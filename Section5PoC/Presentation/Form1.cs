@@ -68,7 +68,7 @@ namespace Section5PoC.Presentation
                 {
                     DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
+                folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
                 AddNamesToBundlesListBox(folderPaths);
 
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
@@ -128,7 +128,7 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private List<string> GetImmediateSubfolders(string folderPath)
+        private async Task<List<string>> GetImmediateSubfoldersAsync(string folderPath)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -136,27 +136,28 @@ namespace Section5PoC.Presentation
 
             try
             {
-                
-                // Get all immediate subfolders
-                string[] subfolders = Directory.GetDirectories(folderPath);
-
-                foreach (string subfolder in subfolders)
+                await Task.Run(() =>
                 {
-                    // Check if the folder has any files
-                    if (Directory.EnumerateFiles(subfolder).Any())
-                    {
-                        // Extract folder name and path
-                        string folderName = Path.GetFileName(subfolder);
+                    // Get all immediate subfolders
+                    string[] subfolders = Directory.GetDirectories(folderPath);
 
-                        // Check if the folder name is 7 or 8 numbers long
-                        if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                    foreach (string subfolder in subfolders)
+                    {
+                        // Check if the folder has any files
+                        if (Directory.EnumerateFiles(subfolder).Any())
                         {
-                            // Add to lists
-                            folderPaths.Add(subfolder);
+                            // Extract folder name and path
+                            string folderName = Path.GetFileName(subfolder);
+
+                            // Check if the folder name is 7 or 8 numbers long
+                            if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                            {
+                                // Add to lists
+                                folderPaths.Add(subfolder);
+                            }
                         }
                     }
-                    
-                };
+                });
 
                 stopwatch.Stop();
                 Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
@@ -370,7 +371,7 @@ namespace Section5PoC.Presentation
         {
             BundlesToggleButton(productProtoButton);
 
-            folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ProductionBuildOfMaterialsFolder)).Result;
             AddNamesToBundlesListBox(folderPaths);
         }
 
@@ -378,7 +379,7 @@ namespace Section5PoC.Presentation
         {
             BundlesToggleButton(reldasButton);
 
-            folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ReldasBuildOfMaterialsFolder)).Result;
             AddNamesToBundlesListBox(folderPaths);
         }
 
@@ -386,7 +387,7 @@ namespace Section5PoC.Presentation
         {
             BundlesToggleButton(designerButton);
 
-            folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
             AddNamesToBundlesListBox(folderPaths);
         }
 
