@@ -17,7 +17,10 @@ namespace Section5PoC.Presentation
 {
     public partial class Form1 : Form
     {
-        private string BuildOfMaterialsFolder = @"U:\Data\SaberWiP\2_Users\designs\BSA\Boms";
+        private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
+        private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer";
+        private string DesignerBuildOfMaterialsFolder = @"J:\SaberWiP\2_Users\designs\BSA\Boms";
+
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
         private List<string> folderPaths;
@@ -63,9 +66,9 @@ namespace Section5PoC.Presentation
             {
                 if(computerName == "EXURBIA")
                 {
-                    BuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
+                    DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                folderPaths = GetImmediateSubfolders(BuildOfMaterialsFolder);
+                folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
                 AddNamesToBundlesListBox(folderPaths);
 
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
@@ -360,16 +363,25 @@ namespace Section5PoC.Presentation
         private void productProtoButton_Click(object sender, EventArgs e)
         {
             BundlesToggleButton(productProtoButton);
+
+            folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
+            AddNamesToBundlesListBox(folderPaths);
         }
 
         private void reldasButton_Click(object sender, EventArgs e)
         {
             BundlesToggleButton(reldasButton);
+
+            folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
+            AddNamesToBundlesListBox(folderPaths);
         }
 
         private void designerButton_Click(object sender, EventArgs e)
         {
             BundlesToggleButton(designerButton);
+
+            folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
+            AddNamesToBundlesListBox(folderPaths);
         }
 
         private void ProjectsToggleButton(System.Windows.Forms.Button clickedButton)
