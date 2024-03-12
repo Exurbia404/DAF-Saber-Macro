@@ -132,7 +132,7 @@ namespace Section5PoC.Presentation
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            folderPaths = new List<string>();
+            List<string> folderPaths = new List<string>();
 
             try
             {
@@ -147,14 +147,18 @@ namespace Section5PoC.Presentation
                     // Check if the folder name is 7 or 8 numbers long
                     if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                     {
-                        // Add to lists
-                        folderPaths.Add(subfolder);
+                        // Check if there's a file with "_DSI" in its name
+                        if (Directory.GetFiles(subfolder, "*_DSI*").Any())
+                        {
+                            // Add to lists
+                            folderPaths.Add(subfolder);
+                        }
                     }
                 }
+
                 stopwatch.Stop();
                 Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds);
                 return folderPaths;
-                
             }
             catch (Exception ex)
             {
