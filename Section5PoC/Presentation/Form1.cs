@@ -144,18 +144,17 @@ namespace Section5PoC.Presentation
                     foreach (string subfolder in subfolders)
                     {
                         // Check if the folder has any files
-                        if (Directory.EnumerateFiles(subfolder).Any())
-                        {
-                            // Extract folder name and path
-                            string folderName = Path.GetFileName(subfolder);
+                        
+                        // Extract folder name and path
+                        string folderName = Path.GetFileName(subfolder);
 
-                            // Check if the folder name is 7 or 8 numbers long
-                            if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
-                            {
-                                // Add to lists
-                                folderPaths.Add(subfolder);
-                            }
+                        // Check if the folder name is 7 or 8 numbers long
+                        if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                        {
+                            // Add to lists
+                            folderPaths.Add(subfolder);
                         }
+                        
                     }
                 });
 
