@@ -53,7 +53,7 @@
             this.bundlesListBox.FormattingEnabled = true;
             this.bundlesListBox.ItemHeight = 16;
             this.bundlesListBox.Location = new System.Drawing.Point(28, 177);
-            this.bundlesListBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bundlesListBox.Margin = new System.Windows.Forms.Padding(4);
             this.bundlesListBox.Name = "bundlesListBox";
             this.bundlesListBox.Size = new System.Drawing.Size(311, 452);
             this.bundlesListBox.TabIndex = 1;
@@ -63,20 +63,21 @@
             // 
             this.searchBundlesTextBox.Font = new System.Drawing.Font("Arial", 10F);
             this.searchBundlesTextBox.Location = new System.Drawing.Point(28, 142);
-            this.searchBundlesTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.searchBundlesTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.searchBundlesTextBox.Name = "searchBundlesTextBox";
             this.searchBundlesTextBox.Size = new System.Drawing.Size(311, 23);
             this.searchBundlesTextBox.TabIndex = 4;
             this.searchBundlesTextBox.Text = "search:";
             this.searchBundlesTextBox.TextChanged += new System.EventHandler(this.searchBundlesTextBox_TextChanged);
             this.searchBundlesTextBox.Enter += new System.EventHandler(this.searchBundlesTextBox_Enter);
+            this.searchBundlesTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBundlesTextBox_KeyDown);
             this.searchBundlesTextBox.Leave += new System.EventHandler(this.searchBundlesTextBox_Leave);
             // 
             // schematicsSearchTextBox
             // 
             this.schematicsSearchTextBox.Font = new System.Drawing.Font("Arial", 10F);
             this.schematicsSearchTextBox.Location = new System.Drawing.Point(477, 142);
-            this.schematicsSearchTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.schematicsSearchTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.schematicsSearchTextBox.Name = "schematicsSearchTextBox";
             this.schematicsSearchTextBox.Size = new System.Drawing.Size(311, 23);
             this.schematicsSearchTextBox.TabIndex = 7;
@@ -89,7 +90,7 @@
             this.schematicsListBox.FormattingEnabled = true;
             this.schematicsListBox.ItemHeight = 16;
             this.schematicsListBox.Location = new System.Drawing.Point(477, 177);
-            this.schematicsListBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.schematicsListBox.Margin = new System.Windows.Forms.Padding(4);
             this.schematicsListBox.Name = "schematicsListBox";
             this.schematicsListBox.Size = new System.Drawing.Size(311, 452);
             this.schematicsListBox.TabIndex = 6;
@@ -117,7 +118,7 @@
             this.Controls.Add(this.searchBundlesTextBox);
             this.Controls.Add(this.bundlesListBox);
             this.Controls.Add(this.bundlesListLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);

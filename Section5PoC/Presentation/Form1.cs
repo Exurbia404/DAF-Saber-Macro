@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -113,6 +114,8 @@ namespace Section5PoC.Presentation
 
         private List<string> GetImmediateSubfolders(string folderPath)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             folderPaths = new List<string>();
 
             try
@@ -132,7 +135,10 @@ namespace Section5PoC.Presentation
                         folderPaths.Add(subfolder);
                     }
                 }
+                stopwatch.Stop();
+                Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds);
                 return folderPaths;
+                
             }
             catch (Exception ex)
             {
@@ -153,8 +159,14 @@ namespace Section5PoC.Presentation
             // Get the selected index
             string selectedBundle = bundlesListBox.SelectedItem.ToString();
 
+            OpenLatestBundleFile(selectedBundle);
+            
+        }
+
+        private void OpenLatestBundleFile(string bundleName)
+        {
             // Get the corresponding folder path
-            string selectedFolderPath = GetFilePath(selectedBundle);
+            string selectedFolderPath = GetFilePath(bundleName);
 
             // Search for the latest .txt file containing "_DSI" in the selected folder
             string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
@@ -171,11 +183,12 @@ namespace Section5PoC.Presentation
             {
                 MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
             }
-            
         }
 
         private string GetFilePath(string inputName)
         {
+            inputName = Path.GetFileName(inputName);
+
             foreach (string folderPath in folderPaths)
             {
                 string folderName = Path.GetFileName(folderPath);
@@ -240,23 +253,7 @@ namespace Section5PoC.Presentation
 
         private void searchBundlesTextBox_TextChanged(object sender, EventArgs e)
         {
-            string searchText;
-            // Get the search text
-            if(searchBundlesTextBox.Text == "Search:")
-            {
-                searchText = "";
-            }
-            else
-            {
-                searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
-            }
-
-            // Filter folderPaths and folderNames based on the search text
-            IEnumerable<string> filteredFolderPaths = folderPaths
-                .Where(path => Path.GetFileName(path).IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
-
-            // Call AddNamesToListBox with the filtered lists
-            AddNamesToBundlesListBox(filteredFolderPaths);
+            
         }
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
@@ -291,6 +288,40 @@ namespace Section5PoC.Presentation
                 // Call AddSchematicsToListBox with the list of BundleNumbers
                 AddSchematicsToListBox(bundleNumbers);
             }
+        }
+
+        private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Check if the Enter key is pressed
+            if (e.KeyCode == Keys.Enter)
+            {
+                string searchText;
+
+                // Get the search text
+                if (searchBundlesTextBox.Text == "Search:")
+                {
+                    searchText = "";
+                }
+                else
+                {
+                    searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
+                }
+
+                // Filter folderPaths based on the search text
+                IEnumerable<string> filteredFolderPaths = folderPaths
+                    .Where(path => Path.GetFileName(path).IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
+
+                // If there's only one option, open the latest bundle file
+                if (filteredFolderPaths.Count() == 1)
+                {
+                    OpenLatestBundleFile(filteredFolderPaths.First());
+                }
+                else
+                {
+                    // Call AddNamesToListBox with the filtered lists
+                    AddNamesToBundlesListBox(filteredFolderPaths);
+                }
+            }            
         }
     }
 }
