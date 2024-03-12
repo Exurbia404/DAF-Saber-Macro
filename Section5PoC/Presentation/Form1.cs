@@ -18,7 +18,7 @@ namespace Section5PoC.Presentation
     public partial class Form1 : Form
     {
         private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
-        private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer";
+        private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer\Boms";
         private string DesignerBuildOfMaterialsFolder = @"J:\SaberWiP\2_Users\designs\BSA\Boms";
 
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
