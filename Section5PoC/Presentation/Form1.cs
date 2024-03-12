@@ -31,6 +31,9 @@ namespace Section5PoC.Presentation
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
+        private List<System.Windows.Forms.Button> bundlesToggleButtons = new List<System.Windows.Forms.Button>();
+        private List<System.Windows.Forms.Button> projectsToggleButtons = new List<System.Windows.Forms.Button>();
+
         public Form1()
         {
             InitializeComponent();
@@ -43,6 +46,16 @@ namespace Section5PoC.Presentation
 
             folderPaths = new List<string>();
             extractedReferences = excelImporter.DSIReferences;
+
+            //These are the buttons for toggling the working directory:
+            //Bundles:
+            bundlesToggleButtons.Add(productProtoButton);
+            bundlesToggleButtons.Add(reldasButton);
+            bundlesToggleButtons.Add(designerButton);
+
+            //Projects
+            projectsToggleButtons.Add(wipButton);
+            projectsToggleButtons.Add(releasedButton);
 
             searchBundlesTextBox_SetText();
 
@@ -322,6 +335,68 @@ namespace Section5PoC.Presentation
                     AddNamesToBundlesListBox(filteredFolderPaths);
                 }
             }            
+        }
+
+
+
+        //Buttons to choose directory:
+        private void BundlesToggleButton(System.Windows.Forms.Button clickedButton)
+        {
+            // Toggle the clicked button to its opposite state
+            clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
+
+            // Set other toggle buttons to their default color
+            foreach (System.Windows.Forms.Button button in bundlesToggleButtons)
+            {
+                if (button != clickedButton)
+                {
+                    button.BackColor = Color.Gray;
+                }
+            }
+        }
+
+
+        //Bundles
+        private void productProtoButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(productProtoButton);
+        }
+
+        private void reldasButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(reldasButton);
+        }
+
+        private void designerButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(designerButton);
+        }
+
+        private void ProjectsToggleButton(System.Windows.Forms.Button clickedButton)
+        {
+            // Toggle the clicked button to its opposite state
+            clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
+
+            // Set other toggle buttons to their default color
+            foreach (System.Windows.Forms.Button button in projectsToggleButtons)
+            {
+                if (button != clickedButton)
+                {
+                    button.BackColor = Color.Gray;
+                }
+            }
+        }
+
+        //Projects:
+
+        private void releasedButton_Click(object sender, EventArgs e)
+        {
+            ProjectsToggleButton(releasedButton);
+        }
+
+        private void wipButton_Click(object sender, EventArgs e)
+        {
+            ProjectsToggleButton(wipButton);
         }
     }
 }
