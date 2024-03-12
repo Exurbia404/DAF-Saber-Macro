@@ -136,28 +136,30 @@ namespace Section5PoC.Presentation
 
             try
             {
+                
                 // Get all immediate subfolders
                 string[] subfolders = Directory.GetDirectories(folderPath);
 
                 foreach (string subfolder in subfolders)
                 {
-                    // Extract folder name and path
-                    string folderName = Path.GetFileName(subfolder);
-
-                    // Check if the folder name is 7 or 8 numbers long
-                    if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                    // Check if the folder has any files
+                    if (Directory.EnumerateFiles(subfolder).Any())
                     {
-                        // Check if there's a file with "_DSI" in its name
-                        if (Directory.GetFiles(subfolder, "*_DSI*").Any())
+                        // Extract folder name and path
+                        string folderName = Path.GetFileName(subfolder);
+
+                        // Check if the folder name is 7 or 8 numbers long
+                        if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                         {
                             // Add to lists
                             folderPaths.Add(subfolder);
                         }
                     }
-                }
+                    
+                };
 
                 stopwatch.Stop();
-                Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds);
+                Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
                 return folderPaths;
             }
             catch (Exception ex)
