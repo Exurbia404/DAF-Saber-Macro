@@ -261,7 +261,7 @@ namespace Section5PoC.Presentation
             searchBundlesTextBox.ForeColor = Color.Black;
         }
 
-        protected void searchBundlesTextBox_SetText()
+        private void searchBundlesTextBox_SetText()
         {
             searchBundlesTextBox.Text = "Search:";
             searchBundlesTextBox.ForeColor = Color.Gray;
@@ -446,5 +446,10 @@ namespace Section5PoC.Presentation
             ProjectsToggleButton(wipButton);
         }
 
+        private void goToProfilesButton_Click(object sender, EventArgs e)
+        {
+            var newProfileForm = new ProfileCreator();
+            newProfileForm.Show();
+        }
     }
 }

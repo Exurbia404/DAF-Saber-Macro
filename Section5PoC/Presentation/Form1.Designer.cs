@@ -39,6 +39,7 @@
             this.designerButton = new System.Windows.Forms.Button();
             this.wipButton = new System.Windows.Forms.Button();
             this.releasedButton = new System.Windows.Forms.Button();
+            this.goToProfilesButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // bundlesListLabel
@@ -164,11 +165,22 @@
             this.releasedButton.UseVisualStyleBackColor = false;
             this.releasedButton.Click += new System.EventHandler(this.releasedButton_Click);
             // 
+            // goToProfilesButton
+            // 
+            this.goToProfilesButton.Location = new System.Drawing.Point(12, 463);
+            this.goToProfilesButton.Name = "goToProfilesButton";
+            this.goToProfilesButton.Size = new System.Drawing.Size(75, 23);
+            this.goToProfilesButton.TabIndex = 13;
+            this.goToProfilesButton.Text = "Profiles";
+            this.goToProfilesButton.UseVisualStyleBackColor = true;
+            this.goToProfilesButton.Click += new System.EventHandler(this.goToProfilesButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 460);
+            this.ClientSize = new System.Drawing.Size(618, 498);
+            this.Controls.Add(this.goToProfilesButton);
             this.Controls.Add(this.wipButton);
             this.Controls.Add(this.releasedButton);
             this.Controls.Add(this.designerButton);
@@ -201,5 +213,6 @@
         private System.Windows.Forms.Button designerButton;
         private System.Windows.Forms.Button wipButton;
         private System.Windows.Forms.Button releasedButton;
+        private System.Windows.Forms.Button goToProfilesButton;
     }
 }
