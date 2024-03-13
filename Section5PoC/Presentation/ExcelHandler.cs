@@ -12,6 +12,67 @@ namespace Section5PoC
 {
     public class ExcelHandler
     {
+
+        public void CreateProjectExcelSheet(List<Project_Wire> wires, List<Project_Component> components)
+        {
+            try
+            {
+                // Start the stopwatch
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // Close any existing instances of "ExtractedData.xlsx"
+                foreach (var process in Process.GetProcessesByName("EXCEL"))
+                {
+                    if (process.MainWindowTitle.Contains("ExtractedData.xlsx"))
+                    {
+                        process.Kill();
+                        process.WaitForExit(); // Wait for the process to exit before continuing
+                    }
+                }
+
+                using (var package = new ExcelPackage())
+                {
+                    // Add a worksheet for Wires
+                    var wireWorksheet = package.Workbook.Worksheets.Add("Project_Wires");
+
+                    // Write column headers for wires
+                    WriteHeaders(wireWorksheet, wires);
+
+                    // Write wire data
+                    WriteDataToSheet(wireWorksheet, wires);
+                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(wireWorksheet);
+
+                    // Add a worksheet for Components
+                    var componentWorksheet = package.Workbook.Worksheets.Add("Project_Components");
+
+                    // Write column headers for components
+                    WriteHeaders(componentWorksheet, components);
+
+                    // Write component data
+                    WriteDataToSheet(componentWorksheet, components);
+                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(componentWorksheet);
+
+                    // Save the Excel package to a file
+                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
+
+                    Process.Start("ExtractedData.xlsx");
+                }
+
+                // Stop the stopwatch
+                stopwatch.Stop();
+
+                Console.WriteLine($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
         public void CreateExcelSheet(List<WCSPP_Wire> extractedWires, List<WCSPP_Component> extractedComponents)
         {
             try
