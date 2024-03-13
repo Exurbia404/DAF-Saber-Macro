@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataSet1 = new System.Data.DataSet();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.A_comboBox = new System.Windows.Forms.ComboBox();
@@ -65,12 +64,7 @@
             this.profilesListBox = new System.Windows.Forms.ListBox();
             this.profileNameTextBox = new System.Windows.Forms.TextBox();
             this.profileTypeComboBox = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "NewDataSet";
             // 
             // label1
             // 
@@ -691,6 +685,14 @@
             // profileTypeComboBox
             // 
             this.profileTypeComboBox.FormattingEnabled = true;
+            this.profileTypeComboBox.Items.AddRange(new object[] {
+            "Component\t- DSI",
+            "Component\t- Project",
+            "Component\t- WCSPP",
+            "",
+            "Wire\t\t- DSI",
+            "Wire\t\t- Project",
+            "Wire\t\t- WCSPP"});
             this.profileTypeComboBox.Location = new System.Drawing.Point(15, 36);
             this.profileTypeComboBox.Name = "profileTypeComboBox";
             this.profileTypeComboBox.Size = new System.Drawing.Size(152, 21);
@@ -740,15 +742,12 @@
             this.Name = "ProfileCreator";
             this.Text = "F";
             this.Load += new System.EventHandler(this.ProfileCreator_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Data.DataSet dataSet1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox A_comboBox;

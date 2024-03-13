@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Section5PoC
+{
+    public class ProfileController
+    {
+        public ProfileController() { }
+
+        public void LoadProfiles()
+        {
+
+        }
+
+        public void SaveProfiles()
+        {
+
+        }
+    }
+}

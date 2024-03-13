@@ -139,9 +139,56 @@ namespace Section5PoC.Presentation
             N_pins,
         }
 
+        private ProfileController profileController;
+        private Dictionary<string, List<string>> profiles;
+
         public ProfileCreator()
         {
+            profileController = new ProfileController();
+            LoadDefaultProfiles();
+
             InitializeComponent();
+        }
+
+        private void LoadDefaultProfiles()
+        {
+            //Programatically load in each enum (if the enum changes you don't have to worry about this)
+            var wireWCSPPProfile = Enum.GetValues(typeof(Wire_WCSPP_Profile_Options))
+                                        .Cast<Wire_WCSPP_Profile_Options>()
+                                        .Select(option => option.ToString())
+                                        .ToList();
+
+            var wireProfile = Enum.GetValues(typeof(Wire_Profile_Options))
+                                  .Cast<Wire_Profile_Options>()
+                                  .Select(option => option.ToString())
+                                  .ToList();
+
+            var wireProjectProfile = Enum.GetValues(typeof(Wire_Project_Profile_Options))
+                                        .Cast<Wire_Project_Profile_Options>()
+                                        .Select(option => option.ToString())
+                                        .ToList();
+
+            var componentWCSPPProfile = Enum.GetValues(typeof(Component_WCSPP_Profile_Options))
+                                            .Cast<Component_WCSPP_Profile_Options>()
+                                            .Select(option => option.ToString())
+                                            .ToList();
+
+            var componentProfile = Enum.GetValues(typeof(Component_Profile_Options))
+                                      .Cast<Component_Profile_Options>()
+                                      .Select(option => option.ToString())
+                                      .ToList();
+
+            var componentProjectProfile = Enum.GetValues(typeof(Component_Project_Profile_Options))
+                                              .Cast<Component_Project_Profile_Options>()
+                                              .Select(option => option.ToString())
+                                              .ToList();
+
+            profiles.Add("Wire_WCSPP_Profile", wireWCSPPProfile);
+            profiles.Add("Wire_Profile", wireProfile);
+            profiles.Add("Wire_Project_Profile", wireProjectProfile);
+            profiles.Add("Component_WCSPP_Profile", componentWCSPPProfile);
+            profiles.Add("Component_Profile", componentProfile);
+            profiles.Add("Component_Project_Profile", componentProjectProfile);
         }
 
         private void ProfileCreator_Load(object sender, EventArgs e)
