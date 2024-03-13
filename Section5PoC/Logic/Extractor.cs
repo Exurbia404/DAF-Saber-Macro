@@ -280,7 +280,7 @@ namespace Section5PoC
 
         private Project_Wire Project_ExtractWireFromString(string inputString)
         {
-            string[] fields = inputString.Split(':');
+            string[] fields = inputString.Split(',');
 
             // Create a new Project_Wire object and set its properties based on the fields
             Project_Wire wireObject = new Project_Wire
@@ -329,7 +329,7 @@ namespace Section5PoC
 
         private Project_Component Project_ExtractComponentFromString(string inputString)
         {
-            string[] fields = inputString.Split(':');
+            string[] fields = inputString.Split(',');
 
             // Create a new Project_Component object and set its properties based on the fields
             Project_Component componentObject = new Project_Component
