@@ -24,6 +24,8 @@ namespace Section5PoC.Presentation
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
         private List<string> folderPaths;
+        private List<System.Windows.Forms.Button> bundlesToggleButtons = new List<System.Windows.Forms.Button>();
+        private List<System.Windows.Forms.Button> projectsToggleButtons = new List<System.Windows.Forms.Button>();
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
@@ -34,8 +36,7 @@ namespace Section5PoC.Presentation
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
-        private List<System.Windows.Forms.Button> bundlesToggleButtons = new List<System.Windows.Forms.Button>();
-        private List<System.Windows.Forms.Button> projectsToggleButtons = new List<System.Windows.Forms.Button>();
+        
 
         public Form1()
         {
@@ -154,7 +155,6 @@ namespace Section5PoC.Presentation
                             // Add to lists
                             folderPaths.Add(subfolder);
                         }
-                        
                     }
                 });
 
@@ -390,6 +390,7 @@ namespace Section5PoC.Presentation
             AddNamesToBundlesListBox(folderPaths);
         }
 
+        //Projects:
         private void ProjectsToggleButton(System.Windows.Forms.Button clickedButton)
         {
             // Toggle the clicked button to its opposite state
@@ -404,8 +405,6 @@ namespace Section5PoC.Presentation
                 }
             }
         }
-
-        //Projects:
 
         private void releasedButton_Click(object sender, EventArgs e)
         {
