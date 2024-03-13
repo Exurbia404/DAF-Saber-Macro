@@ -150,7 +150,7 @@ namespace Section5PoC
 
             for (int i = 0; i < properties.Length; i++)
             {
-                string header = $"{properties[i].Name} ({GetMaxLength(objects, properties[i])})";
+                string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
         }
