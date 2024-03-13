@@ -60,7 +60,7 @@
             this.bundlesListBox.Name = "bundlesListBox";
             this.bundlesListBox.Size = new System.Drawing.Size(251, 340);
             this.bundlesListBox.TabIndex = 1;
-            this.bundlesListBox.DoubleClick += new System.EventHandler(this.schematicsListBox_DoubleClick_1);
+            this.bundlesListBox.DoubleClick += new System.EventHandler(this.bundlesListBox_DoubleClick);
             // 
             // searchBundlesTextBox
             // 
@@ -70,7 +70,6 @@
             this.searchBundlesTextBox.Size = new System.Drawing.Size(251, 23);
             this.searchBundlesTextBox.TabIndex = 4;
             this.searchBundlesTextBox.Text = "search:";
-            this.searchBundlesTextBox.TextChanged += new System.EventHandler(this.searchBundlesTextBox_TextChanged);
             this.searchBundlesTextBox.Enter += new System.EventHandler(this.searchBundlesTextBox_Enter);
             this.searchBundlesTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBundlesTextBox_KeyDown);
             this.searchBundlesTextBox.Leave += new System.EventHandler(this.searchBundlesTextBox_Leave);
@@ -83,7 +82,6 @@
             this.schematicsSearchTextBox.Size = new System.Drawing.Size(251, 23);
             this.schematicsSearchTextBox.TabIndex = 7;
             this.schematicsSearchTextBox.Text = "search:";
-            this.schematicsSearchTextBox.TextChanged += new System.EventHandler(this.schematicsSearchTextBox_TextChanged);
             // 
             // schematicsListBox
             // 
@@ -110,7 +108,7 @@
             // 
             this.productProtoButton.BackColor = System.Drawing.Color.Gray;
             this.productProtoButton.Location = new System.Drawing.Point(12, 55);
-            this.productProtoButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.productProtoButton.Margin = new System.Windows.Forms.Padding(2);
             this.productProtoButton.Name = "productProtoButton";
             this.productProtoButton.Size = new System.Drawing.Size(83, 20);
             this.productProtoButton.TabIndex = 8;
@@ -122,7 +120,7 @@
             // 
             this.reldasButton.BackColor = System.Drawing.Color.Gray;
             this.reldasButton.Location = new System.Drawing.Point(95, 55);
-            this.reldasButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.reldasButton.Margin = new System.Windows.Forms.Padding(2);
             this.reldasButton.Name = "reldasButton";
             this.reldasButton.Size = new System.Drawing.Size(83, 20);
             this.reldasButton.TabIndex = 9;
@@ -134,7 +132,7 @@
             // 
             this.designerButton.BackColor = System.Drawing.Color.White;
             this.designerButton.Location = new System.Drawing.Point(179, 55);
-            this.designerButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.designerButton.Margin = new System.Windows.Forms.Padding(2);
             this.designerButton.Name = "designerButton";
             this.designerButton.Size = new System.Drawing.Size(83, 20);
             this.designerButton.TabIndex = 10;
@@ -146,7 +144,7 @@
             // 
             this.wipButton.BackColor = System.Drawing.Color.Gray;
             this.wipButton.Location = new System.Drawing.Point(432, 55);
-            this.wipButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.wipButton.Margin = new System.Windows.Forms.Padding(2);
             this.wipButton.Name = "wipButton";
             this.wipButton.Size = new System.Drawing.Size(83, 20);
             this.wipButton.TabIndex = 12;
@@ -158,7 +156,7 @@
             // 
             this.releasedButton.BackColor = System.Drawing.Color.White;
             this.releasedButton.Location = new System.Drawing.Point(349, 55);
-            this.releasedButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.releasedButton.Margin = new System.Windows.Forms.Padding(2);
             this.releasedButton.Name = "releasedButton";
             this.releasedButton.Size = new System.Drawing.Size(83, 20);
             this.releasedButton.TabIndex = 11;

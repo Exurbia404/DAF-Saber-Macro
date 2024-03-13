@@ -30,6 +30,7 @@ namespace Section5PoC.Presentation
         private Extractor extractor;
         private WCSPP_Convertor convertor;
         private ExcelImporter excelImporter;
+        private ExcelHandler excelHandler;
 
         private static List<Wire> extractedWires;
         private static List<Component> extractedComponents;
@@ -47,6 +48,7 @@ namespace Section5PoC.Presentation
 
             excelImporter = new ExcelImporter();
             extractor = new Extractor();
+            excelHandler = new ExcelHandler();
 
             folderPaths = new List<string>();
             extractedReferences = excelImporter.DSIReferences;
@@ -175,14 +177,12 @@ namespace Section5PoC.Presentation
             return int.TryParse(str, out _);
         }
 
-
-        private void schematicsListBox_DoubleClick_1(object sender, EventArgs e)
+        private void bundlesListBox_DoubleClick(object sender, EventArgs e)
         {
             // Get the selected index
             string selectedBundle = bundlesListBox.SelectedItem.ToString();
 
             OpenLatestBundleFile(selectedBundle);
-            
         }
 
         private void OpenLatestBundleFile(string bundleName)
@@ -273,11 +273,6 @@ namespace Section5PoC.Presentation
                 searchBundlesTextBox_SetText();
         }
 
-        private void searchBundlesTextBox_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             bundlesListBox.ClearSelected();
@@ -285,31 +280,7 @@ namespace Section5PoC.Presentation
             {
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
                 AddSchematicsToListBox(schematicNames);
-            }
-            
-        }
-
-        private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void schematicsListBox_DoubleClick(object sender, EventArgs e)
-        {
-            // Get the selected ProjectName from schematicsListBox
-            string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
-
-            if (selectedSchematic != null)
-            {
-                // Filter the extractedReferences based on the selected ProjectName
-                List<string> bundleNumbers = extractedReferences
-                    .Where(reference => reference.ProjectName == selectedSchematic)
-                    .Select(reference => reference.BundleNumber)
-                    .ToList();
-
-                // Call AddSchematicsToListBox with the list of BundleNumbers
-                AddSchematicsToListBox(bundleNumbers);
-            }
+            }            
         }
 
         private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -343,10 +314,68 @@ namespace Section5PoC.Presentation
                     // Call AddNamesToListBox with the filtered lists
                     AddNamesToBundlesListBox(filteredFolderPaths);
                 }
-            }            
+            }
         }
 
+        private void schematicsListBox_DoubleClick(object sender, EventArgs e)
+        {
+            // Get the selected ProjectName from schematicsListBox
+            string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
 
+            if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
+            {
+                // Filter the extractedReferences based on the selected ProjectName
+                List<string> bundleNumbers = extractedReferences
+                    .Where(reference => reference.ProjectName == selectedSchematic)
+                    .Select(reference => reference.BundleNumber)
+                    .ToList();
+
+                // Call AddSchematicsToListBox with the list of BundleNumbers
+                AddSchematicsToListBox(bundleNumbers);
+            }
+            else if(IsRefSetNumber(selectedSchematic))
+            {
+                OpenRefSetInExcel(selectedSchematic);
+            }
+        }
+
+        private bool IsRefSetNumber(string selectedSchematic)
+        {
+            // Check if the string contains only numeric characters and has a length of 7 or 8
+            return selectedSchematic.All(char.IsDigit) && (selectedSchematic.Length == 7 || selectedSchematic.Length == 8);
+        }
+
+        private void OpenRefSetInExcel(string selectedSchematic)
+        {
+            // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
+            string folderPath = Path.Combine(ProductionBuildOfMaterialsFolder, selectedSchematic);
+
+            // Check if the folder exists
+            if (Directory.Exists(folderPath))
+            {
+                // Search for _comp.txt and _wires.txt files in the folder
+                string[] compFilePaths = Directory.GetFiles(folderPath, "*_comp*.txt");
+                string[] wiresFilePaths = Directory.GetFiles(folderPath, "*_wires*.txt");
+
+                if ((compFilePaths.Length > 0) && (wiresFilePaths.Length > 0))
+                {
+                    // Sort files by creation time and get the latest one
+                    string latestCompFile = compFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    string latestWiresFile = wiresFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+
+                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile);
+                    // Do something with the latest .txt file, for example, display its path
+                }
+            }
+        }
+
+        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath)
+        {
+            List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
+            List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
+
+            excelHandler.CreateProjectExcelSheet(foundWires, foundComponents);
+        }
 
         //Buttons to choose directory:
         private void BundlesToggleButton(System.Windows.Forms.Button clickedButton)
@@ -415,5 +444,6 @@ namespace Section5PoC.Presentation
         {
             ProjectsToggleButton(wipButton);
         }
+
     }
 }
