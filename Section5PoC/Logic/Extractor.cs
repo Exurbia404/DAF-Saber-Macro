@@ -261,5 +261,96 @@ namespace Section5PoC
 
             return string.Empty; // Return empty string if no value is found
         }
+
+        public List<Project_Wire> Project_ExtractWiresFromWireFile(string filePath)
+        { 
+            List<Project_Wire> foundWires = new List<Project_Wire>();
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                Project_Wire wire = Project_ExtractWireFromString(line);
+                // Process lines between Section 3 and Section 4
+                if (wire != null)
+                {
+                    foundWires.Add(wire);
+                }
+            }
+            return foundWires;
+        }
+
+        private Project_Wire Project_ExtractWireFromString(string inputString)
+        {
+            string[] fields = inputString.Split(',');
+
+            // Create a new Project_Wire object and set its properties based on the fields
+            Project_Wire wireObject = new Project_Wire
+            {
+                Wire = GetStringAtIndex(fields, 0),
+                Diameter = GetStringAtIndex(fields, 1),
+                Color = GetStringAtIndex(fields, 2),
+                Type = GetStringAtIndex(fields, 3),
+                Connector_1 = GetStringAtIndex(fields, 4),
+                Port_1 = GetStringAtIndex(fields, 5),
+                Term_1 = GetStringAtIndex(fields, 6),
+                Seal_1 = GetStringAtIndex(fields, 7),
+                Lokation_1 = GetStringAtIndex(fields, 8),
+                Wire_connection = GetStringAtIndex(fields, 9),
+                Term_2 = GetStringAtIndex(fields, 10),
+                Seal_2 = GetStringAtIndex(fields, 11),
+                Connector_2 = GetStringAtIndex(fields, 12),
+                Port_2 = GetStringAtIndex(fields, 13),
+                Lokation_2 = GetStringAtIndex(fields, 14),
+                Harness = GetStringAtIndex(fields, 15),
+                Variant = GetStringAtIndex(fields, 16),
+                Bundle = GetStringAtIndex(fields, 17),
+                Kodenr_wire = GetStringAtIndex(fields, 18),
+                Tag = GetStringAtIndex(fields, 19),
+            };
+
+            return wireObject;
+
+        }
+
+        public List<Project_Component> Project_ExtractComponentFromComponentFile(string filePath)
+        {
+            List<Project_Component> foundComponents = new List<Project_Component>();
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                Project_Component component = Project_ExtractComponentFromString(line);
+                // Process lines between Section 3 and Section 4
+                if (component != null)
+                {
+                    foundComponents.Add(component);
+                }
+            }
+            return foundComponents;
+        }
+
+        private Project_Component Project_ExtractComponentFromString(string inputString)
+        {
+            string[] fields = inputString.Split(',');
+
+            // Create a new Project_Component object and set its properties based on the fields
+            Project_Component componentObject = new Project_Component
+            {
+                Type = GetStringAtIndex(fields, 0),
+                Ref = GetStringAtIndex(fields, 1),
+                Description = GetStringAtIndex(fields, 2),
+                Location = GetStringAtIndex(fields, 3),
+                Connector = GetStringAtIndex(fields, 4),
+                SecLock = GetStringAtIndex(fields, 5),
+                Harness = GetStringAtIndex(fields, 6),
+                Variant = GetStringAtIndex(fields, 7),
+                Bundle = GetStringAtIndex(fields, 8),
+                Tag = GetStringAtIndex(fields, 9),
+                System = GetStringAtIndex(fields, 10),
+                Fuse_value = GetStringAtIndex(fields, 11),
+                Color = GetStringAtIndex(fields, 12),
+                N_pins = GetStringAtIndex(fields, 13),
+            };
+
+            return componentObject;
+        }
     }
 }

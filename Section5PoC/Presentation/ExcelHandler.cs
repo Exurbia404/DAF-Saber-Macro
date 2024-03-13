@@ -5,13 +5,74 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
+
 
 namespace Section5PoC
 {
     public class ExcelHandler
     {
+
+        public void CreateProjectExcelSheet(List<Project_Wire> wires, List<Project_Component> components)
+        {
+            try
+            {
+                // Start the stopwatch
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // Close any existing instances of "ExtractedData.xlsx"
+                foreach (var process in Process.GetProcessesByName("EXCEL"))
+                {
+                    if (process.MainWindowTitle.Contains("ExtractedData.xlsx"))
+                    {
+                        process.Kill();
+                        process.WaitForExit(); // Wait for the process to exit before continuing
+                    }
+                }
+
+                using (var package = new ExcelPackage())
+                {
+                    // Add a worksheet for Wires
+                    var wireWorksheet = package.Workbook.Worksheets.Add("Project_Wires");
+
+                    // Write column headers for wires
+                    WriteHeaders(wireWorksheet, wires);
+
+                    // Write wire data
+                    WriteDataToSheet(wireWorksheet, wires);
+                    //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(wireWorksheet);
+
+                    // Add a worksheet for Components
+                    var componentWorksheet = package.Workbook.Worksheets.Add("Project_Components");
+
+                    // Write column headers for components
+                    WriteHeaders(componentWorksheet, components);
+
+                    // Write component data
+                    WriteDataToSheet(componentWorksheet, components);
+                    //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    AddAutoFilterButtons(componentWorksheet);
+
+                    // Save the Excel package to a file
+                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
+
+                    Process.Start("ExtractedData.xlsx");
+                }
+
+                // Stop the stopwatch
+                stopwatch.Stop();
+
+                Console.WriteLine($"Project Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
         public void CreateExcelSheet(List<WCSPP_Wire> extractedWires, List<WCSPP_Component> extractedComponents)
         {
             try
@@ -54,6 +115,9 @@ namespace Section5PoC
                     componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
+                    // Set sensitivity label
+                    SetWorkbookSensitivityLabel(package, SensitivityLabel.General);
+
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));
 
@@ -89,10 +153,12 @@ namespace Section5PoC
 
             for (int i = 0; i < properties.Length; i++)
             {
-                string header = $"{properties[i].Name} ({GetMaxLength(objects, properties[i])})";
+                string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
+            worksheet.View.FreezePanes(1, worksheet.Dimension.End.Column + 1);
         }
+
 
         private static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
         {
@@ -134,6 +200,44 @@ namespace Section5PoC
                     worksheet.Cells[row + 2, col + 1].Value = propertyValue;
                 }
             }
+        }
+
+        static object GetCustomPropertyValue(ExcelPackage package, string propertyName)
+        {
+            // Get the custom properties XML
+            var customPropertiesXml = package.Workbook.Properties.CustomPropertiesXml;
+
+            // Check if the custom properties XML is not null
+            if (customPropertiesXml != null)
+            {
+                // Check if the property exists
+                var propertyNode = customPropertiesXml.SelectSingleNode($"/Properties/AppProperties[@name='{propertyName}']");
+                if (propertyNode != null)
+                {
+                    // Return the property value
+                    return propertyNode.InnerText;
+                }
+            }
+
+            // Return null if the property is not found
+            return null;
+        }
+
+        static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
+        {
+            // Get or create the DocumentSummaryInformation
+            var docSummaryInfo = package.Workbook.Properties;
+
+            // Set the Sensitivity Label custom property
+            docSummaryInfo.SetCustomPropertyValue("SensitivityLabel", sensitivityLabel.ToString());
+        }
+
+
+        public enum SensitivityLabel
+        {
+            General,
+            Confidential,
+            HighlyConfidential
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,22 +17,27 @@ namespace Section5PoC.Presentation
 {
     public partial class Form1 : Form
     {
-        private string BuildOfMaterialsFolder = @"U:\Data\SaberWiP\2_Users\designs\BSA\Boms";
+        private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
+        private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer\Boms";
+        private string DesignerBuildOfMaterialsFolder = @"J:\SaberWiP\2_Users\designs\BSA\Boms";
+
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
-        private List<string> folderNames;
         private List<string> folderPaths;
-
-        private List<string> loadedVersionPaths;
+        private List<System.Windows.Forms.Button> bundlesToggleButtons = new List<System.Windows.Forms.Button>();
+        private List<System.Windows.Forms.Button> projectsToggleButtons = new List<System.Windows.Forms.Button>();
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
         private ExcelImporter excelImporter;
+        private ExcelHandler excelHandler;
 
         private static List<Wire> extractedWires;
         private static List<Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
+
+        
 
         public Form1()
         {
@@ -42,11 +48,20 @@ namespace Section5PoC.Presentation
 
             excelImporter = new ExcelImporter();
             extractor = new Extractor();
+            excelHandler = new ExcelHandler();
 
-            folderNames = new List<string>();
             folderPaths = new List<string>();
-            loadedVersionPaths = new List<string>();
             extractedReferences = excelImporter.DSIReferences;
+
+            //These are the buttons for toggling the working directory:
+            //Bundles:
+            bundlesToggleButtons.Add(productProtoButton);
+            bundlesToggleButtons.Add(reldasButton);
+            bundlesToggleButtons.Add(designerButton);
+
+            //Projects
+            projectsToggleButtons.Add(wipButton);
+            projectsToggleButtons.Add(releasedButton);
 
             searchBundlesTextBox_SetText();
 
@@ -54,10 +69,10 @@ namespace Section5PoC.Presentation
             {
                 if(computerName == "EXURBIA")
                 {
-                    BuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
+                    DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                GetImmediateSubfolders(BuildOfMaterialsFolder, out folderNames, out folderPaths);
-                AddNamesToListBox(folderPaths, folderNames);
+                folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
+                AddNamesToBundlesListBox(folderPaths);
 
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
                 AddSchematicsToListBox(schematicNames);
@@ -68,21 +83,22 @@ namespace Section5PoC.Presentation
             }
         }
 
-            
 
-        private void AddNamesToListBox(List<string> filteredFolderPaths, List<string> filteredFolderNames)
+
+        private void AddNamesToBundlesListBox(IEnumerable<string> filteredFolderPaths)
         {
             bundlesListBox.Items.Clear();
             try
             {
-                //Sorts the files by last update time for user convenience
-                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => new DirectoryInfo(f).LastWriteTime).ToList();
-                filteredFolderNames = filteredFolderNames.Select(path => Path.GetFileName(path)).ToList();
+                // Sorts the folder names by their numeric value in descending order
+                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => int.Parse(Path.GetFileName(f))).ToList();
 
-                foreach (string name in filteredFolderNames)
+                foreach (string fullPath in filteredFolderPaths)
                 {
-                    bundlesListBox.Items.Add(name);
+                    string folderName = Path.GetFileName(fullPath);
+                    bundlesListBox.Items.Add(folderName);
                 }
+
                 bundlesListBox.Refresh();
             }
             catch (Exception ex)
@@ -115,34 +131,43 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private static void GetImmediateSubfolders(string folderPath, out List<string> folderNames, out List<string> folderPaths)
+        private async Task<List<string>> GetImmediateSubfoldersAsync(string folderPath)
         {
-            folderNames = new List<string>();
-            folderPaths = new List<string>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            List<string> folderPaths = new List<string>();
 
             try
             {
-                // Get all immediate subfolders
-                string[] subfolders = Directory.GetDirectories(folderPath);
-
-                foreach (string subfolder in subfolders)
+                await Task.Run(() =>
                 {
-                    // Extract folder name and path
-                    string folderName = Path.GetFileName(subfolder);
+                    // Get all immediate subfolders
+                    string[] subfolders = Directory.GetDirectories(folderPath);
 
-                    // Check if the folder name is 7 or 8 numbers long
-                    if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                    foreach (string subfolder in subfolders)
                     {
-                        folderNames.Add(folderName);
+                        // Check if the folder has any files
+                        
+                        // Extract folder name and path
+                        string folderName = Path.GetFileName(subfolder);
 
-                        // Add to lists
-                        folderPaths.Add(subfolder);
+                        // Check if the folder name is 7 or 8 numbers long
+                        if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
+                        {
+                            // Add to lists
+                            folderPaths.Add(subfolder);
+                        }
                     }
-                }
+                });
+
+                stopwatch.Stop();
+                Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
+                return folderPaths;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                return null;
             }
         }
 
@@ -152,33 +177,53 @@ namespace Section5PoC.Presentation
             return int.TryParse(str, out _);
         }
 
-
-        private void schematicsListBox_DoubleClick_1(object sender, EventArgs e)
+        private void bundlesListBox_DoubleClick(object sender, EventArgs e)
         {
             // Get the selected index
-            int selectedIndex = bundlesListBox.SelectedIndex;
+            string selectedBundle = bundlesListBox.SelectedItem.ToString();
 
-            if (selectedIndex >= 0 && selectedIndex < folderPaths.Count)
+            OpenLatestBundleFile(selectedBundle);
+        }
+
+        private void OpenLatestBundleFile(string bundleName)
+        {
+            // Get the corresponding folder path
+            string selectedFolderPath = GetFilePath(bundleName);
+
+            // Search for the latest .txt file containing "_DSI" in the selected folder
+            string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+
+            if (txtFiles.Length > 0)
             {
-                // Get the corresponding folder path
-                string selectedFolderPath = folderPaths[selectedIndex];
+                // Sort files by creation time and get the latest one
+                string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                ExtractAndOpenExcel(latestTxtFile);
+                // Do something with the latest .txt file, for example, display its path
+                Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+            }
+            else
+            {
+                MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
+            }
+        }
 
-                // Search for the latest .txt file containing "_DSI" in the selected folder
-                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+        private string GetFilePath(string inputName)
+        {
+            inputName = Path.GetFileName(inputName);
 
-                if (txtFiles.Length > 0)
+            foreach (string folderPath in folderPaths)
+            {
+                string folderName = Path.GetFileName(folderPath);
+
+                // Case-insensitive comparison
+                if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Sort files by creation time and get the latest one
-                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
-                    ExtractAndOpenExcel(latestTxtFile);
-                    // Do something with the latest .txt file, for example, display its path
-                    Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
-                }
-                else
-                {
-                    MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
+                    return folderPath;
                 }
             }
+
+            // No matching folder path found
+            return null;
         }
 
         private async void ExtractAndOpenExcel(string textFilePath)
@@ -216,7 +261,7 @@ namespace Section5PoC.Presentation
             searchBundlesTextBox.ForeColor = Color.Black;
         }
 
-        protected void searchBundlesTextBox_SetText()
+        private void searchBundlesTextBox_SetText()
         {
             searchBundlesTextBox.Text = "Search:";
             searchBundlesTextBox.ForeColor = Color.Gray;
@@ -228,43 +273,48 @@ namespace Section5PoC.Presentation
                 searchBundlesTextBox_SetText();
         }
 
-        private void searchBundlesTextBox_TextChanged(object sender, EventArgs e)
-        {
-            string searchText;
-            // Get the search text
-            if(searchBundlesTextBox.Text == "Search:")
-            {
-                searchText = "";
-            }
-            else
-            {
-                searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
-            }
-             
-            // Filter folderPaths and folderNames based on the search text
-            List<string> filteredFolderPaths = folderPaths
-                .Where(path => Path.GetFileName(path).ToLower().Contains(searchText))
-                .ToList();
-
-            List<string> filteredFolderNames = folderNames
-                .Where(name => name.ToLower().Contains(searchText))
-                .ToList();
-
-            // Call AddNamesToListBox with the filtered lists
-            AddNamesToListBox(filteredFolderPaths, filteredFolderNames);
-        }
-
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             bundlesListBox.ClearSelected();
-
-            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
-            AddSchematicsToListBox(schematicNames);
+            if (extractedReferences != null)
+            {
+                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+                AddSchematicsToListBox(schematicNames);
+            }            
         }
 
-        private void schematicsSearchTextBox_TextChanged(object sender, EventArgs e)
+        private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            // Check if the Enter key is pressed
+            if (e.KeyCode == Keys.Enter)
+            {
+                string searchText;
 
+                // Get the search text
+                if (searchBundlesTextBox.Text == "Search:")
+                {
+                    searchText = "";
+                }
+                else
+                {
+                    searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
+                }
+
+                // Filter folderPaths based on the search text
+                IEnumerable<string> filteredFolderPaths = folderPaths
+                    .Where(path => Path.GetFileName(path).IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1);
+
+                // If there's only one option, open the latest bundle file
+                if (filteredFolderPaths.Count() == 1)
+                {
+                    OpenLatestBundleFile(filteredFolderPaths.First());
+                }
+                else
+                {
+                    // Call AddNamesToListBox with the filtered lists
+                    AddNamesToBundlesListBox(filteredFolderPaths);
+                }
+            }
         }
 
         private void schematicsListBox_DoubleClick(object sender, EventArgs e)
@@ -272,7 +322,7 @@ namespace Section5PoC.Presentation
             // Get the selected ProjectName from schematicsListBox
             string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
 
-            if (selectedSchematic != null)
+            if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
             {
                 // Filter the extractedReferences based on the selected ProjectName
                 List<string> bundleNumbers = extractedReferences
@@ -283,6 +333,123 @@ namespace Section5PoC.Presentation
                 // Call AddSchematicsToListBox with the list of BundleNumbers
                 AddSchematicsToListBox(bundleNumbers);
             }
+            else if(IsRefSetNumber(selectedSchematic))
+            {
+                OpenRefSetInExcel(selectedSchematic);
+            }
+        }
+
+        private bool IsRefSetNumber(string selectedSchematic)
+        {
+            // Check if the string contains only numeric characters and has a length of 7 or 8
+            return selectedSchematic.All(char.IsDigit) && (selectedSchematic.Length == 7 || selectedSchematic.Length == 8);
+        }
+
+        private void OpenRefSetInExcel(string selectedSchematic)
+        {
+            // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
+            string folderPath = Path.Combine(ProductionBuildOfMaterialsFolder, selectedSchematic);
+
+            // Check if the folder exists
+            if (Directory.Exists(folderPath))
+            {
+                // Search for _comp.txt and _wires.txt files in the folder
+                string[] compFilePaths = Directory.GetFiles(folderPath, "*_comp*.txt");
+                string[] wiresFilePaths = Directory.GetFiles(folderPath, "*_wires*.txt");
+
+                if ((compFilePaths.Length > 0) && (wiresFilePaths.Length > 0))
+                {
+                    // Sort files by creation time and get the latest one
+                    string latestCompFile = compFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    string latestWiresFile = wiresFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+
+                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile);
+                    // Do something with the latest .txt file, for example, display its path
+                }
+            }
+        }
+
+        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath)
+        {
+            List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
+            List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
+
+            excelHandler.CreateProjectExcelSheet(foundWires, foundComponents);
+        }
+
+        //
+        //Buttons to choose directory:
+        private void BundlesToggleButton(System.Windows.Forms.Button clickedButton)
+        {
+            // Toggle the clicked button to its opposite state
+            clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
+
+            // Set other toggle buttons to their default color
+            foreach (System.Windows.Forms.Button button in bundlesToggleButtons)
+            {
+                if (button != clickedButton)
+                {
+                    button.BackColor = Color.Gray;
+                }
+            }
+        }
+
+
+        //Bundles
+        private void productProtoButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(productProtoButton);
+
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ProductionBuildOfMaterialsFolder)).Result;
+            AddNamesToBundlesListBox(folderPaths);
+        }
+
+        private void reldasButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(reldasButton);
+
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ReldasBuildOfMaterialsFolder)).Result;
+            AddNamesToBundlesListBox(folderPaths);
+        }
+
+        private void designerButton_Click(object sender, EventArgs e)
+        {
+            BundlesToggleButton(designerButton);
+
+            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
+            AddNamesToBundlesListBox(folderPaths);
+        }
+
+        //Projects:
+        private void ProjectsToggleButton(System.Windows.Forms.Button clickedButton)
+        {
+            // Toggle the clicked button to its opposite state
+            clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
+
+            // Set other toggle buttons to their default color
+            foreach (System.Windows.Forms.Button button in projectsToggleButtons)
+            {
+                if (button != clickedButton)
+                {
+                    button.BackColor = Color.Gray;
+                }
+            }
+        }
+
+        private void releasedButton_Click(object sender, EventArgs e)
+        {
+            ProjectsToggleButton(releasedButton);
+        }
+
+        private void wipButton_Click(object sender, EventArgs e)
+        {
+            ProjectsToggleButton(wipButton);
+        }
+
+        private void goToProfilesButton_Click(object sender, EventArgs e)
+        {
+            var newProfileForm = new ProfileCreator();
+            newProfileForm.Show();
         }
     }
 }
