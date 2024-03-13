@@ -25,7 +25,7 @@ namespace Section5PoC
         public string Connector_2 { get; set; }
         public string Port_2 { get; set; }
         public string Lokation_2 { get; set; }
-        public string Harness {  get; set; }
+        public string Harness { get; set; }
         public string Variant { get; set; }
         public string Bundle { get; set; }
 
@@ -57,9 +57,14 @@ namespace Section5PoC
             Tag = tag;
         }
 
+        public Project_Wire()
+        {
+
+        }
+
         public override string ToString()
         {
-            return base.ToString(); 
+            return base.ToString();
         }
     }
 }
