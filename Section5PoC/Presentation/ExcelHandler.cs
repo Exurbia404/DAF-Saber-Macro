@@ -41,7 +41,7 @@ namespace Section5PoC
 
                     // Write wire data
                     WriteDataToSheet(wireWorksheet, wires);
-                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(wireWorksheet);
 
                     // Add a worksheet for Components
@@ -52,7 +52,7 @@ namespace Section5PoC
 
                     // Write component data
                     WriteDataToSheet(componentWorksheet, components);
-                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
