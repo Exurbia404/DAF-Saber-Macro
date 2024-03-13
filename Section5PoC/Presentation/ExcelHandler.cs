@@ -153,7 +153,7 @@ namespace Section5PoC
                 string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
-            worksheet.View.FreezePanes(1, worksheet.Dimension.End.Column);
+            worksheet.View.FreezePanes(1, worksheet.Dimension.End.Column + 1);
         }
 
 
