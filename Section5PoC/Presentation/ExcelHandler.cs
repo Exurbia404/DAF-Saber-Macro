@@ -5,8 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
+
 
 namespace Section5PoC
 {
@@ -115,6 +115,9 @@ namespace Section5PoC
                     componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
+                    // Set sensitivity label
+                    SetWorkbookSensitivityLabel(package, SensitivityLabel.General);
+
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));
 
@@ -197,6 +200,44 @@ namespace Section5PoC
                     worksheet.Cells[row + 2, col + 1].Value = propertyValue;
                 }
             }
+        }
+
+        static object GetCustomPropertyValue(ExcelPackage package, string propertyName)
+        {
+            // Get the custom properties XML
+            var customPropertiesXml = package.Workbook.Properties.CustomPropertiesXml;
+
+            // Check if the custom properties XML is not null
+            if (customPropertiesXml != null)
+            {
+                // Check if the property exists
+                var propertyNode = customPropertiesXml.SelectSingleNode($"/Properties/AppProperties[@name='{propertyName}']");
+                if (propertyNode != null)
+                {
+                    // Return the property value
+                    return propertyNode.InnerText;
+                }
+            }
+
+            // Return null if the property is not found
+            return null;
+        }
+
+        static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
+        {
+            // Get or create the DocumentSummaryInformation
+            var docSummaryInfo = package.Workbook.Properties;
+
+            // Set the Sensitivity Label custom property
+            docSummaryInfo.SetCustomPropertyValue("SensitivityLabel", sensitivityLabel.ToString());
+        }
+
+
+        public enum SensitivityLabel
+        {
+            General,
+            Confidential,
+            HighlyConfidential
         }
     }
 }
