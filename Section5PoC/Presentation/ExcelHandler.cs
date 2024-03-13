@@ -152,9 +152,10 @@ namespace Section5PoC
             {
                 string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
-                worksheet.View.FreezePanes(2, i + 1); // Assuming headers are in the first row (1-indexed)
             }
+            worksheet.View.FreezePanes(1, worksheet.Dimension.End.Column);
         }
+
 
         private static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
         {
