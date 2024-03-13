@@ -47,3 +47,7 @@ C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\obj\
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\obj\Debug\Section5PoC.Presentation.Form1.resources
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\obj\Debug\Section5PoC.csproj.GenerateResource.cache
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\obj\Debug\Section5PoC.Presentation.ProfileCreator.resources
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.Framework.dll
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.Framework.xml
