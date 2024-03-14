@@ -51,3 +51,5 @@ C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.Framework.dll
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.xml
 C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\DocumentFormat.OpenXml.Framework.xml
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\Newtonsoft.Json.dll
+C:\Users\tomvh\Documents\School\S5 - Internship\DAF-Saber-Macro\Section5PoC\bin\Debug\Newtonsoft.Json.xml

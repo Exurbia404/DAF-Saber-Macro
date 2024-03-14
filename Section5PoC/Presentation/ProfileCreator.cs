@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Point = System.Drawing.Point;
 
 namespace Section5PoC.Presentation
@@ -164,9 +165,20 @@ namespace Section5PoC.Presentation
             comboBoxes = new List<ComboBox>();
             comboBox_Labels = new List<Label>();
 
-
             LoadDefaultProfiles();
 
+            Dictionary<string, List<string>> loadedProfiles = LoadProfilesFromSettings();
+            if (loadedProfiles != null)
+            {
+                // Assign the loaded profiles to userProfiles
+                userProfiles = loadedProfiles;
+
+                // Add the names of each profile to profilesListBox.Items
+                foreach (string profileName in loadedProfiles.Keys)
+                {
+                    profilesListBox.Items.Add(profileName);
+                }
+            }
 
             GenerateComboBoxes(headerCounter);
         }
@@ -458,6 +470,8 @@ namespace Section5PoC.Presentation
 
                 UnselectAllComboBoxes();
                 profileNameTextBox.Clear();
+
+                SaveProfilesToSettings();
             }
             else
             {
@@ -485,6 +499,8 @@ namespace Section5PoC.Presentation
 
                     // Optionally, you can clear the selection in the profileTypeComboBox
                     profileTypeComboBox.SelectedIndex = -1;
+                    SaveProfilesToSettings();
+
                 }
             }
             else
@@ -531,6 +547,25 @@ namespace Section5PoC.Presentation
                     MessageBox.Show("The number of values in the loaded profile does not match the number of ComboBoxes.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void SaveProfilesToSettings()
+        {
+            string userProfileJson = JsonConvert.SerializeObject(userProfiles);
+
+            // Save the serialized string to the application setting
+            Properties.Settings.Default.UserProfiles = userProfileJson;
+            Properties.Settings.Default.Save();
+        }
+
+        private Dictionary<string, List<string>> LoadProfilesFromSettings()
+        {
+            // Retrieve the serialized string from the application setting
+            string userProfileJson = Properties.Settings.Default.UserProfiles;
+
+            // Deserialize the string back to the dictionary
+            Dictionary<string, List<string>> userProfiles = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(userProfileJson);
+            return userProfiles;
         }
     }
 }
