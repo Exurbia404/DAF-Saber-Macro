@@ -54,6 +54,7 @@
             this.profilesListBox.Name = "profilesListBox";
             this.profilesListBox.Size = new System.Drawing.Size(155, 238);
             this.profilesListBox.TabIndex = 51;
+            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.profilesListBox_SelectedIndexChanged);
             // 
             // profileNameTextBox
             // 
@@ -79,6 +80,7 @@
             this.deleteProfileButton.TabIndex = 54;
             this.deleteProfileButton.Text = "Delete";
             this.deleteProfileButton.UseVisualStyleBackColor = true;
+            this.deleteProfileButton.Click += new System.EventHandler(this.deleteProfileButton_Click);
             // 
             // addHeaderButton
             // 
