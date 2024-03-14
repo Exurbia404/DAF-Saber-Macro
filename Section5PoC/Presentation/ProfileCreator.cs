@@ -84,7 +84,7 @@ namespace Section5PoC.Presentation
             Kodenr_wire,
             Tag,
         }
-        
+
         private enum Component_WCSPP_Profile_Options
         {
             Name,
@@ -140,14 +140,28 @@ namespace Section5PoC.Presentation
         }
 
         private ProfileController profileController;
+
         private Dictionary<string, List<string>> profiles;
+        private List<ComboBox> comboBoxes;
+        private List<Label> comboBox_Labels;
+
+        //Distance between buttons
+        private int horizontalOffset = 40;
+        private int headerCounter = 3;
 
         public ProfileCreator()
         {
             profileController = new ProfileController();
+            profiles = new Dictionary<string, List<string>>();
+            comboBoxes = new List<ComboBox>();
+            comboBox_Labels = new List<Label>();
+
+
             LoadDefaultProfiles();
 
             InitializeComponent();
+
+            GenerateComboBoxes(headerCounter);
         }
 
         private void LoadDefaultProfiles()
@@ -194,6 +208,127 @@ namespace Section5PoC.Presentation
         private void ProfileCreator_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void GenerateComboBoxes(int headerCount)
+        {
+            RemoveOldHeadersAndButtons();
+
+            int x = 175; // Initial x-coordinate
+            int y = 60;  // Initial y-coordinate
+
+            // Iterate through each header
+            for (int i = 0; i < headerCount; i++)
+            {
+                // Create a new ComboBox
+                ComboBox comboBox = new ComboBox();
+
+                // Set ComboBox location
+                comboBox.Location = new Point(x, y);
+                comboBox.Size = new Size(40, 25);
+
+                // Add ComboBox to the list
+                comboBoxes.Add(comboBox);
+
+                // Increment x-coordinate for the next ComboBox
+                x += horizontalOffset; // horizontalOffset is assumed to be set elsewhere
+
+                // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
+                this.Controls.Add(comboBox);
+                comboBox.Show();
+            }
+
+            GenerateLabels(headerCount);
+            MoveHeaderButtons(headerCount);
+        }
+
+        private void GenerateLabels(int headerCount)
+        {
+            int labelX = 175; // Initial x-coordinate
+            int labelY = 40; // Initial y-coordinate for Labels
+
+            // Iterate through each header
+            for (int i = 0; i < headerCount; i++)
+            {
+                // Create a new Label
+                Label label = new Label();
+
+                // Set Label text to alphabet (A, B, C, ...)
+                label.Text = ((char)('X' + i)).ToString();
+                label.Size = new Size(25, 25);
+
+                // Set Label location
+                label.Location = new Point(labelX, labelY);
+
+                // Add Label to the appropriate container in your UI (e.g., a panel or form)
+                comboBox_Labels.Add(label);
+                this.Controls.Add(label);
+                label.Show();
+
+                labelX += horizontalOffset;
+            }
+        }
+
+        private void MoveHeaderButtons(int headerCount)
+        {
+
+            int x = 175 + ((headerCount * horizontalOffset) + 10); // Initial x-coordinate for header buttons (added 10 for extra offset)
+            int y = 45; // y-coordinate for header buttons
+
+            // Set the location for the Add Header Button
+            removeHeaderButton.Location = new Point(x, y);
+
+            // Increment x-coordinate for the Delete Header Button
+            x += removeHeaderButton.Width + 10; // Assuming a gap of 10 pixels between buttons
+
+            // Set the location for the Delete Header Button
+            addHeaderButton.Location = new Point(x, y);
+        }
+
+        
+        private void RemoveOldHeadersAndButtons()
+        {
+            //Get rid of all existing comboBoxes and labels in the list so duplicates cannot exist
+            foreach(ComboBox comboBox in comboBoxes)
+            {
+                comboBox.Dispose();
+            }
+
+            foreach(Label label in comboBox_Labels)
+            {
+                label.Dispose();
+            }
+        }
+
+        private void GetComboBoxesValues()
+        {
+
+        }
+
+        private void saveProfileButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void removeHeaderButton_Click(object sender, EventArgs e)
+        {
+            //headerCounter cannot go into the negative
+            if(headerCounter > 0)
+            {
+                headerCounter--;
+                GenerateComboBoxes(headerCounter);
+            }
+            
+        }
+
+        private void addHeaderButton_Click(object sender, EventArgs e)
+        {
+            //Here you can set the maximum amount of headers
+            if (headerCounter < 26)
+            {
+                headerCounter++;
+                GenerateComboBoxes(headerCounter);
+            }
         }
     }
 }
