@@ -146,11 +146,13 @@ namespace Section5PoC.Presentation
         private List<Label> comboBox_Labels;
 
         //Distance between buttons
-        private int horizontalOffset = 40;
+        private int horizontalOffset = 120;
         private int headerCounter = 3;
 
         public ProfileCreator()
         {
+            InitializeComponent();
+
             profileController = new ProfileController();
             profiles = new Dictionary<string, List<string>>();
             comboBoxes = new List<ComboBox>();
@@ -159,7 +161,6 @@ namespace Section5PoC.Presentation
 
             LoadDefaultProfiles();
 
-            InitializeComponent();
 
             GenerateComboBoxes(headerCounter);
         }
@@ -203,6 +204,11 @@ namespace Section5PoC.Presentation
             profiles.Add("Component_WCSPP_Profile", componentWCSPPProfile);
             profiles.Add("Component_Profile", componentProfile);
             profiles.Add("Component_Project_Profile", componentProjectProfile);
+
+            foreach (string profileName in profiles.Keys)
+            {
+                profileTypeComboBox.Items.Add(profileName);
+            }
         }
 
         private void ProfileCreator_Load(object sender, EventArgs e)
@@ -212,7 +218,7 @@ namespace Section5PoC.Presentation
 
         private void GenerateComboBoxes(int headerCount)
         {
-            RemoveOldHeadersAndButtons();
+            RemoveOldHeadersAndButtons(headerCount);
 
             int x = 175; // Initial x-coordinate
             int y = 60;  // Initial y-coordinate
@@ -225,7 +231,10 @@ namespace Section5PoC.Presentation
 
                 // Set ComboBox location
                 comboBox.Location = new Point(x, y);
-                comboBox.Size = new Size(40, 25);
+                comboBox.Size = new Size(horizontalOffset, 25);
+
+                // Set ComboBox DropDownStyle to DropDownList
+                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
                 // Add ComboBox to the list
                 comboBoxes.Add(comboBox);
@@ -239,8 +248,10 @@ namespace Section5PoC.Presentation
             }
 
             GenerateLabels(headerCount);
+            AddOptionsToComboBoxes(profiles);
             MoveHeaderButtons(headerCount);
         }
+
 
         private void GenerateLabels(int headerCount)
         {
@@ -254,7 +265,7 @@ namespace Section5PoC.Presentation
                 Label label = new Label();
 
                 // Set Label text to alphabet (A, B, C, ...)
-                label.Text = ((char)('X' + i)).ToString();
+                label.Text = ((char)('A' + i)).ToString();
                 label.Size = new Size(25, 25);
 
                 // Set Label location
@@ -285,18 +296,45 @@ namespace Section5PoC.Presentation
             addHeaderButton.Location = new Point(x, y);
         }
 
-        
-        private void RemoveOldHeadersAndButtons()
+
+        private void RemoveOldHeadersAndButtons(int headerCount)
         {
-            //Get rid of all existing comboBoxes and labels in the list so duplicates cannot exist
-            foreach(ComboBox comboBox in comboBoxes)
+            // Remove ComboBoxes and Labels that are outside the range of headerCount
+            for (int i = headerCount; i < comboBoxes.Count; i++)
             {
-                comboBox.Dispose();
+                comboBoxes[i].Dispose();
             }
 
-            foreach(Label label in comboBox_Labels)
+            for (int i = headerCount; i < comboBox_Labels.Count; i++)
             {
-                label.Dispose();
+                comboBox_Labels[i].Dispose();
+            }
+
+            //Does not need to happen at the start of the program when these are empty
+            if((comboBoxes.Count > headerCount) && (comboBox_Labels.Count > headerCount))
+            {
+                // Remove the disposed ComboBoxes and Labels from the lists
+                comboBoxes.RemoveRange(headerCount, comboBoxes.Count - headerCount);
+                comboBox_Labels.RemoveRange(headerCount, comboBox_Labels.Count - headerCount);
+            }
+            
+        }
+
+        private void AddOptionsToComboBoxes(Dictionary<string, List<string>> profile)
+        {
+            if (profiles.Count > 0)
+            {
+                // Get the first KeyValuePair from the dictionary
+                KeyValuePair<string, List<string>> keyValueProfile = profile.First();
+                foreach(ComboBox comboBox in comboBoxes)
+                {
+                    comboBox.Items.Clear();
+                    // Add items from the first list to the ComboBox
+                    foreach (string item in keyValueProfile.Value)
+                    {
+                        comboBox.Items.Add(item);
+                    }
+                }
             }
         }
 
@@ -328,6 +366,23 @@ namespace Section5PoC.Presentation
             {
                 headerCounter++;
                 GenerateComboBoxes(headerCounter);
+            }
+        }
+
+        private void profileTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Dictionary<string, List<string>> selectedProfileDictionary;
+            string selectedProfileName = profileTypeComboBox.SelectedItem.ToString();
+
+            // Check if the selected profile name exists in the dictionary
+            if (profiles.ContainsKey(selectedProfileName))
+            {
+                // Get the dictionary associated with the selected profile name
+                selectedProfileDictionary = new Dictionary<string, List<string>>();
+                selectedProfileDictionary.Add(selectedProfileName, profiles[selectedProfileName]);
+
+                // Call AddOptionsToComboBoxes with the selected dictionary
+                AddOptionsToComboBoxes(selectedProfileDictionary);
             }
         }
     }

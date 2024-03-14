@@ -65,18 +65,11 @@
             // profileTypeComboBox
             // 
             this.profileTypeComboBox.FormattingEnabled = true;
-            this.profileTypeComboBox.Items.AddRange(new object[] {
-            "Component\t- DSI",
-            "Component\t- Project",
-            "Component\t- WCSPP",
-            "",
-            "Wire\t\t- DSI",
-            "Wire\t\t- Project",
-            "Wire\t\t- WCSPP"});
             this.profileTypeComboBox.Location = new System.Drawing.Point(15, 12);
             this.profileTypeComboBox.Name = "profileTypeComboBox";
             this.profileTypeComboBox.Size = new System.Drawing.Size(155, 21);
             this.profileTypeComboBox.TabIndex = 53;
+            this.profileTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.profileTypeComboBox_SelectedIndexChanged);
             // 
             // deleteProfileButton
             // 
