@@ -229,11 +229,6 @@ namespace Section5PoC.Presentation
             }
         }
 
-        private void ProfileCreator_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void GenerateComboBoxes(int headerCount)
         {
             RemoveOldHeadersAndButtons(headerCount);

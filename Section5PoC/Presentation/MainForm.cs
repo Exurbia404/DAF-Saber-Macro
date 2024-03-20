@@ -140,12 +140,13 @@ namespace Section5PoC.Presentation
 
             try
             {
-                await Task.Run(() =>
-                {
-                    // Get all immediate subfolders
-                    string[] subfolders = Directory.GetDirectories(folderPath);
+                // Get all immediate subfolders asynchronously
+                string[] subfolders = await Task.Run(() => Directory.GetDirectories(folderPath));
 
-                    foreach (string subfolder in subfolders)
+                // Process subfolders in parallel
+                await Task.WhenAll(subfolders.Select(async subfolder =>
+                {
+                    try
                     {
                         // Check if the folder has any files
 
@@ -155,11 +156,18 @@ namespace Section5PoC.Presentation
                         // Check if the folder name is 7 or 8 numbers long
                         if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                         {
-                            // Add to lists
-                            folderPaths.Add(subfolder);
+                            // Add to list (ensure thread-safe access)
+                            lock (folderPaths)
+                            {
+                                folderPaths.Add(subfolder);
+                            }
                         }
                     }
-                });
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing folder '{subfolder}': {ex.Message}");
+                    }
+                }));
 
                 stopwatch.Stop();
                 Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
