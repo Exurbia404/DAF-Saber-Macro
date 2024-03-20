@@ -1,19 +1,9 @@
-﻿using Section5PoC.DAL;
-using Section5PoC.Logic;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Logic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Component = Logic.Component;
 
-namespace Section5PoC.Presentation
+namespace Presentation
 {
     public partial class MainForm : Form
     {
@@ -24,8 +14,8 @@ namespace Section5PoC.Presentation
         private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
 
         private List<string> folderPaths;
-        private List<System.Windows.Forms.Button> bundlesToggleButtons = new List<System.Windows.Forms.Button>();
-        private List<System.Windows.Forms.Button> projectsToggleButtons = new List<System.Windows.Forms.Button>();
+        private List<Button> bundlesToggleButtons = new List<Button>();
+        private List<Button> projectsToggleButtons = new List<Button>();
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;

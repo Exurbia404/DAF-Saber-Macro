@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Section5PoC.Presentation
+namespace Presentation
 {
     public partial class ProfileChoiceForm : Form
     {

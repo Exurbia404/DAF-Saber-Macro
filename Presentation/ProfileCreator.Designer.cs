@@ -1,4 +1,4 @@
-﻿namespace Section5PoC.Presentation
+﻿namespace Presentation
 {
     partial class ProfileCreator
     {

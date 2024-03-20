@@ -1,14 +1,10 @@
-﻿using OfficeOpenXml;
-using System;
-using System.Collections.Generic;
+﻿using Logic;
+using OfficeOpenXml;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Xml;
 
 
-namespace Section5PoC
+namespace Presentation
 {
     public class ExcelHandler
     {
