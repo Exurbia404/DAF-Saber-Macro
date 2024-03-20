@@ -62,6 +62,12 @@
     </Compile>
     <Compile Include="Logic\Component_Folder\Project_Component.cs" />
     <Compile Include="Logic\Wire_Folder\Project_Wire.cs" />
+    <Compile Include="Presentation\ProfileChoiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\ProfileChoiceForm.Designer.cs">
+      <DependentUpon>ProfileChoiceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\ProfileCreator.cs">
       <SubType>Form</SubType>
     </Compile>
