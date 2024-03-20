@@ -15,7 +15,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Section5PoC.Presentation
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
         private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer\Boms";
@@ -37,9 +37,9 @@ namespace Section5PoC.Presentation
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
-        
 
-        public Form1()
+
+        public MainForm()
         {
             InitializeComponent();
 
@@ -64,10 +64,11 @@ namespace Section5PoC.Presentation
             projectsToggleButtons.Add(releasedButton);
 
             searchBundlesTextBox_SetText();
+            schematicsSearchTextBox_SetText();
 
             try
             {
-                if(computerName == "EXURBIA")
+                if (computerName == "EXURBIA")
                 {
                     DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
@@ -147,7 +148,7 @@ namespace Section5PoC.Presentation
                     foreach (string subfolder in subfolders)
                     {
                         // Check if the folder has any files
-                        
+
                         // Extract folder name and path
                         string folderName = Path.GetFileName(subfolder);
 
@@ -273,6 +274,27 @@ namespace Section5PoC.Presentation
                 searchBundlesTextBox_SetText();
         }
 
+        private void schematicsSearchTextBox_Enter(object sender, EventArgs e)
+        {
+            if (schematicsSearchTextBox.ForeColor == Color.Black)
+                return;
+            schematicsSearchTextBox.Text = "";
+            schematicsSearchTextBox.ForeColor = Color.Black;
+        }
+
+        private void schematicsSearchTextBox_Leave(object sender, EventArgs e)
+        {
+            if (schematicsSearchTextBox.Text.Trim() == "")
+                schematicsSearchTextBox_SetText();
+        }
+
+        private void schematicsSearchTextBox_SetText()
+        {
+            schematicsSearchTextBox.Text = "Search:";
+            schematicsSearchTextBox.ForeColor = Color.Gray;
+        }
+
+
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             bundlesListBox.ClearSelected();
@@ -280,7 +302,7 @@ namespace Section5PoC.Presentation
             {
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
                 AddSchematicsToListBox(schematicNames);
-            }            
+            }
         }
 
         private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -333,7 +355,7 @@ namespace Section5PoC.Presentation
                 // Call AddSchematicsToListBox with the list of BundleNumbers
                 AddSchematicsToListBox(bundleNumbers);
             }
-            else if(IsRefSetNumber(selectedSchematic))
+            else if (IsRefSetNumber(selectedSchematic))
             {
                 OpenRefSetInExcel(selectedSchematic);
             }
@@ -451,5 +473,6 @@ namespace Section5PoC.Presentation
             var newProfileForm = new ProfileCreator();
             newProfileForm.Show();
         }
+
     }
 }

@@ -26,7 +26,7 @@ namespace Section5PoC
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
-            Form1 myForm = new Form1();
+            MainForm myForm = new MainForm();
             myForm.Show();  // Show the form
             Application.Run(myForm);
 

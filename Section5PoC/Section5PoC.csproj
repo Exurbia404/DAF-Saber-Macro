@@ -54,11 +54,11 @@
     <Compile Include="Logic\WCSPP_Convertor.cs" />
     <Compile Include="Logic\Wire_Folder\WCSPP_Wire.cs" />
     <Compile Include="Logic\Wire_Folder\Wire.cs" />
-    <Compile Include="Presentation\Form1.cs">
+    <Compile Include="Presentation\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentation\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Presentation\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\Component_Folder\Project_Component.cs" />
     <Compile Include="Logic\Wire_Folder\Project_Wire.cs" />
@@ -125,8 +125,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Presentation\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Presentation\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\ProfileCreator.resx">
       <DependentUpon>ProfileCreator.cs</DependentUpon>
