@@ -116,7 +116,6 @@
             this.Controls.Add(this.saveProfileButton);
             this.Name = "ProfileCreator";
             this.Text = "F";
-            this.Load += new System.EventHandler(this.ProfileCreator_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
