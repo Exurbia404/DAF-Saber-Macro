@@ -3,8 +3,12 @@
 ## People
 
 - **Tom van Heek** - Intern/Developer
-- **Gustavo Carniel (DAF)** - Product owner
+
+- **Tom Lavrijsen (DAF)** - Product owner
+- **Gustavo Carniel (DAF)** - Product owner/intern coordinator
 - **Ema Mladenovska (Fontys)** - 1e Assesor
+-
+- **Marc van Grootel (Fontys)** - 2e Assesor
 - **Mark Mestrom (Fontys)** - Internship coordinator
 
 ## Project description
