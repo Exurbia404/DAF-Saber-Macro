@@ -1,3 +1,5 @@
+using Logging;
+
 namespace Presentation
 {
     internal static class Program
@@ -8,10 +10,11 @@ namespace Presentation
         [STAThread]
         static void Main()
         {
+            Logger mainLogger = new Logger();
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            Application.Run(new MainForm(mainLogger));
         }
     }
 }

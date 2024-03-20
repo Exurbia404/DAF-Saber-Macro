@@ -28,215 +28,223 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.bundlesListLabel = new System.Windows.Forms.Label();
-            this.bundlesListBox = new System.Windows.Forms.ListBox();
-            this.searchBundlesTextBox = new System.Windows.Forms.TextBox();
-            this.schematicsSearchTextBox = new System.Windows.Forms.TextBox();
-            this.schematicsListBox = new System.Windows.Forms.ListBox();
-            this.schematicsListLabel = new System.Windows.Forms.Label();
-            this.productProtoButton = new System.Windows.Forms.Button();
-            this.reldasButton = new System.Windows.Forms.Button();
-            this.designerButton = new System.Windows.Forms.Button();
-            this.wipButton = new System.Windows.Forms.Button();
-            this.releasedButton = new System.Windows.Forms.Button();
-            this.goToProfilesButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            bundlesListLabel = new Label();
+            bundlesListBox = new ListBox();
+            searchBundlesTextBox = new TextBox();
+            schematicsSearchTextBox = new TextBox();
+            schematicsListBox = new ListBox();
+            schematicsListLabel = new Label();
+            productProtoButton = new Button();
+            reldasButton = new Button();
+            designerButton = new Button();
+            wipButton = new Button();
+            releasedButton = new Button();
+            goToProfilesButton = new Button();
+            button1 = new Button();
+            button2 = new Button();
+            button3 = new Button();
+            SuspendLayout();
             // 
             // bundlesListLabel
             // 
-            this.bundlesListLabel.AutoSize = true;
-            this.bundlesListLabel.Font = new System.Drawing.Font("Arial", 15F, System.Drawing.FontStyle.Bold);
-            this.bundlesListLabel.Location = new System.Drawing.Point(9, 76);
-            this.bundlesListLabel.Name = "bundlesListLabel";
-            this.bundlesListLabel.Size = new System.Drawing.Size(94, 24);
-            this.bundlesListLabel.TabIndex = 0;
-            this.bundlesListLabel.Text = "Bundels:";
+            bundlesListLabel.AutoSize = true;
+            bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold);
+            bundlesListLabel.Location = new Point(10, 88);
+            bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
+            bundlesListLabel.Name = "bundlesListLabel";
+            bundlesListLabel.Size = new Size(94, 24);
+            bundlesListLabel.TabIndex = 0;
+            bundlesListLabel.Text = "Bundles:";
             // 
             // bundlesListBox
             // 
-            this.bundlesListBox.Font = new System.Drawing.Font("Arial", 10F);
-            this.bundlesListBox.FormattingEnabled = true;
-            this.bundlesListBox.ItemHeight = 16;
-            this.bundlesListBox.Location = new System.Drawing.Point(12, 175);
-            this.bundlesListBox.Name = "bundlesListBox";
-            this.bundlesListBox.Size = new System.Drawing.Size(251, 340);
-            this.bundlesListBox.TabIndex = 1;
-            this.bundlesListBox.DoubleClick += new System.EventHandler(this.bundlesListBox_DoubleClick);
+            bundlesListBox.Font = new Font("Arial", 10F);
+            bundlesListBox.FormattingEnabled = true;
+            bundlesListBox.Location = new Point(14, 202);
+            bundlesListBox.Margin = new Padding(4, 3, 4, 3);
+            bundlesListBox.Name = "bundlesListBox";
+            bundlesListBox.Size = new Size(292, 388);
+            bundlesListBox.TabIndex = 1;
+            bundlesListBox.DoubleClick += bundlesListBox_DoubleClick;
             // 
             // searchBundlesTextBox
             // 
-            this.searchBundlesTextBox.Font = new System.Drawing.Font("Arial", 10F);
-            this.searchBundlesTextBox.Location = new System.Drawing.Point(12, 146);
-            this.searchBundlesTextBox.Name = "searchBundlesTextBox";
-            this.searchBundlesTextBox.Size = new System.Drawing.Size(251, 23);
-            this.searchBundlesTextBox.TabIndex = 4;
-            this.searchBundlesTextBox.Text = "search:";
-            this.searchBundlesTextBox.Enter += new System.EventHandler(this.searchBundlesTextBox_Enter);
-            this.searchBundlesTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBundlesTextBox_KeyDown);
-            this.searchBundlesTextBox.Leave += new System.EventHandler(this.searchBundlesTextBox_Leave);
+            searchBundlesTextBox.Font = new Font("Arial", 10F);
+            searchBundlesTextBox.Location = new Point(14, 168);
+            searchBundlesTextBox.Margin = new Padding(4, 3, 4, 3);
+            searchBundlesTextBox.Name = "searchBundlesTextBox";
+            searchBundlesTextBox.Size = new Size(292, 23);
+            searchBundlesTextBox.TabIndex = 4;
+            searchBundlesTextBox.Text = "search:";
+            searchBundlesTextBox.Enter += searchBundlesTextBox_Enter;
+            searchBundlesTextBox.KeyDown += searchBundlesTextBox_KeyDown;
+            searchBundlesTextBox.Leave += searchBundlesTextBox_Leave;
             // 
             // schematicsSearchTextBox
             // 
-            this.schematicsSearchTextBox.Font = new System.Drawing.Font("Arial", 10F);
-            this.schematicsSearchTextBox.Location = new System.Drawing.Point(349, 146);
-            this.schematicsSearchTextBox.Name = "schematicsSearchTextBox";
-            this.schematicsSearchTextBox.Size = new System.Drawing.Size(251, 23);
-            this.schematicsSearchTextBox.TabIndex = 7;
-            this.schematicsSearchTextBox.Text = "search:";
-            this.schematicsSearchTextBox.Enter += new System.EventHandler(this.schematicsSearchTextBox_Enter);
-            this.schematicsSearchTextBox.Leave += new System.EventHandler(this.schematicsSearchTextBox_Leave);
+            schematicsSearchTextBox.Font = new Font("Arial", 10F);
+            schematicsSearchTextBox.Location = new Point(407, 168);
+            schematicsSearchTextBox.Margin = new Padding(4, 3, 4, 3);
+            schematicsSearchTextBox.Name = "schematicsSearchTextBox";
+            schematicsSearchTextBox.Size = new Size(292, 23);
+            schematicsSearchTextBox.TabIndex = 7;
+            schematicsSearchTextBox.Text = "search:";
+            schematicsSearchTextBox.Enter += schematicsSearchTextBox_Enter;
+            schematicsSearchTextBox.Leave += schematicsSearchTextBox_Leave;
             // 
             // schematicsListBox
             // 
-            this.schematicsListBox.Font = new System.Drawing.Font("Arial", 10F);
-            this.schematicsListBox.FormattingEnabled = true;
-            this.schematicsListBox.ItemHeight = 16;
-            this.schematicsListBox.Location = new System.Drawing.Point(349, 175);
-            this.schematicsListBox.Name = "schematicsListBox";
-            this.schematicsListBox.Size = new System.Drawing.Size(251, 340);
-            this.schematicsListBox.TabIndex = 6;
-            this.schematicsListBox.DoubleClick += new System.EventHandler(this.schematicsListBox_DoubleClick);
+            schematicsListBox.Font = new Font("Arial", 10F);
+            schematicsListBox.FormattingEnabled = true;
+            schematicsListBox.Location = new Point(407, 202);
+            schematicsListBox.Margin = new Padding(4, 3, 4, 3);
+            schematicsListBox.Name = "schematicsListBox";
+            schematicsListBox.Size = new Size(292, 388);
+            schematicsListBox.TabIndex = 6;
+            schematicsListBox.DoubleClick += schematicsListBox_DoubleClick;
             // 
             // schematicsListLabel
             // 
-            this.schematicsListLabel.AutoSize = true;
-            this.schematicsListLabel.Font = new System.Drawing.Font("Arial", 15F, System.Drawing.FontStyle.Bold);
-            this.schematicsListLabel.Location = new System.Drawing.Point(346, 76);
-            this.schematicsListLabel.Name = "schematicsListLabel";
-            this.schematicsListLabel.Size = new System.Drawing.Size(95, 24);
-            this.schematicsListLabel.TabIndex = 5;
-            this.schematicsListLabel.Text = "Projects:";
+            schematicsListLabel.AutoSize = true;
+            schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold);
+            schematicsListLabel.Location = new Point(404, 88);
+            schematicsListLabel.Margin = new Padding(4, 0, 4, 0);
+            schematicsListLabel.Name = "schematicsListLabel";
+            schematicsListLabel.Size = new Size(95, 24);
+            schematicsListLabel.TabIndex = 5;
+            schematicsListLabel.Text = "Projects:";
             // 
             // productProtoButton
             // 
-            this.productProtoButton.BackColor = System.Drawing.Color.Gray;
-            this.productProtoButton.Location = new System.Drawing.Point(12, 122);
-            this.productProtoButton.Margin = new System.Windows.Forms.Padding(2);
-            this.productProtoButton.Name = "productProtoButton";
-            this.productProtoButton.Size = new System.Drawing.Size(83, 20);
-            this.productProtoButton.TabIndex = 8;
-            this.productProtoButton.Text = "Production/Proto";
-            this.productProtoButton.UseVisualStyleBackColor = false;
-            this.productProtoButton.Click += new System.EventHandler(this.productProtoButton_Click);
+            productProtoButton.BackColor = Color.Gray;
+            productProtoButton.Location = new Point(14, 141);
+            productProtoButton.Margin = new Padding(2);
+            productProtoButton.Name = "productProtoButton";
+            productProtoButton.Size = new Size(97, 23);
+            productProtoButton.TabIndex = 8;
+            productProtoButton.Text = "Production/Proto";
+            productProtoButton.UseVisualStyleBackColor = false;
+            productProtoButton.Click += productProtoButton_Click;
             // 
             // reldasButton
             // 
-            this.reldasButton.BackColor = System.Drawing.Color.Gray;
-            this.reldasButton.Location = new System.Drawing.Point(95, 122);
-            this.reldasButton.Margin = new System.Windows.Forms.Padding(2);
-            this.reldasButton.Name = "reldasButton";
-            this.reldasButton.Size = new System.Drawing.Size(83, 20);
-            this.reldasButton.TabIndex = 9;
-            this.reldasButton.Text = "Release portal";
-            this.reldasButton.UseVisualStyleBackColor = false;
-            this.reldasButton.Click += new System.EventHandler(this.reldasButton_Click);
+            reldasButton.BackColor = Color.Gray;
+            reldasButton.Location = new Point(111, 141);
+            reldasButton.Margin = new Padding(2);
+            reldasButton.Name = "reldasButton";
+            reldasButton.Size = new Size(97, 23);
+            reldasButton.TabIndex = 9;
+            reldasButton.Text = "Release portal";
+            reldasButton.UseVisualStyleBackColor = false;
+            reldasButton.Click += reldasButton_Click;
             // 
             // designerButton
             // 
-            this.designerButton.BackColor = System.Drawing.Color.White;
-            this.designerButton.Location = new System.Drawing.Point(179, 122);
-            this.designerButton.Margin = new System.Windows.Forms.Padding(2);
-            this.designerButton.Name = "designerButton";
-            this.designerButton.Size = new System.Drawing.Size(83, 20);
-            this.designerButton.TabIndex = 10;
-            this.designerButton.Text = "WiP";
-            this.designerButton.UseVisualStyleBackColor = false;
-            this.designerButton.Click += new System.EventHandler(this.designerButton_Click);
+            designerButton.BackColor = Color.White;
+            designerButton.Location = new Point(209, 141);
+            designerButton.Margin = new Padding(2);
+            designerButton.Name = "designerButton";
+            designerButton.Size = new Size(97, 23);
+            designerButton.TabIndex = 10;
+            designerButton.Text = "WiP";
+            designerButton.UseVisualStyleBackColor = false;
+            designerButton.Click += designerButton_Click;
             // 
             // wipButton
             // 
-            this.wipButton.BackColor = System.Drawing.Color.Gray;
-            this.wipButton.Enabled = false;
-            this.wipButton.Location = new System.Drawing.Point(432, 122);
-            this.wipButton.Margin = new System.Windows.Forms.Padding(2);
-            this.wipButton.Name = "wipButton";
-            this.wipButton.Size = new System.Drawing.Size(83, 20);
-            this.wipButton.TabIndex = 12;
-            this.wipButton.Text = "WiP";
-            this.wipButton.UseVisualStyleBackColor = false;
-            this.wipButton.Click += new System.EventHandler(this.wipButton_Click);
+            wipButton.BackColor = Color.Gray;
+            wipButton.Enabled = false;
+            wipButton.Location = new Point(504, 141);
+            wipButton.Margin = new Padding(2);
+            wipButton.Name = "wipButton";
+            wipButton.Size = new Size(97, 23);
+            wipButton.TabIndex = 12;
+            wipButton.Text = "WiP";
+            wipButton.UseVisualStyleBackColor = false;
+            wipButton.Click += wipButton_Click;
             // 
             // releasedButton
             // 
-            this.releasedButton.BackColor = System.Drawing.Color.White;
-            this.releasedButton.Location = new System.Drawing.Point(349, 122);
-            this.releasedButton.Margin = new System.Windows.Forms.Padding(2);
-            this.releasedButton.Name = "releasedButton";
-            this.releasedButton.Size = new System.Drawing.Size(83, 20);
-            this.releasedButton.TabIndex = 11;
-            this.releasedButton.Text = "Released";
-            this.releasedButton.UseVisualStyleBackColor = false;
-            this.releasedButton.Click += new System.EventHandler(this.releasedButton_Click);
+            releasedButton.BackColor = Color.White;
+            releasedButton.Location = new Point(407, 141);
+            releasedButton.Margin = new Padding(2);
+            releasedButton.Name = "releasedButton";
+            releasedButton.Size = new Size(97, 23);
+            releasedButton.TabIndex = 11;
+            releasedButton.Text = "Released";
+            releasedButton.UseVisualStyleBackColor = false;
+            releasedButton.Click += releasedButton_Click;
             // 
             // goToProfilesButton
             // 
-            this.goToProfilesButton.Location = new System.Drawing.Point(12, 530);
-            this.goToProfilesButton.Name = "goToProfilesButton";
-            this.goToProfilesButton.Size = new System.Drawing.Size(75, 23);
-            this.goToProfilesButton.TabIndex = 13;
-            this.goToProfilesButton.Text = "Profiles";
-            this.goToProfilesButton.UseVisualStyleBackColor = true;
-            this.goToProfilesButton.Click += new System.EventHandler(this.goToProfilesButton_Click);
+            goToProfilesButton.Location = new Point(14, 612);
+            goToProfilesButton.Margin = new Padding(4, 3, 4, 3);
+            goToProfilesButton.Name = "goToProfilesButton";
+            goToProfilesButton.Size = new Size(88, 27);
+            goToProfilesButton.TabIndex = 13;
+            goToProfilesButton.Text = "Profiles";
+            goToProfilesButton.UseVisualStyleBackColor = true;
+            goToProfilesButton.Click += goToProfilesButton_Click;
             // 
             // button1
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 30);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "Open";
-            this.button1.UseVisualStyleBackColor = true;
+            button1.Enabled = false;
+            button1.Location = new Point(14, 14);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(88, 35);
+            button1.TabIndex = 14;
+            button1.Text = "Open";
+            button1.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(93, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 30);
-            this.button2.TabIndex = 15;
-            this.button2.Text = "Release";
-            this.button2.UseVisualStyleBackColor = true;
+            button2.Enabled = false;
+            button2.Location = new Point(108, 14);
+            button2.Margin = new Padding(4, 3, 4, 3);
+            button2.Name = "button2";
+            button2.Size = new Size(88, 35);
+            button2.TabIndex = 15;
+            button2.Text = "Release";
+            button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(174, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 30);
-            this.button3.TabIndex = 16;
-            this.button3.Text = "Compare";
-            this.button3.UseVisualStyleBackColor = true;
+            button3.Enabled = false;
+            button3.Location = new Point(203, 14);
+            button3.Margin = new Padding(4, 3, 4, 3);
+            button3.Name = "button3";
+            button3.Size = new Size(88, 35);
+            button3.TabIndex = 16;
+            button3.Text = "Compare";
+            button3.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 568);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.goToProfilesButton);
-            this.Controls.Add(this.wipButton);
-            this.Controls.Add(this.releasedButton);
-            this.Controls.Add(this.designerButton);
-            this.Controls.Add(this.reldasButton);
-            this.Controls.Add(this.productProtoButton);
-            this.Controls.Add(this.schematicsSearchTextBox);
-            this.Controls.Add(this.schematicsListBox);
-            this.Controls.Add(this.schematicsListLabel);
-            this.Controls.Add(this.searchBundlesTextBox);
-            this.Controls.Add(this.bundlesListBox);
-            this.Controls.Add(this.bundlesListLabel);
-            this.Name = "MainForm";
-            this.Text = "Form1";
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(721, 655);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(goToProfilesButton);
+            Controls.Add(wipButton);
+            Controls.Add(releasedButton);
+            Controls.Add(designerButton);
+            Controls.Add(reldasButton);
+            Controls.Add(productProtoButton);
+            Controls.Add(schematicsSearchTextBox);
+            Controls.Add(schematicsListBox);
+            Controls.Add(schematicsListLabel);
+            Controls.Add(searchBundlesTextBox);
+            Controls.Add(bundlesListBox);
+            Controls.Add(bundlesListLabel);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "MainForm";
+            Text = "Form1";
+            MouseClick += Form1_MouseClick;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

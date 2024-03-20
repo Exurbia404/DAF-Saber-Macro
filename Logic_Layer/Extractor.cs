@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace Logic
 {
     public class Extractor
     {
+        private Logger _logger;
+        public Extractor(Logger logger)
+        {
+            _logger = logger;
+        }
 
         public List<Bundle> ExtractBundlesFromFile(string filePath)
         {

@@ -1,7 +1,11 @@
 ﻿using Logic;
+using OfficeOpenXml.FormulaParsing.Logging;
 using System.Data;
 using System.Diagnostics;
 using Component = Logic.Component;
+using Logging;
+using Data_Access;
+using OfficeOpenXml;
 
 namespace Presentation
 {
@@ -19,9 +23,9 @@ namespace Presentation
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
+        private Logger _logger;
 
-        //TODO: import from DAL
-        //private ExcelImporter excelImporter;
+        private ExcelImporter excelImporter;
         private ExcelHandler excelHandler;
 
         private static List<Wire> extractedWires;
@@ -31,19 +35,22 @@ namespace Presentation
 
 
 
-        public MainForm()
+        public MainForm(Logger logger)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+
+            _logger = logger;
             InitializeComponent();
 
             string computerName = Environment.MachineName;
-            Console.WriteLine($"Computer Name: {computerName}");
+            _logger.Log($"Computer Name: {computerName}");
 
-            //excelImporter = new ExcelImporter();
-            extractor = new Extractor();
-            excelHandler = new ExcelHandler();
+            excelImporter = new ExcelImporter(_logger);
+            extractor = new Extractor(_logger);
+            excelHandler = new ExcelHandler(_logger);
 
             folderPaths = new List<string>();
-            //extractedReferences = excelImporter.DSIReferences;
+            extractedReferences = excelImporter.DSIReferences;
 
             //These are the buttons for toggling the working directory:
             //Bundles:
@@ -72,7 +79,7 @@ namespace Presentation
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.Log($"Error: {ex.Message}");
             }
         }
 
@@ -96,7 +103,7 @@ namespace Presentation
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.Log($"Error: {ex.Message}");
             }
         }
 
@@ -120,7 +127,7 @@ namespace Presentation
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.Log($"Error: {ex.Message}");
             }
         }
 
@@ -157,17 +164,17 @@ namespace Presentation
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error processing folder '{subfolder}': {ex.Message}");
+                        _logger.Log($"Error processing folder '{subfolder}': {ex.Message}");
                     }
                 }));
 
                 stopwatch.Stop();
-                Console.WriteLine("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
+                _logger.Log("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
                 return folderPaths;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.Log($"Error: {ex.Message}");
                 return null;
             }
         }
@@ -200,11 +207,11 @@ namespace Presentation
                 string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
                 ExtractAndOpenExcel(latestTxtFile);
                 // Do something with the latest .txt file, for example, display its path
-                Console.WriteLine($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
             }
             else
             {
-                MessageBox.Show($"No matching .txt files found in {selectedFolderPath}");
+                _logger.Log($"No matching .txt files found in {selectedFolderPath}");
             }
         }
 
@@ -250,7 +257,7 @@ namespace Presentation
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.Log($"Error: {ex.Message}");
             }
         }
 
@@ -443,13 +450,13 @@ namespace Presentation
         }
 
         //Projects:
-        private void ProjectsToggleButton(System.Windows.Forms.Button clickedButton)
+        private void ProjectsToggleButton(Button clickedButton)
         {
             // Toggle the clicked button to its opposite state
             clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
 
             // Set other toggle buttons to their default color
-            foreach (System.Windows.Forms.Button button in projectsToggleButtons)
+            foreach (Button button in projectsToggleButtons)
             {
                 if (button != clickedButton)
                 {
@@ -470,7 +477,7 @@ namespace Presentation
 
         private void goToProfilesButton_Click(object sender, EventArgs e)
         {
-            var newProfileForm = new ProfileCreator();
+            var newProfileForm = new ProfileCreator(_logger);
             newProfileForm.Show();
         }
 

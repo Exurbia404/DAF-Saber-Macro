@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic_Layer", "Logic_Layer\Logic_Layer.csproj", "{C96E7D9A-30D2-4648-AFF3-FB6939282DEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{27F46195-9A2D-4CE0-BC92-C1783102A3DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C96E7D9A-30D2-4648-AFF3-FB6939282DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C96E7D9A-30D2-4648-AFF3-FB6939282DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C96E7D9A-30D2-4648-AFF3-FB6939282DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F46195-9A2D-4CE0-BC92-C1783102A3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F46195-9A2D-4CE0-BC92-C1783102A3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F46195-9A2D-4CE0-BC92-C1783102A3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F46195-9A2D-4CE0-BC92-C1783102A3DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,10 +26,11 @@ namespace Logic
 
         private static Extractor extractor;
         private static WCSPP_Convertor wcsppConvertor;
+        private Logger _logger;
 
-        public TestingSuite()
+        public TestingSuite(Logger logger)
         {
-            extractor = new Extractor();
+            extractor = new Extractor(_logger);
             wcsppConvertor = new WCSPP_Convertor();
         }
 

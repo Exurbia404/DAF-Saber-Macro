@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Logging;
 using Newtonsoft.Json;
 using Point = System.Drawing.Point;
 
@@ -146,7 +147,7 @@ namespace Presentation
         private int horizontalOffset = 120;
         private int headerCounter = 3;
 
-        public ProfileCreator()
+        public ProfileCreator(Logger logger)
         {
             InitializeComponent();
 

@@ -1,19 +1,22 @@
 ﻿using System.Diagnostics;
 using OfficeOpenXml;
 using Logic;
+using Logging;
 
 namespace Data_Access
 {
     public class ExcelImporter
     {
         private string dsiDataSetLocation = @"U:\Data\SaberWiP\3_Key_Users\www\Macro\Office10\Importeren_SABER_DATA.xlsm";
-        public List<DSI_Reference> DSIReferences;
-        public ExcelImporter() 
+        public List<DSI_Reference> DSIReferences { get; private set; }
+        private Logger _logger;
+        public ExcelImporter(Logger logger) 
         {
+            _logger = logger;
             DSIReferences = GetDataSetFromExcelSheet(dsiDataSetLocation);
         }
 
-        private static List<DSI_Reference> GetDataSetFromExcelSheet(string filePath)
+        private List<DSI_Reference> GetDataSetFromExcelSheet(string filePath)
         {
             string searchTerm = "jrwk";
             string sheetName = "DATASET";
@@ -76,19 +79,19 @@ namespace Data_Access
 
                     if (foundReferences.Count == 0)
                     {
-                        Console.WriteLine($"No occurrences of the search term '{searchTerm}' found in the second row.");
+                        _logger.Log($"No occurrences of the search term '{searchTerm}' found in the second row.");
                     }
 
                     // Stop the stopwatch
                     stopwatch.Stop();
 
-                    Console.WriteLine($"References imported in: {stopwatch.Elapsed.TotalSeconds}s");
+                    _logger.Log($"References imported in: {stopwatch.Elapsed.TotalSeconds}s");
 
                     return foundReferences;
                 }
                 else
                 {
-                    Console.WriteLine($"Sheet '{sheetName}' not found.");
+                    _logger.Log($"Sheet '{sheetName}' not found.");
                     return null;
                 }
             }

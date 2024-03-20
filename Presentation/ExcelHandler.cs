@@ -1,4 +1,5 @@
-﻿using Logic;
+﻿using Logging;
+using Logic;
 using OfficeOpenXml;
 using System.Diagnostics;
 using System.Reflection;
@@ -8,6 +9,12 @@ namespace Presentation
 {
     public class ExcelHandler
     {
+        private Logger _logger;
+        
+        public ExcelHandler(Logger logger)
+        {
+            _logger = logger;
+        }
 
         public void CreateProjectExcelSheet(List<Project_Wire> wires, List<Project_Component> components)
         {
@@ -60,11 +67,11 @@ namespace Presentation
                 // Stop the stopwatch
                 stopwatch.Stop();
 
-                Console.WriteLine($"Project Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
+                _logger.Log($"Project Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.Log(ex.Message);
             }
         }
 
@@ -123,11 +130,11 @@ namespace Presentation
                 // Stop the stopwatch
                 stopwatch.Stop();
 
-                Console.WriteLine($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
+                _logger.Log($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.Log(ex.Message);
             }
         }
 

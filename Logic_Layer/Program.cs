@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System;
-//using OfficeOpenXml;
+using Logging;
 
 namespace Logic
 {
@@ -15,12 +15,14 @@ namespace Logic
         private static WCSPP_Convertor wcsppConvertor;
         private static TestingSuite testingSuite;
         
-        //Could inject this with a interface?
         //private static ExcelImporter excelImporter;
 
-        public static void Main()
+        private Logger _logger;
+
+        //Could inject this with a interface?
+
+        public static void Main(Logger logger)
         {
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
             //MainForm myForm = new MainForm();
             //myForm.Show();  // Show the form
@@ -35,14 +37,14 @@ namespace Logic
             string textFilePath = SelectTxtFilePath();
             string fileName = Path.GetFileNameWithoutExtension(textFilePath).Replace("_DSI", "");
 
-            extractor = new Extractor();
+            extractor = new Extractor(_logger);
 
             extractedWires = extractor.ExtractWiresFromFile(textFilePath);
             extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
             extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
             wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
-            testingSuite = new TestingSuite();
+            testingSuite = new TestingSuite(_logger);
 
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1. Open in Excel");
@@ -90,7 +92,7 @@ namespace Logic
             }
 
             Console.ReadLine();
-            Main();
+            Main(_logger);
         }
         
 
