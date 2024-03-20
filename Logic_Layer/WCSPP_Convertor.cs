@@ -5,16 +5,17 @@
         //WCSPP contains:
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
-        private ExcelHandler wcsppExcelHandler;
-        private FileHandler serialisation;
+        //Can inject this with in an interface
+        //private ExcelHandler wcsppExcelHandler;
+        //private FileHandler serialisation;
 
         private static List<Wire> wiresToConvert;
         private static List<Component> componentsToConvert;
 
         public WCSPP_Convertor(List<Wire> wires, List<Component> components) 
         {
-            wcsppExcelHandler = new ExcelHandler();
-            serialisation = new FileHandler();
+            //wcsppExcelHandler = new ExcelHandler();
+            //serialisation = new FileHandler();
 
             wiresToConvert = wires;
             componentsToConvert = components;
@@ -26,12 +27,12 @@
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
         public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles, string fileName)
         {
-            serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles, fileName);
+           // serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles, fileName);
         }
 
         public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles) 
         {
-            wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
+            //wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
         }
 
         private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert, List<Bundle> bundles)

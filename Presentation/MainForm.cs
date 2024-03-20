@@ -19,7 +19,9 @@ namespace Presentation
 
         private Extractor extractor;
         private WCSPP_Convertor convertor;
-        private ExcelImporter excelImporter;
+
+        //TODO: import from DAL
+        //private ExcelImporter excelImporter;
         private ExcelHandler excelHandler;
 
         private static List<Wire> extractedWires;
@@ -36,12 +38,12 @@ namespace Presentation
             string computerName = Environment.MachineName;
             Console.WriteLine($"Computer Name: {computerName}");
 
-            excelImporter = new ExcelImporter();
+            //excelImporter = new ExcelImporter();
             extractor = new Extractor();
             excelHandler = new ExcelHandler();
 
             folderPaths = new List<string>();
-            extractedReferences = excelImporter.DSIReferences;
+            //extractedReferences = excelImporter.DSIReferences;
 
             //These are the buttons for toggling the working directory:
             //Bundles:

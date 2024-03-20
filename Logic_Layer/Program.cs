@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System;
-using OfficeOpenXml;
+//using OfficeOpenXml;
 
 namespace Logic
 {
@@ -14,15 +14,17 @@ namespace Logic
         private static Extractor extractor;
         private static WCSPP_Convertor wcsppConvertor;
         private static TestingSuite testingSuite;
-        private static ExcelImporter excelImporter;
+        
+        //Could inject this with a interface?
+        //private static ExcelImporter excelImporter;
 
         public static void Main()
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
-            MainForm myForm = new MainForm();
-            myForm.Show();  // Show the form
-            Application.Run(myForm);
+            //MainForm myForm = new MainForm();
+            //myForm.Show();  // Show the form
+            //Application.Run(myForm);
 
             Console.ReadLine();
         }

@@ -134,7 +134,8 @@ namespace Presentation
             N_pins,
         }
 
-        private ProfileController profileController;
+        //TODO: not yet implemented
+        //private ProfileController profileController;
 
         private Dictionary<string, List<string>> defaultProfiles;
         private Dictionary<string, List<string>> userProfiles;
@@ -149,7 +150,7 @@ namespace Presentation
         {
             InitializeComponent();
 
-            profileController = new ProfileController();
+            //profileController = new ProfileController();
             defaultProfiles = new Dictionary<string, List<string>>();
             userProfiles = new Dictionary<string, List<string>>();
             comboBoxes = new List<ComboBox>();
