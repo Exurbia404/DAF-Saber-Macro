@@ -266,7 +266,8 @@ namespace Section5PoC
         { 
             List<Project_Wire> foundWires = new List<Project_Wire>();
 
-            foreach (string line in File.ReadLines(filePath))
+            // Read lines from the file and skip the first line
+            foreach (string line in File.ReadLines(filePath).Skip(1))
             {
                 Project_Wire wire = Project_ExtractWireFromString(line);
                 // Process lines between Section 3 and Section 4
@@ -315,7 +316,8 @@ namespace Section5PoC
         {
             List<Project_Component> foundComponents = new List<Project_Component>();
 
-            foreach (string line in File.ReadLines(filePath))
+            // Read lines from the file and skip the first line
+            foreach (string line in File.ReadLines(filePath).Skip(1))
             {
                 Project_Component component = Project_ExtractComponentFromString(line);
                 // Process lines between Section 3 and Section 4
