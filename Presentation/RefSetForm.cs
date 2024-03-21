@@ -62,11 +62,21 @@ namespace Presentation
             // Check if any item is selected in the ListBox
             if (projectsListBox.SelectedItem != null)
             {
-                // Get the selected project name
-                string selectedBundleNumber = bundleNumberTextBox.Text;
+                // Get the selected reference
+                DSI_Reference selectedReference = new DSI_Reference(
+                    yearWeekTextBox.Text,
+                    bundleNumberTextBox.Text,
+                    projectNameTextBox.Text,
+                    descriptionTextBox.Text
+                );
 
-                // Remove references associated with the selected project name
-                extractedReferences.RemoveAll(reference => reference.BundleNumber == selectedBundleNumber);
+                // Remove the selected reference from extractedReferences
+                extractedReferences.RemoveAll(reference =>
+                    reference.YearWeek == selectedReference.YearWeek &&
+                    reference.BundleNumber == selectedReference.BundleNumber &&
+                    reference.ProjectName == selectedReference.ProjectName &&
+                    reference.Description == selectedReference.Description
+                );
 
                 // Save the updated reference sets
                 SaveRefSets(extractedReferences);
@@ -202,13 +212,13 @@ namespace Presentation
                         catch (Exception ex)
                         {
                             // Handle any exceptions that occur during object creation
-                            Console.WriteLine($"Error creating DSI_Reference object: {ex.Message}");
+                            _logger.Log($"Error creating DSI_Reference object: {ex.Message}");
                         }
                     }
                     else
                     {
                         // Handle incorrect format error
-                        Console.WriteLine("Invalid reference format: " + referenceString);
+                        _logger.Log("Invalid reference format: " + referenceString);
                     }
                 }
             }

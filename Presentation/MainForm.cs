@@ -486,7 +486,21 @@ namespace Presentation
         private void openRefSetFormButton_Click(object sender, EventArgs e)
         {
             var RefSetForm = new RefSetForm(_logger);
+            
+            // Subscribe to the FormClosed event
+            RefSetForm.FormClosed += RefSetForm_FormClosed;
+
             RefSetForm.Show();
+        }
+
+        //When the refset form is closed you should update the refsets present in the document
+        private void RefSetForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Call your function here
+            extractedReferences = LoadRefSets();
+
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            AddSchematicsToListBox(schematicNames);
         }
 
         //TODO: this should be a class!
