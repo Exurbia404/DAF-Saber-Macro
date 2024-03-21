@@ -8,18 +8,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Presentation.Properties {
+namespace Data_Access {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class MySettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        private static MySettings defaultInstance = ((MySettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new MySettings())));
         
-        public static Settings Default {
+        public static MySettings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RefSets {
+            get {
+                return ((string)(this["RefSets"]));
+            }
+            set {
+                this["RefSets"] = value;
             }
         }
         
@@ -32,18 +44,6 @@ namespace Presentation.Properties {
             }
             set {
                 this["UserProfiles"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RefSet {
-            get {
-                return ((string)(this["RefSet"]));
-            }
-            set {
-                this["RefSet"] = value;
             }
         }
     }

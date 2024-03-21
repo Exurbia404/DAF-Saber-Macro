@@ -543,18 +543,20 @@ namespace Presentation
         {
             string userProfileJson = JsonConvert.SerializeObject(userProfiles);
 
+            //TODO: fix this
             // Save the serialized string to the application setting
-            Properties.Settings.Default.UserProfiles = userProfileJson;
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.UserProfiles = userProfileJson;
+            //Properties.Settings.Default.Save();
         }
 
         private Dictionary<string, List<string>> LoadProfilesFromSettings()
         {
+            //TODO: fix this one as well
             // Retrieve the serialized string from the application setting
-            string userProfileJson = Properties.Settings.Default.UserProfiles;
+            //string userProfileJson = Properties.Settings.Default.UserProfiles;
 
             // Deserialize the string back to the dictionary
-            Dictionary<string, List<string>> userProfiles = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(userProfileJson);
+            //Dictionary<string, List<string>> userProfiles = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(userProfileJson);
             return userProfiles;
         }
     }
