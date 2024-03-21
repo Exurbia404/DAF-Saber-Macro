@@ -147,6 +147,9 @@ namespace Presentation
         private int horizontalOffset = 120;
         private int headerCounter = 3;
 
+        //Used by buttons, labels and comboBoxes
+        private int initalXOffset = 210;
+
         public ProfileCreator(Logger logger)
         {
             InitializeComponent();
@@ -225,7 +228,7 @@ namespace Presentation
         {
             RemoveOldHeadersAndButtons(headerCount);
 
-            int x = 175; // Initial x-coordinate
+            int x = initalXOffset; // Initial x-coordinate
             int y = 60;  // Initial y-coordinate
             
             int initialOffset = horizontalOffset * comboBoxes.Count;
@@ -263,7 +266,7 @@ namespace Presentation
 
         private void GenerateLabels(int headerCount)
         {
-            int labelX = 175; // Initial x-coordinate
+            int labelX = initalXOffset; // Initial x-coordinate
             int labelY = 40; // Initial y-coordinate for Labels
 
             // Iterate through each header
@@ -291,7 +294,7 @@ namespace Presentation
         private void MoveHeaderButtons(int headerCount)
         {
 
-            int x = 175 + ((headerCount * horizontalOffset) + 10); // Initial x-coordinate for header buttons (added 10 for extra offset)
+            int x = initalXOffset + ((headerCount * horizontalOffset) + 10); // Initial x-coordinate for header buttons (added 10 for extra offset)
             int y = 45; // y-coordinate for header buttons
 
             // Set the location for the Add Header Button

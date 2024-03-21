@@ -27,9 +27,12 @@ namespace Logging
         public void Log(string message)
         {
             string timestamp = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
+
+            //Get the method that is calling the Log function
             StackFrame frame = new StackFrame(1);
             MethodBase method = frame.GetMethod();
             string callingMethod = method.DeclaringType.Name + "." + method.Name;
+            
             using (StreamWriter writer = new StreamWriter(filename, true))
             {
                 writer.WriteLine($"{timestamp} [{callingMethod}] {message}");

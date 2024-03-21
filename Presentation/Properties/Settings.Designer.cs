@@ -34,5 +34,17 @@ namespace Presentation.Properties {
                 this["UserProfiles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RefSet {
+            get {
+                return ((string)(this["RefSet"]));
+            }
+            set {
+                this["RefSet"] = value;
+            }
+        }
     }
 }
