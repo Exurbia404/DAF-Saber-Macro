@@ -508,44 +508,58 @@ namespace Presentation
         {
             List<DSI_Reference> references = new List<DSI_Reference>();
 
-            // Retrieve the serialized references from application settings
-            string serializedReferences = Properties.Settings.Default.RefSet;
+            // Start the stopwatch
+            System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            if (!string.IsNullOrEmpty(serializedReferences))
+            try
             {
-                // Split the serialized references string by the delimiter
-                string[] referenceStrings = serializedReferences.Split(';');
+                // Retrieve the serialized references from application settings
+                string serializedReferences = Properties.Settings.Default.RefSet;
 
-                foreach (string referenceString in referenceStrings)
+                if (!string.IsNullOrEmpty(serializedReferences))
                 {
-                    // Split each reference string into its components
-                    string[] parts = referenceString.Split(':');
-                    if (parts.Length == 4) // Ensure all components are present
+                    // Split the serialized references string by the delimiter
+                    string[] referenceStrings = serializedReferences.Split(';');
+
+                    foreach (string referenceString in referenceStrings)
                     {
-                        try
+                        // Split each reference string into its components
+                        string[] parts = referenceString.Split(':');
+                        if (parts.Length == 4) // Ensure all components are present
                         {
-                            // Create a DSI_Reference object from the parts
-                            DSI_Reference reference = new DSI_Reference
+                            try
                             {
-                                YearWeek = parts[0],
-                                BundleNumber = parts[1],
-                                ProjectName = parts[2],
-                                Description = parts[3]
-                            };
-                            references.Add(reference);
+                                // Create a DSI_Reference object from the parts
+                                DSI_Reference reference = new DSI_Reference
+                                {
+                                    YearWeek = parts[0],
+                                    BundleNumber = parts[1],
+                                    ProjectName = parts[2],
+                                    Description = parts[3]
+                                };
+                                references.Add(reference);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle any exceptions that occur during object creation
+                                _logger.Log($"Error creating DSI_Reference object: {ex.Message}");
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            // Handle any exceptions that occur during object creation
-                            Console.WriteLine($"Error creating DSI_Reference object: {ex.Message}");
+                            // Handle incorrect format error
+                            _logger.Log("Invalid reference format: " + referenceString);
                         }
-                    }
-                    else
-                    {
-                        // Handle incorrect format error
-                        Console.WriteLine("Invalid reference format: " + referenceString);
                     }
                 }
+            }
+            finally
+            {
+                // Stop the stopwatch
+                stopwatch.Stop();
+
+                // Log the elapsed time in milliseconds
+                _logger.Log($"LoadRefSets function executed in {stopwatch.ElapsedMilliseconds} ms");
             }
 
             return references;

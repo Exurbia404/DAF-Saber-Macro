@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Allow the Presentation\Bin directory and all of its contents
+!Presentation/Bin/
+!Presentation/Bin/*
