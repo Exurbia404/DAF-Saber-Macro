@@ -40,12 +40,54 @@ namespace Presentation
 
         private void addReferenceButton_Click(object sender, EventArgs e)
         {
-            DSI_Reference newReference = new DSI_Reference(yearWeekTextBox.Text, specNumberTextBox.Text, projectNameTextBox.Text, descriptionTextBox.Text);
+            DSI_Reference newReference = new DSI_Reference(yearWeekTextBox.Text, bundleNumberTextBox.Text, projectNameTextBox.Text, descriptionTextBox.Text);
+            extractedReferences.Add(newReference);
+
+            SaveRefSets(extractedReferences);
+
+            // Get the selected ProjectName from schematicsListBox
+            string selectedSchematic = projectsListBox.SelectedItem?.ToString();
+
+            // Filter the extractedReferences based on the selected ProjectName
+            List<DSI_Reference> filteredReferences = extractedReferences
+                .Where(reference => reference.ProjectName == selectedSchematic)
+                .ToList();
+
+            // Call AddSchematicsToListBox with the list of BundleNumbers
+            LoadRefSetsListBox(filteredReferences);
         }
 
         private void deleteReferenceButton_Click(object sender, EventArgs e)
         {
+            // Check if any item is selected in the ListBox
+            if (projectsListBox.SelectedItem != null)
+            {
+                // Get the selected project name
+                string selectedBundleNumber = bundleNumberTextBox.Text;
 
+                // Remove references associated with the selected project name
+                extractedReferences.RemoveAll(reference => reference.BundleNumber == selectedBundleNumber);
+
+                // Save the updated reference sets
+                SaveRefSets(extractedReferences);
+
+                // Reload the projects ListBox with the updated references
+
+                // Get the selected ProjectName from schematicsListBox
+                string selectedSchematic = projectsListBox.SelectedItem?.ToString();
+
+                // Filter the extractedReferences based on the selected ProjectName
+                List<DSI_Reference> filteredReferences = extractedReferences
+                    .Where(reference => reference.ProjectName == selectedSchematic)
+                    .ToList();
+
+                // Call AddSchematicsToListBox with the list of BundleNumbers
+                LoadRefSetsListBox(filteredReferences);
+            }
+            else
+            {
+                MessageBox.Show("Please select a project to delete.", "No Project Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void LoadProjectsListBox(List<string> foundReferences)
@@ -83,11 +125,12 @@ namespace Presentation
                 .ToList();
 
             // Call AddSchematicsToListBox with the list of BundleNumbers
-            LoadRefSets(filteredReferences);
-            
+            LoadRefSetsListBox(filteredReferences);
+
+            projectNameTextBox.Text = selectedSchematic;
         }
 
-        private void LoadRefSets(List<DSI_Reference> references)
+        private void LoadRefSetsListBox(List<DSI_Reference> references)
         {
             referencesListBox.Items.Clear();
             try
@@ -171,6 +214,22 @@ namespace Presentation
             }
 
             return references;
+        }
+
+        private void referencesListBox_DoubleClick(object sender, EventArgs e)
+        {
+            // Check if any item is selected in the ListBox
+            if (referencesListBox.SelectedItem != null)
+            {
+                // Get the selected reference
+                DSI_Reference selectedReference = (DSI_Reference)referencesListBox.SelectedItem;
+
+                // Set the text of text boxes based on the selected reference
+                yearWeekTextBox.Text = selectedReference.YearWeek;
+                bundleNumberTextBox.Text = selectedReference.BundleNumber;
+                projectNameTextBox.Text = selectedReference.ProjectName;
+                descriptionTextBox.Text = selectedReference.Description;
+            }
         }
     }
 }

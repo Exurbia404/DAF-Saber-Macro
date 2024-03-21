@@ -31,11 +31,15 @@
             projectsListBox = new ListBox();
             referencesListBox = new ListBox();
             yearWeekTextBox = new TextBox();
-            specNumberTextBox = new TextBox();
+            bundleNumberTextBox = new TextBox();
             projectNameTextBox = new TextBox();
             descriptionTextBox = new TextBox();
             addReferenceButton = new Button();
             deleteReferenceButton = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
             SuspendLayout();
             // 
             // projectsListBox
@@ -58,6 +62,7 @@
             referencesListBox.Name = "referencesListBox";
             referencesListBox.Size = new Size(515, 382);
             referencesListBox.TabIndex = 1;
+            referencesListBox.DoubleClick += referencesListBox_DoubleClick;
             // 
             // yearWeekTextBox
             // 
@@ -66,12 +71,12 @@
             yearWeekTextBox.Size = new Size(140, 23);
             yearWeekTextBox.TabIndex = 2;
             // 
-            // specNumberTextBox
+            // bundleNumberTextBox
             // 
-            specNumberTextBox.Location = new Point(158, 433);
-            specNumberTextBox.Name = "specNumberTextBox";
-            specNumberTextBox.Size = new Size(140, 23);
-            specNumberTextBox.TabIndex = 3;
+            bundleNumberTextBox.Location = new Point(158, 433);
+            bundleNumberTextBox.Name = "bundleNumberTextBox";
+            bundleNumberTextBox.Size = new Size(140, 23);
+            bundleNumberTextBox.TabIndex = 3;
             // 
             // projectNameTextBox
             // 
@@ -107,16 +112,60 @@
             deleteReferenceButton.UseVisualStyleBackColor = true;
             deleteReferenceButton.Click += deleteReferenceButton_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F);
+            label1.Location = new Point(12, 409);
+            label1.Name = "label1";
+            label1.Size = new Size(80, 21);
+            label1.TabIndex = 8;
+            label1.Text = "Year week";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F);
+            label2.Location = new Point(158, 409);
+            label2.Name = "label2";
+            label2.Size = new Size(117, 21);
+            label2.TabIndex = 9;
+            label2.Text = "Bundle number";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F);
+            label3.Location = new Point(304, 409);
+            label3.Name = "label3";
+            label3.Size = new Size(101, 21);
+            label3.TabIndex = 10;
+            label3.Text = "Project name";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F);
+            label4.Location = new Point(450, 409);
+            label4.Name = "label4";
+            label4.Size = new Size(89, 21);
+            label4.TabIndex = 11;
+            label4.Text = "Description";
+            // 
             // RefSetForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(781, 481);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(deleteReferenceButton);
             Controls.Add(addReferenceButton);
             Controls.Add(descriptionTextBox);
             Controls.Add(projectNameTextBox);
-            Controls.Add(specNumberTextBox);
+            Controls.Add(bundleNumberTextBox);
             Controls.Add(yearWeekTextBox);
             Controls.Add(referencesListBox);
             Controls.Add(projectsListBox);
@@ -131,10 +180,14 @@
         private ListBox projectsListBox;
         private ListBox referencesListBox;
         private TextBox yearWeekTextBox;
-        private TextBox specNumberTextBox;
+        private TextBox bundleNumberTextBox;
         private TextBox projectNameTextBox;
         private TextBox descriptionTextBox;
         private Button addReferenceButton;
         private Button deleteReferenceButton;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
     }
 }

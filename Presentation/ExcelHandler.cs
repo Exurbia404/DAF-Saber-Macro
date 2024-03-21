@@ -10,7 +10,13 @@ namespace Presentation
     public class ExcelHandler
     {
         private Logger _logger;
-        
+        private enum SensitivityLabel
+        {
+            General,
+            Confidential,
+            HighlyConfidential
+        }
+
         public ExcelHandler(Logger logger)
         {
             _logger = logger;
@@ -205,7 +211,7 @@ namespace Presentation
             }
         }
 
-        static object GetCustomPropertyValue(ExcelPackage package, string propertyName)
+        private static object GetCustomPropertyValue(ExcelPackage package, string propertyName)
         {
             // Get the custom properties XML
             var customPropertiesXml = package.Workbook.Properties.CustomPropertiesXml;
@@ -226,21 +232,9 @@ namespace Presentation
             return null;
         }
 
-        static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
+        private async static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
         {
-            // Get or create the DocumentSummaryInformation
-            var docSummaryInfo = package.Workbook.Properties;
-
-            // Set the Sensitivity Label custom property
-            docSummaryInfo.SetCustomPropertyValue("SensitivityLabel", sensitivityLabel.ToString());
-        }
-
-
-        public enum SensitivityLabel
-        {
-            General,
-            Confidential,
-            HighlyConfidential
+            
         }
     }
 }
