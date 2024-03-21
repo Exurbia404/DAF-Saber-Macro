@@ -4,6 +4,8 @@ namespace Presentation
 {
     internal static class Program
     {
+        //TODO: can probably shloink this to the MainForm.cs
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

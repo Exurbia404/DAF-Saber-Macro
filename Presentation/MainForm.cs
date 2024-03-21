@@ -45,12 +45,14 @@ namespace Presentation
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
 
-            excelImporter = new ExcelImporter(_logger);
+            //Commented out for replacement with localSettingsFiles
+            //excelImporter = new ExcelImporter(_logger);
             extractor = new Extractor(_logger);
             excelHandler = new ExcelHandler(_logger);
 
             folderPaths = new List<string>();
-            extractedReferences = excelImporter.DSIReferences;
+            //extractedReferences = excelImporter.DSIReferences;
+            extractedReferences = LoadRefSets();
 
             //These are the buttons for toggling the working directory:
             //Bundles:
@@ -481,5 +483,72 @@ namespace Presentation
             newProfileForm.Show();
         }
 
+        private void openRefSetFormButton_Click(object sender, EventArgs e)
+        {
+            var RefSetForm = new RefSetForm(_logger);
+            
+            // Subscribe to the FormClosed event
+            RefSetForm.FormClosed += RefSetForm_FormClosed;
+
+            RefSetForm.Show();
+        }
+
+        //When the refset form is closed you should update the refsets present in the document
+        private void RefSetForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Call your function here
+            extractedReferences = LoadRefSets();
+
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            AddSchematicsToListBox(schematicNames);
+        }
+
+        //TODO: this should be a class!
+        private List<DSI_Reference> LoadRefSets()
+        {
+            List<DSI_Reference> references = new List<DSI_Reference>();
+
+            // Retrieve the serialized references from application settings
+            string serializedReferences = Properties.Settings.Default.RefSet;
+
+            if (!string.IsNullOrEmpty(serializedReferences))
+            {
+                // Split the serialized references string by the delimiter
+                string[] referenceStrings = serializedReferences.Split(';');
+
+                foreach (string referenceString in referenceStrings)
+                {
+                    // Split each reference string into its components
+                    string[] parts = referenceString.Split(':');
+                    if (parts.Length == 4) // Ensure all components are present
+                    {
+                        try
+                        {
+                            // Create a DSI_Reference object from the parts
+                            DSI_Reference reference = new DSI_Reference
+                            {
+                                YearWeek = parts[0],
+                                BundleNumber = parts[1],
+                                ProjectName = parts[2],
+                                Description = parts[3]
+                            };
+                            references.Add(reference);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Handle any exceptions that occur during object creation
+                            Console.WriteLine($"Error creating DSI_Reference object: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        // Handle incorrect format error
+                        Console.WriteLine("Invalid reference format: " + referenceString);
+                    }
+                }
+            }
+
+            return references;
+        }
     }
 }
