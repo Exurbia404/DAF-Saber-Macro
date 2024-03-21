@@ -25,7 +25,7 @@ namespace Logic
 
         public override string ToString()
         {
-            return base.ToString();
+            return YearWeek + " - " + BundleNumber + " - " + ProjectName + " - " + Description;
         }
     }
 }

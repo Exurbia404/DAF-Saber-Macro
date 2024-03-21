@@ -1,0 +1,176 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Data_Access;
+using Logging;
+using Logic;
+
+namespace Presentation
+{
+    public partial class RefSetForm : Form
+    {
+        //private SettingsHandler settingsHandler
+
+        private Logger _logger;
+
+        private static List<DSI_Reference> extractedReferences;
+        private ExcelImporter excelImporter;
+
+        public RefSetForm(Logger logger)
+        {
+            InitializeComponent();
+
+            _logger = logger;
+            //excelImporter = new ExcelImporter(_logger);
+
+            //This will load from DATASET
+            //extractedReferences = excelImporter.DSIReferences;
+
+            extractedReferences = LoadRefSets();
+
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            LoadProjectsListBox(schematicNames);
+        }
+
+        private void addReferenceButton_Click(object sender, EventArgs e)
+        {
+            DSI_Reference newReference = new DSI_Reference(yearWeekTextBox.Text, specNumberTextBox.Text, projectNameTextBox.Text, descriptionTextBox.Text);
+        }
+
+        private void deleteReferenceButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoadProjectsListBox(List<string> foundReferences)
+        {
+            projectsListBox.Items.Clear();
+            try
+            {
+                // Use a HashSet to store unique ProjectNames
+                HashSet<string> uniqueProjectNames = new HashSet<string>();
+
+                foreach (string reference in foundReferences)
+                {
+                    // Check if the ProjectName is not already in the HashSet
+                    if (uniqueProjectNames.Add(reference))
+                    {
+                        // If it's a new ProjectName, add it to the ListBox
+                        projectsListBox.Items.Add(reference);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Error: {ex.Message}");
+            }
+        }
+
+        private void projectsListBox_DoubleClick(object sender, EventArgs e)
+        {
+            // Get the selected ProjectName from schematicsListBox
+            string selectedSchematic = projectsListBox.SelectedItem?.ToString();
+
+            // Filter the extractedReferences based on the selected ProjectName
+            List<DSI_Reference> filteredReferences = extractedReferences
+                .Where(reference => reference.ProjectName == selectedSchematic)
+                .ToList();
+
+            // Call AddSchematicsToListBox with the list of BundleNumbers
+            LoadRefSets(filteredReferences);
+            
+        }
+
+        private void LoadRefSets(List<DSI_Reference> references)
+        {
+            referencesListBox.Items.Clear();
+            try
+            {
+                // Use a HashSet to store unique ProjectNames
+                HashSet<DSI_Reference> uniqueProjectNames = new HashSet<DSI_Reference>();
+
+                foreach (DSI_Reference reference in references)
+                {
+                    // Check if the ProjectName is not already in the HashSet
+                    if (uniqueProjectNames.Add(reference))
+                    {
+                        // If it's a new ProjectName, add it to the ListBox
+                        referencesListBox.Items.Add(reference);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Error: {ex.Message}");
+            }
+        }
+
+        private void SaveRefSets(List<DSI_Reference> references)
+        {
+            // Convert list of DSI_Reference objects to a list of strings
+            List<string> referenceStrings = references.Select(reference => $"{reference.YearWeek}:{reference.BundleNumber}:{reference.ProjectName}:{reference.Description}").ToList();
+
+            // Join the list of strings into a single string with a delimiter
+            string serializedReferences = string.Join(";", referenceStrings);
+
+            // Save the serialized references to application settings
+            Properties.Settings.Default.RefSet = serializedReferences;
+
+            // Save the changes to the settings
+            Properties.Settings.Default.Save();
+        }
+
+        private List<DSI_Reference> LoadRefSets()
+        {
+            List<DSI_Reference> references = new List<DSI_Reference>();
+
+            // Retrieve the serialized references from application settings
+            string serializedReferences = Properties.Settings.Default.RefSet;
+
+            if (!string.IsNullOrEmpty(serializedReferences))
+            {
+                // Split the serialized references string by the delimiter
+                string[] referenceStrings = serializedReferences.Split(';');
+
+                foreach (string referenceString in referenceStrings)
+                {
+                    // Split each reference string into its components
+                    string[] parts = referenceString.Split(':');
+                    if (parts.Length == 4) // Ensure all components are present
+                    {
+                        try
+                        {
+                            // Create a DSI_Reference object from the parts
+                            DSI_Reference reference = new DSI_Reference
+                            {
+                                YearWeek = parts[0],
+                                BundleNumber = parts[1],
+                                ProjectName = parts[2],
+                                Description = parts[3]
+                            };
+                            references.Add(reference);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Handle any exceptions that occur during object creation
+                            Console.WriteLine($"Error creating DSI_Reference object: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        // Handle incorrect format error
+                        Console.WriteLine("Invalid reference format: " + referenceString);
+                    }
+                }
+            }
+
+            return references;
+        }
+    }
+}

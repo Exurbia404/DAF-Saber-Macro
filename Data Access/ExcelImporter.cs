@@ -8,6 +8,7 @@ namespace Data_Access
     public class ExcelImporter
     {
         private string dsiDataSetLocation = @"U:\Data\SaberWiP\3_Key_Users\www\Macro\Office10\Importeren_SABER_DATA.xlsm";
+        private string LocalDataSetLocation = @"C:\Users\tomvh\Documents\School\S5 - Internship\Original tool\Importeren_SABER_DATA.xlsm";
         public List<DSI_Reference> DSIReferences { get; private set; }
         private Logger _logger;
         public ExcelImporter(Logger logger) 
@@ -18,6 +19,13 @@ namespace Data_Access
 
         private List<DSI_Reference> GetDataSetFromExcelSheet(string filePath)
         {
+            string computerName = Environment.MachineName;
+
+            if(computerName == "EXURBIA")
+            {
+                filePath = LocalDataSetLocation;
+            }
+
             string searchTerm = "jrwk";
             string sheetName = "DATASET";
 

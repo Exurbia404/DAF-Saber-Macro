@@ -43,6 +43,7 @@
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
+            openRefSetFormButton = new Button();
             SuspendLayout();
             // 
             // bundlesListLabel
@@ -219,11 +220,22 @@
             button3.Text = "Compare";
             button3.UseVisualStyleBackColor = true;
             // 
+            // openRefSetFormButton
+            // 
+            openRefSetFormButton.Location = new Point(111, 612);
+            openRefSetFormButton.Name = "openRefSetFormButton";
+            openRefSetFormButton.Size = new Size(88, 27);
+            openRefSetFormButton.TabIndex = 17;
+            openRefSetFormButton.Text = "RefSets";
+            openRefSetFormButton.UseVisualStyleBackColor = true;
+            openRefSetFormButton.Click += openRefSetFormButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(721, 655);
+            Controls.Add(openRefSetFormButton);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -264,5 +276,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private Button openRefSetFormButton;
     }
 }
