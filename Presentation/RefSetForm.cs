@@ -29,13 +29,19 @@ namespace Presentation
 
             _logger = logger;
             refsetHandler = new RefSetHandler(_logger);
-            //excelImporter = new ExcelImporter(_logger);
 
-            //This will load from DATASET
-            //extractedReferences = excelImporter.DSIReferences;
-            //refsetHandler.SaveRefSets(extractedReferences);
-
+            //Get the refsets from settings
             extractedReferences = LoadRefSets();
+
+            //If there aren't any loaded in get them from the DATASET.xlsx (slower)
+            if(extractedReferences == null)
+            {
+                excelImporter = new ExcelImporter(_logger);
+
+                //This will load from DATASET
+                extractedReferences = excelImporter.DSIReferences;
+                refsetHandler.SaveRefSets(extractedReferences);
+            }
 
             List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
             LoadProjectsListBox(schematicNames);
