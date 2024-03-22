@@ -34,7 +34,7 @@ namespace Presentation
             extractedReferences = LoadRefSets();
 
             //If there aren't any loaded in get them from the DATASET.xlsx (slower)
-            if(extractedReferences == null)
+            if(extractedReferences.Count == 0)
             {
                 excelImporter = new ExcelImporter(_logger);
 
