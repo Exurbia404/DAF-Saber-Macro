@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "Presentation/1.0.0": {
+      "Saber Tool+/1.0.0": {
         "dependencies": {
           "Data_Access": "1.0.0",
           "EPPlus": "7.0.10",
@@ -18,7 +18,7 @@
           "UI_Interfaces": "1.0.0"
         },
         "runtime": {
-          "Presentation.dll": {}
+          "Saber Tool+.dll": {}
         }
       },
       "Azure.Core/1.37.0": {
@@ -700,7 +700,7 @@
     }
   },
   "libraries": {
-    "Presentation/1.0.0": {
+    "Saber Tool+/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
