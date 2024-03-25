@@ -1,4 +1,6 @@
-﻿namespace Logic
+﻿using UI_Interfaces;
+
+namespace Logic
 {
     public class WCSPP_Convertor
     {
@@ -6,15 +8,15 @@
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
         //Can inject this with in an interface
-        //private ExcelHandler wcsppExcelHandler;
+        private iExcelExporter excelExporter;
         //private FileHandler serialisation;
 
-        private static List<Wire> wiresToConvert;
-        private static List<Component> componentsToConvert;
+        private static List<DSI_Wire> wiresToConvert;
+        private static List<DSI_Component> componentsToConvert;
 
-        public WCSPP_Convertor(List<Wire> wires, List<Component> components) 
+        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iExcelExporter _excelExporter) 
         {
-            //wcsppExcelHandler = new ExcelHandler();
+            excelExporter = _excelExporter;
             //serialisation = new FileHandler();
 
             wiresToConvert = wires;
@@ -25,23 +27,25 @@
 
 
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
-        public void ConvertListToWCSPPTextFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles, string fileName)
+        public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName)
         {
            // serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles, fileName);
         }
 
-        public void ConvertListToWCSPPExcelFile(List<Wire> wiresToConvert, List<Component> componentsToConvert, List<Bundle> extractedBundles) 
+        public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles) 
         {
-            //wcsppExcelHandler.CreateExcelSheet(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles));
+            List<iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast<iConverted_Wire>().ToList();
+            List<iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<iConverted_Component>().ToList();
+            excelExporter.CreateExcelSheet(wires, components);
         }
 
-        private List<WCSPP_Wire> ConvertWireToWCSPP(List<Wire> wiresToConvert, List<Bundle> bundles)
+        private List<Converted_Wire> ConvertWireToWCSPP(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)
         {
-            List<WCSPP_Wire> convertedList = new List<WCSPP_Wire>();
+            List<Converted_Wire> convertedList = new List<Converted_Wire>();
 
-            foreach (Wire wire in wiresToConvert)
+            foreach (DSI_Wire wire in wiresToConvert)
             {
-                WCSPP_Wire wCSPP_Wire = new WCSPP_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", wire.End2NodeName, wire.End2Cavity, "?", "?", "?", "?");
+                Converted_Wire wCSPP_Wire = new Converted_Wire(wire.WireName, wire.CrossSectionalArea, wire.Color, wire.Material, wire.WireNote, wire.WireNote, wire.End1NodeName, wire.End1Cavity, "?", "?", "combination", "?", "?", wire.End2NodeName, wire.End2Cavity, "?", "?", "?", "?");
                 
                 wCSPP_Wire.Length = GetValueFromInputString(wire.WireNote, 0);
                 wCSPP_Wire.Code_no = GetValueFromInputString(wire.WireNote, 1);
@@ -154,16 +158,16 @@
             return false;
         }
 
-        private List<WCSPP_Component> ConvertComponentToWCSPP(List<Component> componentsToConvert, List<Bundle> bundles)
+        private List<Converted_Component> ConvertComponentToWCSPP(List<DSI_Component> componentsToConvert, List<Bundle> bundles)
         {
-            List<WCSPP_Component> convertedList = new List<WCSPP_Component>();
+            List<Converted_Component> convertedList = new List<Converted_Component>();
 
-            foreach (Component component in componentsToConvert)
+            foreach (DSI_Component component in componentsToConvert)
             {
                 if (component.ComponentTypeCode == "CONNECTOR")
                 {
                     // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
-                    WCSPP_Component wCSPP_Component = new WCSPP_Component
+                    Converted_Component wCSPP_Component = new Converted_Component
                     {
                         Name = component.NodeName,
                         Part_no = component.PartNumber2,
@@ -172,7 +176,7 @@
                         Variant = component.CircuitOption,
                         Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
                         Description = "",
-                        Lokation = "",
+                        Location = "",
                         EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
     
                         // Set other properties here as needed
@@ -201,7 +205,7 @@
             return result;
         }
 
-        private string GetPassivesForComponent(List<Component> fullList, string componentName, string endText)
+        private string GetPassivesForComponent(List<DSI_Component> fullList, string componentName, string endText)
         {
             // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains numbers
             var filteredComponents = fullList
@@ -219,7 +223,7 @@
             return result;
         }
 
-        private string GetEndTextForComponent(List<Component> fullList, string componentName)
+        private string GetEndTextForComponent(List<DSI_Component> fullList, string componentName)
         {
             // Filter components based on ComponentName and ServiceFunction
             var filteredComponents = fullList
@@ -233,7 +237,7 @@
             return result;
         }
 
-        private string GetInstructionForComponent(List<Component> fullList, string componentName)
+        private string GetInstructionForComponent(List<DSI_Component> fullList, string componentName)
         {
             //Include the component if:
             //  -NodeName matches a specified name.

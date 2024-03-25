@@ -14,7 +14,8 @@
           "Logic_Layer": "1.0.0",
           "Microsoft.Graph": "5.44.0",
           "Microsoft.Identity.Client": "4.59.0",
-          "Newtonsoft.Json": "13.0.3"
+          "Newtonsoft.Json": "13.0.3",
+          "UI_Interfaces": "1.0.0"
         },
         "runtime": {
           "Presentation.dll": {}
@@ -658,6 +659,7 @@
       "System.Threading.Tasks.Extensions/4.5.4": {},
       "Data_Access/1.0.0": {
         "dependencies": {
+          "Data_Interfaces": "1.0.0",
           "EPPlus": "7.0.10",
           "Logging": "1.0.0",
           "Logic_Layer": "1.0.0",
@@ -667,6 +669,11 @@
           "Data_Access.dll": {}
         }
       },
+      "Data_Interfaces/1.0.0": {
+        "runtime": {
+          "Data_Interfaces.dll": {}
+        }
+      },
       "Logging/1.0.0": {
         "runtime": {
           "Logging.dll": {}
@@ -674,10 +681,20 @@
       },
       "Logic_Layer/1.0.0": {
         "dependencies": {
-          "Logging": "1.0.0"
+          "Data_Interfaces": "1.0.0",
+          "Logging": "1.0.0",
+          "UI_Interfaces": "1.0.0"
         },
         "runtime": {
           "Logic_Layer.dll": {}
+        }
+      },
+      "UI_Interfaces/1.0.0": {
+        "dependencies": {
+          "Logging": "1.0.0"
+        },
+        "runtime": {
+          "UI_Interfaces.dll": {}
         }
       }
     }
@@ -1155,12 +1172,22 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Data_Interfaces/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Logging/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "Logic_Layer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UI_Interfaces/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

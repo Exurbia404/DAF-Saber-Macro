@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using UI_Interfaces;
 
 namespace Logic
 {
@@ -31,7 +32,7 @@ namespace Logic
         public TestingSuite(Logger logger)
         {
             extractor = new Extractor(_logger);
-            wcsppConvertor = new WCSPP_Convertor();
+            //wcsppConvertor = new WCSPP_Convertor();
         }
 
         public void StartComponentsTest()
@@ -54,12 +55,16 @@ namespace Logic
             {
                 string fileName = Path.GetFileNameWithoutExtension(filePath);
 
-                List<Wire> extractedWires = extractor.ExtractWiresFromFile(filePath);
-                List<Component> extractedComponents = extractor.ExtractComponentsFromFile(filePath);
+                List<DSI_Wire> extractedWires = extractor.ExtractWiresFromFile(filePath);
+                List<DSI_Component> extractedComponents = extractor.ExtractComponentsFromFile(filePath);
                 List<Bundle> extractedBundles = extractor.ExtractBundlesFromFile(filePath);
+                
+                //ExcelExporter excelExporter = new ExcelExporter(new Logger());
 
-                wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
-                wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
+                 
+
+                //wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
+                //wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
             }
         }
 

@@ -4,7 +4,7 @@ namespace Data_Access
 {
     public class FileHandler
     {
-        public void WriteToFile(List<WCSPP_Wire> wires, List<WCSPP_Component> components, List<Bundle> extractedBundles, string fileName)
+        public void WriteToFile(List<Converted_Wire> wires, List<Converted_Component> components, List<Bundle> extractedBundles, string fileName)
         {
             fileName = fileName.Replace("_DSI", "");
 
@@ -52,7 +52,7 @@ namespace Data_Access
                 {
                     // Format the line with object properties
                     string line = $"{wcsppComponent.Name},{wcsppComponent.Part_no},,{wcsppComponent.Passive},{wcsppComponent.Instruction},{wcsppComponent.Variant},{wcsppComponent.Bundle}," +
-                                $"{wcsppComponent.Description},{wcsppComponent.Lokation},,,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText}";
+                                $"{wcsppComponent.Description},{wcsppComponent.Location},,,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText}";
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }

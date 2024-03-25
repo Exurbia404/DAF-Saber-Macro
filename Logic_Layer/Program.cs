@@ -6,8 +6,8 @@ namespace Logic
 {
     internal class Program
     {
-        private static List<Wire> extractedWires;
-        private static List<Component> extractedComponents;
+        private static List<DSI_Wire> extractedWires;
+        private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         
         
@@ -43,7 +43,7 @@ namespace Logic
             extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
             extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-            wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+            //wcsppConvertor = new WCSPP_Convertor(extractedWires, extractedComponents);
             testingSuite = new TestingSuite(_logger);
 
             Console.WriteLine("Choose an option:");
