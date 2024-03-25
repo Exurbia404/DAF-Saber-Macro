@@ -45,6 +45,8 @@
             button2 = new Button();
             button3 = new Button();
             openRefSetFormButton = new Button();
+            progressBar = new ProgressBar();
+            programStatusButton = new Button();
             SuspendLayout();
             // 
             // bundlesListLabel
@@ -233,11 +235,29 @@
             openRefSetFormButton.UseVisualStyleBackColor = true;
             openRefSetFormButton.Click += openRefSetFormButton_Click;
             // 
+            // progressBar
+            // 
+            progressBar.Location = new Point(560, 11);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(100, 23);
+            progressBar.TabIndex = 18;
+            // 
+            // programStatusButton
+            // 
+            programStatusButton.Location = new Point(666, 11);
+            programStatusButton.Name = "programStatusButton";
+            programStatusButton.Size = new Size(43, 24);
+            programStatusButton.TabIndex = 19;
+            programStatusButton.UseVisualStyleBackColor = true;
+            programStatusButton.Click += programStatusButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(721, 655);
+            Controls.Add(programStatusButton);
+            Controls.Add(progressBar);
             Controls.Add(openRefSetFormButton);
             Controls.Add(button3);
             Controls.Add(button2);
@@ -257,7 +277,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
-            Text = "Form1";
+            Text = "Main form";
             MouseClick += Form1_MouseClick;
             ResumeLayout(false);
             PerformLayout();
@@ -281,5 +301,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private Button openRefSetFormButton;
+        private ProgressBar progressBar;
+        private Button programStatusButton;
     }
 }

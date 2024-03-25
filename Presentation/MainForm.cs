@@ -7,6 +7,7 @@ using Logging;
 using Data_Access;
 using OfficeOpenXml;
 using UI_Interfaces;
+using Microsoft.Graph.Models.TermStore;
 
 namespace Presentation
 {
@@ -26,6 +27,7 @@ namespace Presentation
         private WCSPP_Convertor convertor;
         private Logger _logger;
         private RefSetHandler refsetHandler;
+        private MessageViewer messageViewerForm;
 
         private ExcelImporter excelImporter;
         private ExcelExporter excelHandler;
@@ -34,6 +36,8 @@ namespace Presentation
         private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
+
+        private int messageCounter;
 
 
 
@@ -46,6 +50,10 @@ namespace Presentation
 
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
+
+            logger.LogEvent += Logger_LogEvent;
+
+            messageCounter = 0;
 
             //Commented out for replacement with localSettingsFiles
             //excelImporter = new ExcelImporter(_logger);
@@ -76,7 +84,7 @@ namespace Presentation
                 {
                     DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
                 }
-                folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
+                folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
                 AddNamesToBundlesListBox(folderPaths);
 
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
@@ -136,7 +144,7 @@ namespace Presentation
             }
         }
 
-        private async Task<List<string>> GetImmediateSubfoldersAsync(string folderPath)
+        private List<string> GetImmediateSubfolders(string folderPath)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -144,11 +152,11 @@ namespace Presentation
 
             try
             {
-                // Get all immediate subfolders asynchronously
-                string[] subfolders = await Task.Run(() => Directory.GetDirectories(folderPath));
+                // Get all immediate subfolders synchronously
+                string[] subfolders = Directory.GetDirectories(folderPath);
 
-                // Process subfolders in parallel
-                await Task.WhenAll(subfolders.Select(async subfolder =>
+                // Process subfolders
+                foreach (string subfolder in subfolders)
                 {
                     try
                     {
@@ -160,18 +168,15 @@ namespace Presentation
                         // Check if the folder name is 7 or 8 numbers long
                         if (IsNumeric(folderName) && (folderName.Length == 7 || folderName.Length == 8))
                         {
-                            // Add to list (ensure thread-safe access)
-                            lock (folderPaths)
-                            {
-                                folderPaths.Add(subfolder);
-                            }
+                            // Add to list
+                            folderPaths.Add(subfolder);
                         }
                     }
                     catch (Exception ex)
                     {
                         _logger.Log($"Error processing folder '{subfolder}': {ex.Message}");
                     }
-                }));
+                }
 
                 stopwatch.Stop();
                 _logger.Log("Folders retrieved in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
@@ -249,11 +254,11 @@ namespace Presentation
                 // Run the time-consuming code asynchronously
                 await Task.Run(() =>
                 {
-                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                    extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                    extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                    extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    ExcelExporter excelExporter = new ExcelExporter(new Logger());
+                    ExcelExporter excelExporter = new ExcelExporter(_logger);
 
                     convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
 
@@ -413,15 +418,15 @@ namespace Presentation
             excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList()); ;
         }
 
-        //
+
         //Buttons to choose directory:
-        private void BundlesToggleButton(System.Windows.Forms.Button clickedButton)
+        private void BundlesToggleButton(Button clickedButton)
         {
             // Toggle the clicked button to its opposite state
             clickedButton.BackColor = clickedButton.BackColor == Color.Gray ? Color.White : Color.Gray;
 
             // Set other toggle buttons to their default color
-            foreach (System.Windows.Forms.Button button in bundlesToggleButtons)
+            foreach (Button button in bundlesToggleButtons)
             {
                 if (button != clickedButton)
                 {
@@ -436,7 +441,7 @@ namespace Presentation
         {
             BundlesToggleButton(productProtoButton);
 
-            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ProductionBuildOfMaterialsFolder)).Result;
+            folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
             AddNamesToBundlesListBox(folderPaths);
         }
 
@@ -444,7 +449,7 @@ namespace Presentation
         {
             BundlesToggleButton(reldasButton);
 
-            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(ReldasBuildOfMaterialsFolder)).Result;
+            folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
             AddNamesToBundlesListBox(folderPaths);
         }
 
@@ -452,7 +457,7 @@ namespace Presentation
         {
             BundlesToggleButton(designerButton);
 
-            folderPaths = Task.Run(() => GetImmediateSubfoldersAsync(DesignerBuildOfMaterialsFolder)).Result;
+            folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
             AddNamesToBundlesListBox(folderPaths);
         }
 
@@ -491,7 +496,7 @@ namespace Presentation
         private void openRefSetFormButton_Click(object sender, EventArgs e)
         {
             var RefSetForm = new RefSetForm(_logger);
-            
+
             // Subscribe to the FormClosed event
             RefSetForm.FormClosed += RefSetForm_FormClosed;
 
@@ -501,7 +506,6 @@ namespace Presentation
         //When the refset form is closed you should update the refsets present in the document
         private void RefSetForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Call your function here
             extractedReferences = LoadRefSets();
 
             List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
@@ -511,6 +515,30 @@ namespace Presentation
         private List<DSI_Reference> LoadRefSets()
         {
             return refsetHandler.LoadRefSets();
+        }
+
+        private void SetStatusBar(int percentage)
+        {
+            progressBar.Value = percentage;
+        }
+
+        private void Logger_LogEvent(object sender, string message)
+        {
+            messageCounter++;
+            //programStatusButton.Text = messageCounter.ToString();
+        }
+
+        private void programStatusButton_Click(object sender, EventArgs e)
+        {
+            // Check if MessageViewer form is open
+            if (messageViewerForm != null && !messageViewerForm.IsDisposed)
+            {
+                messageViewerForm.Close(); // Close it
+            }
+
+            // Open MessageViewer form
+            messageViewerForm = new MessageViewer(_logger.messages);
+            messageViewerForm.Show();
         }
     }
 }
