@@ -66,16 +66,33 @@ namespace Presentation
                     //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
-                    // Save the Excel package to a file
-                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
+                    // Create a memory stream
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        // Write the ExcelPackage to the memory stream
+                        package.SaveAs(stream);
 
-                    Process.Start("ExtractedData.xlsx");
+                        // Reset the position of the memory stream to the beginning
+                        stream.Position = 0;
+
+                        // Open the ExcelPackage from the memory stream
+                        using (var excelDocument = new ExcelPackage(stream))
+                        {
+                            // Display the ExcelPackage in Excel
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = "excel.exe",
+                                Arguments = " /r " + stream.Length, // Pass the length of the stream as an argument to Excel
+                                UseShellExecute = true
+                            });
+                        }
+                    }
                 }
 
                 // Stop the stopwatch
                 stopwatch.Stop();
 
-                _logger.Log($"Project Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
+                _logger.Log($"Project Excel file opened successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
             catch (Exception ex)
             {
