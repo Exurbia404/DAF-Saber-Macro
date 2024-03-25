@@ -82,7 +82,6 @@ namespace Presentation
                             Process.Start(new ProcessStartInfo
                             {
                                 FileName = "excel.exe",
-                                Arguments = " /r " + stream.Length, // Pass the length of the stream as an argument to Excel
                                 UseShellExecute = true
                             });
                         }
