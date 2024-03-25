@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             bundlesListLabel = new Label();
             bundlesListBox = new ListBox();
             searchBundlesTextBox = new TextBox();
@@ -49,7 +50,7 @@
             // bundlesListLabel
             // 
             bundlesListLabel.AutoSize = true;
-            bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold);
+            bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
             bundlesListLabel.Location = new Point(10, 88);
             bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
             bundlesListLabel.Name = "bundlesListLabel";
@@ -59,8 +60,9 @@
             // 
             // bundlesListBox
             // 
-            bundlesListBox.Font = new Font("Arial", 10F);
+            bundlesListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             bundlesListBox.FormattingEnabled = true;
+            bundlesListBox.ItemHeight = 16;
             bundlesListBox.Location = new Point(14, 202);
             bundlesListBox.Margin = new Padding(4, 3, 4, 3);
             bundlesListBox.Name = "bundlesListBox";
@@ -70,7 +72,7 @@
             // 
             // searchBundlesTextBox
             // 
-            searchBundlesTextBox.Font = new Font("Arial", 10F);
+            searchBundlesTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             searchBundlesTextBox.Location = new Point(14, 168);
             searchBundlesTextBox.Margin = new Padding(4, 3, 4, 3);
             searchBundlesTextBox.Name = "searchBundlesTextBox";
@@ -83,7 +85,7 @@
             // 
             // schematicsSearchTextBox
             // 
-            schematicsSearchTextBox.Font = new Font("Arial", 10F);
+            schematicsSearchTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             schematicsSearchTextBox.Location = new Point(407, 168);
             schematicsSearchTextBox.Margin = new Padding(4, 3, 4, 3);
             schematicsSearchTextBox.Name = "schematicsSearchTextBox";
@@ -95,8 +97,9 @@
             // 
             // schematicsListBox
             // 
-            schematicsListBox.Font = new Font("Arial", 10F);
+            schematicsListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             schematicsListBox.FormattingEnabled = true;
+            schematicsListBox.ItemHeight = 16;
             schematicsListBox.Location = new Point(407, 202);
             schematicsListBox.Margin = new Padding(4, 3, 4, 3);
             schematicsListBox.Name = "schematicsListBox";
@@ -107,7 +110,7 @@
             // schematicsListLabel
             // 
             schematicsListLabel.AutoSize = true;
-            schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold);
+            schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
             schematicsListLabel.Location = new Point(404, 88);
             schematicsListLabel.Margin = new Padding(4, 0, 4, 0);
             schematicsListLabel.Name = "schematicsListLabel";
@@ -251,6 +254,7 @@
             Controls.Add(searchBundlesTextBox);
             Controls.Add(bundlesListBox);
             Controls.Add(bundlesListLabel);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
             Text = "Form1";

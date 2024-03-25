@@ -83,9 +83,9 @@ namespace Logic
             return match.Success ? match.Groups[1].Value : null;
         }
 
-        public List<Wire> ExtractWiresFromFile(string filePath)
+        public List<DSI_Wire> ExtractWiresFromFile(string filePath)
         {
-            List<Wire> wireList = new List<Wire>();
+            List<DSI_Wire> wireList = new List<DSI_Wire>();
             string sectionStart = "%Section 5";
             string sectionEnd = "%Section 6";
             bool isInSection5 = false;
@@ -101,7 +101,7 @@ namespace Logic
                 if (isInSection5)
                 {
                     // Process lines between Section 5 and Section 6
-                    Wire wireObject = ExtractWireObjectFromString(line);
+                    DSI_Wire wireObject = ExtractWireObjectFromString(line);
                     wireList.Add(wireObject);
                 }
 
@@ -115,9 +115,9 @@ namespace Logic
             return wireList;
         }
 
-        public List<Component> ExtractComponentsFromFile(string filePath)
+        public List<DSI_Component> ExtractComponentsFromFile(string filePath)
         {
-            List<Component> componentList = new List<Component>();
+            List<DSI_Component> componentList = new List<DSI_Component>();
             string sectionStart = "%Section 6";
             string sectionEnd = "%Section 7";
             bool isInSection6 = false;
@@ -133,7 +133,7 @@ namespace Logic
                 if (isInSection6)
                 {
                     // Process lines between Section 6 and Section 7
-                    Component componentObject = ExtractComponentObjectFromString(line);
+                    DSI_Component componentObject = ExtractComponentObjectFromString(line);
                     componentList.Add(componentObject);
                 }
 
@@ -149,12 +149,12 @@ namespace Logic
         }
 
 
-        private Wire  ExtractWireObjectFromString(string inputString)
+        private DSI_Wire  ExtractWireObjectFromString(string inputString)
         {
             string[] fields = inputString.Split(':');
 
             // Create a new Wire object and set its properties based on the fields
-            Wire wireObject = new Wire
+            DSI_Wire wireObject = new DSI_Wire
             {
                 WireName = GetStringAtIndex(fields, 0),
                 WireOption = GetStringAtIndex(fields, 1),
@@ -185,14 +185,14 @@ namespace Logic
             return wireObject;
         }
 
-        private Component ExtractComponentObjectFromString(string inputString)
+        private DSI_Component ExtractComponentObjectFromString(string inputString)
         {
             //TODO: i am not extracting the entire object from the string, do i need to?
 
             string[] fields = inputString.Split(':');
 
             // Create a new Component object and set its properties based on the fields
-            Component componentObject = new Component
+            DSI_Component componentObject = new DSI_Component
             {
                 NodeName = GetStringAtIndex(fields, 0),
                 CavityName = GetStringAtIndex(fields, 1),
@@ -300,17 +300,17 @@ namespace Logic
                 Port_1 = GetStringAtIndex(fields, 5),
                 Term_1 = GetStringAtIndex(fields, 6),
                 Seal_1 = GetStringAtIndex(fields, 7),
-                Lokation_1 = GetStringAtIndex(fields, 8),
+                Location_1 = GetStringAtIndex(fields, 8),
                 Wire_connection = GetStringAtIndex(fields, 9),
                 Term_2 = GetStringAtIndex(fields, 10),
                 Seal_2 = GetStringAtIndex(fields, 11),
                 Connector_2 = GetStringAtIndex(fields, 12),
                 Port_2 = GetStringAtIndex(fields, 13),
-                Lokation_2 = GetStringAtIndex(fields, 14),
+                Location_2 = GetStringAtIndex(fields, 14),
                 Harness = GetStringAtIndex(fields, 15),
                 Variant = GetStringAtIndex(fields, 16),
                 Bundle = GetStringAtIndex(fields, 17),
-                Kodenr_wire = GetStringAtIndex(fields, 18),
+                CodeNumber_Wire = GetStringAtIndex(fields, 18),
                 Tag = GetStringAtIndex(fields, 19),
             };
 

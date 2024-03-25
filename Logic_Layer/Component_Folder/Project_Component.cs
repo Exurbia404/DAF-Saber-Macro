@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UI_Interfaces;
 
 namespace Logic
 {
-    public class Project_Component
+    public class Project_Component : IProject_Component
     {
         public string Type { get; set; }
         public string Ref { get; set; }

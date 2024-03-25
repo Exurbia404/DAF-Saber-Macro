@@ -2,10 +2,11 @@
 using OfficeOpenXml.FormulaParsing.Logging;
 using System.Data;
 using System.Diagnostics;
-using Component = Logic.Component;
+using DSI_Component = Logic.DSI_Component;
 using Logging;
 using Data_Access;
 using OfficeOpenXml;
+using UI_Interfaces;
 
 namespace Presentation
 {
@@ -27,10 +28,10 @@ namespace Presentation
         private RefSetHandler refsetHandler;
 
         private ExcelImporter excelImporter;
-        private ExcelHandler excelHandler;
+        private ExcelExporter excelHandler;
 
-        private static List<Wire> extractedWires;
-        private static List<Component> extractedComponents;
+        private static List<DSI_Wire> extractedWires;
+        private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
@@ -49,7 +50,7 @@ namespace Presentation
             //Commented out for replacement with localSettingsFiles
             //excelImporter = new ExcelImporter(_logger);
             extractor = new Extractor(_logger);
-            excelHandler = new ExcelHandler(_logger);
+            excelHandler = new ExcelExporter(_logger);
             refsetHandler = new RefSetHandler(_logger);
 
             folderPaths = new List<string>();
@@ -248,11 +249,13 @@ namespace Presentation
                 // Run the time-consuming code asynchronously
                 await Task.Run(() =>
                 {
-                    extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                    extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                    extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents);
+                    ExcelExporter excelExporter = new ExcelExporter(new Logger());
+
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
 
                     convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
@@ -407,7 +410,7 @@ namespace Presentation
             List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
             List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
 
-            excelHandler.CreateProjectExcelSheet(foundWires, foundComponents);
+            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList()); ;
         }
 
         //
