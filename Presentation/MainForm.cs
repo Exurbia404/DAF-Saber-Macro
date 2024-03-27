@@ -37,10 +37,6 @@ namespace Presentation
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
-        private int messageCounter;
-
-
-
         public MainForm(Logger logger)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
@@ -51,10 +47,6 @@ namespace Presentation
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
 
-            logger.LogEvent += Logger_LogEvent;
-
-            messageCounter = 0;
-
             //Commented out for replacement with localSettingsFiles
             //excelImporter = new ExcelImporter(_logger);
             extractor = new Extractor(_logger);
@@ -62,6 +54,8 @@ namespace Presentation
             refsetHandler = new RefSetHandler(_logger);
 
             folderPaths = new List<string>();
+
+            //Commented out for replacement with localSettingsFiles
             //extractedReferences = excelImporter.DSIReferences;
             extractedReferences = LoadRefSets();
 
@@ -104,6 +98,7 @@ namespace Presentation
             try
             {
                 // Sort the folder paths by creation date
+                //TODO: fix this, it never sorts by creationtime
                 filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => Directory.GetCreationTime(f)).ToList();
 
                 foreach (string fullPath in filteredFolderPaths)
@@ -248,9 +243,6 @@ namespace Presentation
         {
             try
             {
-                // Show a loading indicator or notify the user about the ongoing operation
-                // (e.g., display a ProgressBar or disable UI controls)
-
                 // Run the time-consuming code asynchronously
                 await Task.Run(() =>
                 {
@@ -264,8 +256,6 @@ namespace Presentation
 
                     convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
-
-                // Update the UI or perform any post-operation tasks
             }
             catch (Exception ex)
             {
@@ -338,7 +328,8 @@ namespace Presentation
                 }
                 else
                 {
-                    searchText = searchBundlesTextBox.Text.ToLower(); // Convert to lowercase for case-insensitive comparison
+                    // Convert to lowercase for case-insensitive comparison
+                    searchText = searchBundlesTextBox.Text.ToLower(); 
                 }
 
                 // Filter folderPaths based on the search text
@@ -520,12 +511,6 @@ namespace Presentation
         private void SetStatusBar(int percentage)
         {
             progressBar.Value = percentage;
-        }
-
-        private void Logger_LogEvent(object sender, string message)
-        {
-            messageCounter++;
-            //programStatusButton.Text = messageCounter.ToString();
         }
 
         private void programStatusButton_Click(object sender, EventArgs e)

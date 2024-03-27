@@ -41,7 +41,6 @@
             wipButton = new Button();
             releasedButton = new Button();
             goToProfilesButton = new Button();
-            button1 = new Button();
             button2 = new Button();
             button3 = new Button();
             openRefSetFormButton = new Button();
@@ -192,21 +191,10 @@
             goToProfilesButton.UseVisualStyleBackColor = true;
             goToProfilesButton.Click += goToProfilesButton_Click;
             // 
-            // button1
-            // 
-            button1.Enabled = false;
-            button1.Location = new Point(14, 14);
-            button1.Margin = new Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(88, 35);
-            button1.TabIndex = 14;
-            button1.Text = "Open";
-            button1.UseVisualStyleBackColor = true;
-            // 
             // button2
             // 
             button2.Enabled = false;
-            button2.Location = new Point(108, 14);
+            button2.Location = new Point(10, 6);
             button2.Margin = new Padding(4, 3, 4, 3);
             button2.Name = "button2";
             button2.Size = new Size(88, 35);
@@ -217,7 +205,7 @@
             // button3
             // 
             button3.Enabled = false;
-            button3.Location = new Point(203, 14);
+            button3.Location = new Point(105, 6);
             button3.Margin = new Padding(4, 3, 4, 3);
             button3.Name = "button3";
             button3.Size = new Size(88, 35);
@@ -262,7 +250,6 @@
             Controls.Add(openRefSetFormButton);
             Controls.Add(button3);
             Controls.Add(button2);
-            Controls.Add(button1);
             Controls.Add(goToProfilesButton);
             Controls.Add(wipButton);
             Controls.Add(releasedButton);
@@ -298,7 +285,6 @@
         private System.Windows.Forms.Button wipButton;
         private System.Windows.Forms.Button releasedButton;
         private System.Windows.Forms.Button goToProfilesButton;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private Button openRefSetFormButton;
