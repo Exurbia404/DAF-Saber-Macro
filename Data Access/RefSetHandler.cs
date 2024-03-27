@@ -41,12 +41,14 @@ namespace Data_Access
 
         private void SaveToDisk(List<DSI_Reference> references)
         {
+            _logger.Log("Saved" + references.Count + " to disk");
             string json = JsonConvert.SerializeObject(references, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
         private List<DSI_Reference> LoadFromDisk()
         {
+
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
@@ -61,6 +63,7 @@ namespace Data_Access
 
         private void SaveToSettings(List<DSI_Reference> references)
         {
+            _logger.Log("Saved" + references.Count + " to settings");
             // Convert list of DSI_Reference objects to a list of strings
             List<string> referenceStrings = references.Select(reference => $"{reference.YearWeek}:{reference.BundleNumber}:{reference.ProjectName}:{reference.Description}").ToList();
 
@@ -129,9 +132,9 @@ namespace Data_Access
                 stopwatch.Stop();
 
                 // Log the elapsed time in milliseconds
-                _logger.Log($"LoadRefSets function executed in {stopwatch.ElapsedMilliseconds} ms");
+                _logger.Log($"LoadRefSetsFromSettings function executed in {stopwatch.ElapsedMilliseconds} ms");
             }
-
+           
             return references;
         }
     }

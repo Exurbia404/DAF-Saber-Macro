@@ -532,7 +532,7 @@ namespace Presentation
         {
             try
             {
-                _logger.Log("refsets found in settings: " + refsetHandler.LoadRefSets().Count.ToString());
+                _logger.Log("refsets found: " + refsetHandler.LoadRefSets().Count.ToString());
                 //Check whether or not the refsets are empty
                 if (refsetHandler.LoadRefSets().Count == 0)
                 {
