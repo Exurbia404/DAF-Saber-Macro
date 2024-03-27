@@ -1,19 +1,65 @@
 ﻿using Logging;
 using Logic;
+using Newtonsoft.Json;
 using System.Data;
 
 namespace Data_Access
 {
     public class RefSetHandler
     {
-        Logger _logger;
-        
+        private Logger _logger;
+        private string filePath = @"N:\Saber Tool Plus\Data\refset.json";
+
         public RefSetHandler(Logger logger) 
         {
             _logger = logger;
         }
 
         public void SaveRefSets(List<DSI_Reference> references)
+        {
+            if(Environment.MachineName == "EXURBIA")
+            {
+                SaveToSettings(references);
+            }
+            else
+            {
+                SaveToDisk(references);
+            }
+        }
+
+        public List<DSI_Reference> LoadRefSets()
+        {
+            if (Environment.MachineName == "EXURBIA")
+            {
+                return LoadFromSettings();
+            }
+            else
+            {
+                return LoadFromDisk();
+            }
+        }
+
+        private void SaveToDisk(List<DSI_Reference> references)
+        {
+            string json = JsonConvert.SerializeObject(references, Formatting.Indented);
+            File.WriteAllText(filePath, json);
+        }
+
+        private List<DSI_Reference> LoadFromDisk()
+        {
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<List<DSI_Reference>>(json);
+            }
+            else
+            {
+                // Return an empty list if the file doesn't exist
+                return new List<DSI_Reference>();
+            }
+        }
+
+        private void SaveToSettings(List<DSI_Reference> references)
         {
             // Convert list of DSI_Reference objects to a list of strings
             List<string> referenceStrings = references.Select(reference => $"{reference.YearWeek}:{reference.BundleNumber}:{reference.ProjectName}:{reference.Description}").ToList();
@@ -28,7 +74,7 @@ namespace Data_Access
             MySettings.Default.Save();
         }
 
-        public List<DSI_Reference> LoadRefSets()
+        private List<DSI_Reference> LoadFromSettings()
         {
             List<DSI_Reference> references = new List<DSI_Reference>();
 

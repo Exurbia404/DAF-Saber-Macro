@@ -38,7 +38,7 @@ namespace Presentation
         private static List<DSI_Reference> extractedReferences;
         
         private int messageCounter;
-
+        private string version = "Alpha 0.1";
 
         public MainForm(Logger logger)
         {
@@ -74,6 +74,8 @@ namespace Presentation
 
             //Projects
             projectsToggleButtons.Add(releasedButton);
+
+            versionLabel.Text = "Version: " + version;
 
             searchBundlesTextBox_SetText();
             schematicsSearchTextBox_SetText();

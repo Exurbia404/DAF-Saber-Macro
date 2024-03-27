@@ -45,6 +45,7 @@
             openRefSetFormButton = new Button();
             programStatusButton = new Button();
             label1 = new Label();
+            versionLabel = new Label();
             SuspendLayout();
             // 
             // bundlesListLabel
@@ -228,11 +229,21 @@
             label1.TabIndex = 20;
             label1.Text = "Messages:";
             // 
+            // versionLabel
+            // 
+            versionLabel.AutoSize = true;
+            versionLabel.Location = new Point(599, 631);
+            versionLabel.Name = "versionLabel";
+            versionLabel.Size = new Size(100, 15);
+            versionLabel.TabIndex = 21;
+            versionLabel.Text = "version: Alpha 0.1";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(721, 655);
+            Controls.Add(versionLabel);
             Controls.Add(label1);
             Controls.Add(programStatusButton);
             Controls.Add(openRefSetFormButton);
@@ -276,5 +287,6 @@
         private Button openRefSetFormButton;
         private Button programStatusButton;
         private Label label1;
+        private Label versionLabel;
     }
 }
