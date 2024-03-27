@@ -244,6 +244,7 @@
             // 
             // programStatusButton
             // 
+            programStatusButton.Enabled = false;
             programStatusButton.Location = new Point(666, 11);
             programStatusButton.Name = "programStatusButton";
             programStatusButton.Size = new Size(43, 24);

@@ -28,97 +28,105 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.saveProfileButton = new System.Windows.Forms.Button();
-            this.profilesListBox = new System.Windows.Forms.ListBox();
-            this.profileNameTextBox = new System.Windows.Forms.TextBox();
-            this.profileTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.deleteProfileButton = new System.Windows.Forms.Button();
-            this.addHeaderButton = new System.Windows.Forms.Button();
-            this.removeHeaderButton = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            saveProfileButton = new Button();
+            profilesListBox = new ListBox();
+            profileNameTextBox = new TextBox();
+            profileTypeComboBox = new ComboBox();
+            deleteProfileButton = new Button();
+            addHeaderButton = new Button();
+            removeHeaderButton = new Button();
+            SuspendLayout();
             // 
             // saveProfileButton
             // 
-            this.saveProfileButton.Location = new System.Drawing.Point(96, 39);
-            this.saveProfileButton.Name = "saveProfileButton";
-            this.saveProfileButton.Size = new System.Drawing.Size(75, 23);
-            this.saveProfileButton.TabIndex = 50;
-            this.saveProfileButton.Text = "Save";
-            this.saveProfileButton.UseVisualStyleBackColor = true;
-            this.saveProfileButton.Click += new System.EventHandler(this.saveProfileButton_Click);
+            saveProfileButton.Location = new Point(112, 45);
+            saveProfileButton.Margin = new Padding(4, 3, 4, 3);
+            saveProfileButton.Name = "saveProfileButton";
+            saveProfileButton.Size = new Size(88, 27);
+            saveProfileButton.TabIndex = 50;
+            saveProfileButton.Text = "Save";
+            saveProfileButton.UseVisualStyleBackColor = true;
+            saveProfileButton.Click += saveProfileButton_Click;
             // 
             // profilesListBox
             // 
-            this.profilesListBox.FormattingEnabled = true;
-            this.profilesListBox.Location = new System.Drawing.Point(15, 87);
-            this.profilesListBox.Name = "profilesListBox";
-            this.profilesListBox.Size = new System.Drawing.Size(155, 238);
-            this.profilesListBox.TabIndex = 51;
-            this.profilesListBox.SelectedIndexChanged += new System.EventHandler(this.profilesListBox_SelectedIndexChanged);
+            profilesListBox.FormattingEnabled = true;
+            profilesListBox.ItemHeight = 15;
+            profilesListBox.Location = new Point(18, 100);
+            profilesListBox.Margin = new Padding(4, 3, 4, 3);
+            profilesListBox.Name = "profilesListBox";
+            profilesListBox.Size = new Size(180, 274);
+            profilesListBox.TabIndex = 51;
+            profilesListBox.SelectedIndexChanged += profilesListBox_SelectedIndexChanged;
             // 
             // profileNameTextBox
             // 
-            this.profileNameTextBox.Location = new System.Drawing.Point(15, 61);
-            this.profileNameTextBox.Name = "profileNameTextBox";
-            this.profileNameTextBox.Size = new System.Drawing.Size(155, 20);
-            this.profileNameTextBox.TabIndex = 52;
+            profileNameTextBox.Location = new Point(18, 70);
+            profileNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            profileNameTextBox.Name = "profileNameTextBox";
+            profileNameTextBox.Size = new Size(180, 23);
+            profileNameTextBox.TabIndex = 52;
             // 
             // profileTypeComboBox
             // 
-            this.profileTypeComboBox.FormattingEnabled = true;
-            this.profileTypeComboBox.Location = new System.Drawing.Point(15, 12);
-            this.profileTypeComboBox.Name = "profileTypeComboBox";
-            this.profileTypeComboBox.Size = new System.Drawing.Size(155, 21);
-            this.profileTypeComboBox.TabIndex = 53;
-            this.profileTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.profileTypeComboBox_SelectedIndexChanged);
+            profileTypeComboBox.FormattingEnabled = true;
+            profileTypeComboBox.Location = new Point(18, 14);
+            profileTypeComboBox.Margin = new Padding(4, 3, 4, 3);
+            profileTypeComboBox.Name = "profileTypeComboBox";
+            profileTypeComboBox.Size = new Size(180, 23);
+            profileTypeComboBox.TabIndex = 53;
+            profileTypeComboBox.SelectedIndexChanged += profileTypeComboBox_SelectedIndexChanged;
             // 
             // deleteProfileButton
             // 
-            this.deleteProfileButton.Location = new System.Drawing.Point(15, 39);
-            this.deleteProfileButton.Name = "deleteProfileButton";
-            this.deleteProfileButton.Size = new System.Drawing.Size(75, 23);
-            this.deleteProfileButton.TabIndex = 54;
-            this.deleteProfileButton.Text = "Delete";
-            this.deleteProfileButton.UseVisualStyleBackColor = true;
-            this.deleteProfileButton.Click += new System.EventHandler(this.deleteProfileButton_Click);
+            deleteProfileButton.Location = new Point(18, 45);
+            deleteProfileButton.Margin = new Padding(4, 3, 4, 3);
+            deleteProfileButton.Name = "deleteProfileButton";
+            deleteProfileButton.Size = new Size(88, 27);
+            deleteProfileButton.TabIndex = 54;
+            deleteProfileButton.Text = "Delete";
+            deleteProfileButton.UseVisualStyleBackColor = true;
+            deleteProfileButton.Click += deleteProfileButton_Click;
             // 
             // addHeaderButton
             // 
-            this.addHeaderButton.Location = new System.Drawing.Point(455, 45);
-            this.addHeaderButton.Name = "addHeaderButton";
-            this.addHeaderButton.Size = new System.Drawing.Size(26, 26);
-            this.addHeaderButton.TabIndex = 55;
-            this.addHeaderButton.Text = "+";
-            this.addHeaderButton.UseVisualStyleBackColor = true;
-            this.addHeaderButton.Click += new System.EventHandler(this.addHeaderButton_Click);
+            addHeaderButton.Location = new Point(531, 52);
+            addHeaderButton.Margin = new Padding(4, 3, 4, 3);
+            addHeaderButton.Name = "addHeaderButton";
+            addHeaderButton.Size = new Size(30, 30);
+            addHeaderButton.TabIndex = 55;
+            addHeaderButton.Text = "+";
+            addHeaderButton.UseVisualStyleBackColor = true;
+            addHeaderButton.Click += addHeaderButton_Click;
             // 
             // removeHeaderButton
             // 
-            this.removeHeaderButton.Location = new System.Drawing.Point(415, 45);
-            this.removeHeaderButton.Name = "removeHeaderButton";
-            this.removeHeaderButton.Size = new System.Drawing.Size(26, 26);
-            this.removeHeaderButton.TabIndex = 56;
-            this.removeHeaderButton.Text = "-";
-            this.removeHeaderButton.UseVisualStyleBackColor = true;
-            this.removeHeaderButton.Click += new System.EventHandler(this.removeHeaderButton_Click);
+            removeHeaderButton.Location = new Point(484, 52);
+            removeHeaderButton.Margin = new Padding(4, 3, 4, 3);
+            removeHeaderButton.Name = "removeHeaderButton";
+            removeHeaderButton.Size = new Size(30, 30);
+            removeHeaderButton.TabIndex = 56;
+            removeHeaderButton.Text = "-";
+            removeHeaderButton.UseVisualStyleBackColor = true;
+            removeHeaderButton.Click += removeHeaderButton_Click;
             // 
             // ProfileCreator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(873, 427);
-            this.Controls.Add(this.removeHeaderButton);
-            this.Controls.Add(this.addHeaderButton);
-            this.Controls.Add(this.deleteProfileButton);
-            this.Controls.Add(this.profileTypeComboBox);
-            this.Controls.Add(this.profileNameTextBox);
-            this.Controls.Add(this.profilesListBox);
-            this.Controls.Add(this.saveProfileButton);
-            this.Name = "ProfileCreator";
-            this.Text = "F";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1018, 493);
+            Controls.Add(removeHeaderButton);
+            Controls.Add(addHeaderButton);
+            Controls.Add(deleteProfileButton);
+            Controls.Add(profileTypeComboBox);
+            Controls.Add(profileNameTextBox);
+            Controls.Add(profilesListBox);
+            Controls.Add(saveProfileButton);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "ProfileCreator";
+            Text = "F";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

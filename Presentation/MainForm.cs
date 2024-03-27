@@ -103,8 +103,8 @@ namespace Presentation
             bundlesListBox.Items.Clear();
             try
             {
-                // Sorts the folder names by their numeric value in descending order
-                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => int.Parse(Path.GetFileName(f))).ToList();
+                // Sort the folder paths by creation date
+                filteredFolderPaths = filteredFolderPaths.OrderByDescending(f => Directory.GetCreationTime(f)).ToList();
 
                 foreach (string fullPath in filteredFolderPaths)
                 {
