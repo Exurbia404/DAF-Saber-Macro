@@ -69,6 +69,7 @@
             bundlesListBox.Name = "bundlesListBox";
             bundlesListBox.Size = new Size(292, 388);
             bundlesListBox.TabIndex = 1;
+            bundlesListBox.SelectedIndexChanged += bundlesListBox_SelectedIndexChanged;
             bundlesListBox.DoubleClick += bundlesListBox_DoubleClick;
             // 
             // searchBundlesTextBox
@@ -232,7 +233,6 @@
             // 
             // programStatusButton
             // 
-            programStatusButton.Enabled = false;
             programStatusButton.Location = new Point(666, 11);
             programStatusButton.Name = "programStatusButton";
             programStatusButton.Size = new Size(43, 24);

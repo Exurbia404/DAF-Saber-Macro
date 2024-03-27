@@ -34,9 +34,11 @@
             // messagesListBox
             // 
             messagesListBox.FormattingEnabled = true;
+            messagesListBox.HorizontalScrollbar = true;
             messagesListBox.ItemHeight = 15;
             messagesListBox.Location = new Point(12, 12);
             messagesListBox.Name = "messagesListBox";
+            messagesListBox.ScrollAlwaysVisible = true;
             messagesListBox.Size = new Size(552, 634);
             messagesListBox.TabIndex = 0;
             // 

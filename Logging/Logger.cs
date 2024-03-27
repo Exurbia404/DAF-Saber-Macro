@@ -8,6 +8,7 @@ namespace Logging
     public class Logger
     {
         public List<string> messages { get; private set; }
+        public event EventHandler<string> LogEvent;
 
         private string filename;
 
@@ -42,6 +43,7 @@ namespace Logging
                 writer.WriteLine($"{timestamp} [{callingMethod}] {message}");
             }
             messages.Add($"{timestamp} [{callingMethod}] {message}");
+            LogEvent?.Invoke(this, message);
 
         }
     }

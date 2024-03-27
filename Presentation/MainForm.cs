@@ -36,6 +36,9 @@ namespace Presentation
         private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
+        
+        private int messageCounter;
+
 
         public MainForm(Logger logger)
         {
@@ -46,6 +49,10 @@ namespace Presentation
 
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
+
+            _logger.LogEvent += Logger_LogEvent;
+
+            messageCounter = 0;
 
             //Commented out for replacement with localSettingsFiles
             //excelImporter = new ExcelImporter(_logger);
@@ -194,7 +201,7 @@ namespace Presentation
         {
             // Get the selected index
             string selectedBundle = bundlesListBox.SelectedItem.ToString();
-
+            SetStatusBar(10);
             OpenLatestBundleFile(selectedBundle);
         }
 
@@ -205,7 +212,7 @@ namespace Presentation
 
             // Search for the latest .txt file containing "_DSI" in the selected folder
             string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-
+            SetStatusBar(30);
             if (txtFiles.Length > 0)
             {
                 // Sort files by creation time and get the latest one
@@ -243,6 +250,7 @@ namespace Presentation
         {
             try
             {
+                SetStatusBar(60);
                 // Run the time-consuming code asynchronously
                 await Task.Run(() =>
                 {
@@ -253,7 +261,7 @@ namespace Presentation
                     ExcelExporter excelExporter = new ExcelExporter(_logger);
 
                     convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
-
+                    SetStatusBar(80);
                     convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
             }
@@ -329,7 +337,7 @@ namespace Presentation
                 else
                 {
                     // Convert to lowercase for case-insensitive comparison
-                    searchText = searchBundlesTextBox.Text.ToLower(); 
+                    searchText = searchBundlesTextBox.Text.ToLower();
                 }
 
                 // Filter folderPaths based on the search text
@@ -510,7 +518,16 @@ namespace Presentation
 
         private void SetStatusBar(int percentage)
         {
-            progressBar.Value = percentage;
+            if (progressBar.InvokeRequired)
+            {
+                // If the current thread is not the UI thread, invoke this method on the UI thread
+                progressBar.BeginInvoke(new Action<int>(SetStatusBar), percentage);
+            }
+            else
+            {
+                // If the current thread is the UI thread, update the progress bar directly
+                progressBar.Value = percentage;
+            }
         }
 
         private void programStatusButton_Click(object sender, EventArgs e)
@@ -522,8 +539,34 @@ namespace Presentation
             }
 
             // Open MessageViewer form
-            messageViewerForm = new MessageViewer(_logger.messages);
+            messageViewerForm = new MessageViewer(_logger);
             messageViewerForm.Show();
+        }
+
+        private void Logger_LogEvent(object sender, string message)
+        {
+            //get recent message count
+            messageCounter = _logger.messages.Count;
+
+            // Update programStatusButton.Text on the UI thread
+            if (programStatusButton.InvokeRequired)
+            {
+                // If the current thread is not the UI thread, invoke this method on the UI thread
+                programStatusButton.BeginInvoke(new Action(() =>
+                {
+                    programStatusButton.Text = messageCounter.ToString();
+                }));
+            }
+            else
+            {
+                // If the current thread is the UI thread, update the programStatusButton.Text directly
+                programStatusButton.Text = messageCounter.ToString();
+            }
+        }
+
+        private void bundlesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
