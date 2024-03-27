@@ -241,7 +241,7 @@ namespace Presentation
                 ComboBox comboBox = new ComboBox();
 
                 // Set ComboBox location
-                comboBox.Location = new Point((x + initialOffset), y);
+                comboBox.Location = new Point((initalXOffset + (horizontalOffset * i)), y);
                 comboBox.Size = new Size(horizontalOffset, 25);
 
                 // Set ComboBox DropDownStyle to DropDownList
