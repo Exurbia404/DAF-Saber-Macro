@@ -73,7 +73,6 @@ namespace Presentation
             bundlesToggleButtons.Add(designerButton);
 
             //Projects
-            projectsToggleButtons.Add(wipButton);
             projectsToggleButtons.Add(releasedButton);
 
             searchBundlesTextBox_SetText();
@@ -207,43 +206,59 @@ namespace Presentation
 
         private void OpenLatestBundleFile(string bundleName)
         {
-            // Get the corresponding folder path
-            string selectedFolderPath = GetFilePath(bundleName);
+            try
+            {
+                // Get the corresponding folder path
+                string selectedFolderPath = GetFilePath(bundleName);
 
-            // Search for the latest .txt file containing "_DSI" in the selected folder
-            string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-            SetStatusBar(30);
-            if (txtFiles.Length > 0)
-            {
-                // Sort files by creation time and get the latest one
-                string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
-                ExtractAndOpenExcel(latestTxtFile);
-                // Do something with the latest .txt file, for example, display its path
-                _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                // Search for the latest .txt file containing "_DSI" in the selected folder
+                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+                SetStatusBar(30);
+                if (txtFiles.Length > 0)
+                {
+                    // Sort files by creation time and get the latest one
+                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    ExtractAndOpenExcel(latestTxtFile);
+                    // Do something with the latest .txt file, for example, display its path
+                    _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                }
+                else
+                {
+                    _logger.Log($"No matching .txt files found in {selectedFolderPath}");
+                }
             }
-            else
+            catch(Exception ex)
             {
-                _logger.Log($"No matching .txt files found in {selectedFolderPath}");
+                _logger.Log(ex.ToString());
             }
+            
         }
 
         private string GetFilePath(string inputName)
         {
-            inputName = Path.GetFileName(inputName);
-
-            foreach (string folderPath in folderPaths)
+            try
             {
-                string folderName = Path.GetFileName(folderPath);
+                inputName = Path.GetFileName(inputName);
 
-                // Case-insensitive comparison
-                if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
+                foreach (string folderPath in folderPaths)
                 {
-                    return folderPath;
-                }
-            }
+                    string folderName = Path.GetFileName(folderPath);
 
-            // No matching folder path found
-            return null;
+                    // Case-insensitive comparison
+                    if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return folderPath;
+                    }
+                }
+
+                // No matching folder path found
+                return null;
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(ex.ToString());
+                return null;
+            }            
         }
 
         private async void ExtractAndOpenExcel(string textFilePath)
@@ -438,6 +453,7 @@ namespace Presentation
         //Bundles
         private void productProtoButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("productbutton_clicked");
             BundlesToggleButton(productProtoButton);
 
             folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
@@ -446,6 +462,7 @@ namespace Presentation
 
         private void reldasButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("reldasbutton_clicked");
             BundlesToggleButton(reldasButton);
 
             folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
@@ -454,6 +471,7 @@ namespace Presentation
 
         private void designerButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("designerButton_clicked");
             BundlesToggleButton(designerButton);
 
             folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
@@ -478,22 +496,19 @@ namespace Presentation
 
         private void releasedButton_Click(object sender, EventArgs e)
         {
-            ProjectsToggleButton(releasedButton);
-        }
 
-        private void wipButton_Click(object sender, EventArgs e)
-        {
-            ProjectsToggleButton(wipButton);
         }
 
         private void goToProfilesButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("goToProfilesButton_clicked");
             var newProfileForm = new ProfileCreator(_logger);
             newProfileForm.Show();
         }
 
         private void openRefSetFormButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("openrefSetFormButton_clicked");
             var RefSetForm = new RefSetForm(_logger);
 
             // Subscribe to the FormClosed event
@@ -513,21 +528,38 @@ namespace Presentation
 
         private List<DSI_Reference> LoadRefSets()
         {
-            return refsetHandler.LoadRefSets();
+            try
+            {
+                _logger.Log("refsets found in settings: " + refsetHandler.LoadRefSets().Count.ToString());
+                //Check whether or not the refsets are empty
+                if (refsetHandler.LoadRefSets().Count == 0)
+                {
+                    ExcelImporter excelImporter = new ExcelImporter(_logger);
+                    _logger.Log("refsets found in Excel: " + excelImporter.DSIReferences.Count.ToString());
+                    return excelImporter.DSIReferences;
+                }
+                return refsetHandler.LoadRefSets();
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(ex.ToString());
+                return null;
+            }
+            
         }
 
         private void SetStatusBar(int percentage)
         {
-            if (progressBar.InvokeRequired)
-            {
-                // If the current thread is not the UI thread, invoke this method on the UI thread
-                progressBar.BeginInvoke(new Action<int>(SetStatusBar), percentage);
-            }
-            else
-            {
-                // If the current thread is the UI thread, update the progress bar directly
-                progressBar.Value = percentage;
-            }
+            //if (progressBar.InvokeRequired)
+            //{
+            //    // If the current thread is not the UI thread, invoke this method on the UI thread
+            //    progressBar.BeginInvoke(new Action<int>(SetStatusBar), percentage);
+            //}
+            //else
+            //{
+            //    // If the current thread is the UI thread, update the progress bar directly
+            //    progressBar.Value = percentage;
+            //}
         }
 
         private void programStatusButton_Click(object sender, EventArgs e)

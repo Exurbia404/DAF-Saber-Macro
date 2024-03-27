@@ -38,14 +38,13 @@
             productProtoButton = new Button();
             reldasButton = new Button();
             designerButton = new Button();
-            wipButton = new Button();
             releasedButton = new Button();
             goToProfilesButton = new Button();
             button2 = new Button();
             button3 = new Button();
             openRefSetFormButton = new Button();
-            progressBar = new ProgressBar();
             programStatusButton = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // bundlesListLabel
@@ -156,19 +155,6 @@
             designerButton.UseVisualStyleBackColor = false;
             designerButton.Click += designerButton_Click;
             // 
-            // wipButton
-            // 
-            wipButton.BackColor = Color.Gray;
-            wipButton.Enabled = false;
-            wipButton.Location = new Point(504, 141);
-            wipButton.Margin = new Padding(2);
-            wipButton.Name = "wipButton";
-            wipButton.Size = new Size(97, 23);
-            wipButton.TabIndex = 12;
-            wipButton.Text = "WiP";
-            wipButton.UseVisualStyleBackColor = false;
-            wipButton.Click += wipButton_Click;
-            // 
             // releasedButton
             // 
             releasedButton.BackColor = Color.White;
@@ -224,13 +210,6 @@
             openRefSetFormButton.UseVisualStyleBackColor = true;
             openRefSetFormButton.Click += openRefSetFormButton_Click;
             // 
-            // progressBar
-            // 
-            progressBar.Location = new Point(560, 11);
-            progressBar.Name = "progressBar";
-            progressBar.Size = new Size(100, 23);
-            progressBar.TabIndex = 18;
-            // 
             // programStatusButton
             // 
             programStatusButton.Location = new Point(666, 11);
@@ -240,18 +219,26 @@
             programStatusButton.UseVisualStyleBackColor = true;
             programStatusButton.Click += programStatusButton_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(599, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(61, 15);
+            label1.TabIndex = 20;
+            label1.Text = "Messages:";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(721, 655);
+            Controls.Add(label1);
             Controls.Add(programStatusButton);
-            Controls.Add(progressBar);
             Controls.Add(openRefSetFormButton);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(goToProfilesButton);
-            Controls.Add(wipButton);
             Controls.Add(releasedButton);
             Controls.Add(designerButton);
             Controls.Add(reldasButton);
@@ -282,13 +269,12 @@
         private System.Windows.Forms.Button productProtoButton;
         private System.Windows.Forms.Button reldasButton;
         private System.Windows.Forms.Button designerButton;
-        private System.Windows.Forms.Button wipButton;
         private System.Windows.Forms.Button releasedButton;
         private System.Windows.Forms.Button goToProfilesButton;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private Button openRefSetFormButton;
-        private ProgressBar progressBar;
         private Button programStatusButton;
+        private Label label1;
     }
 }

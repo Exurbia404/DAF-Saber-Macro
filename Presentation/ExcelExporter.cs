@@ -133,9 +133,6 @@ namespace Presentation
                     componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
-                    // Set sensitivity label
-                    SetWorkbookSensitivityLabel(package, SensitivityLabel.General);
-
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo("ExtractedData.xlsx"));
 
@@ -246,11 +243,6 @@ namespace Presentation
 
             // Return null if the property is not found
             return null;
-        }
-
-        private async static void SetWorkbookSensitivityLabel(ExcelPackage package, SensitivityLabel sensitivityLabel)
-        {
-            
         }
     }
 }
