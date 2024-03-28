@@ -49,7 +49,7 @@ namespace Presentation
 
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
-
+            
             _logger.LogEvent += Logger_LogEvent;
 
             messageCounter = 0;
@@ -96,6 +96,8 @@ namespace Presentation
             {
                 _logger.Log($"Error: {ex.Message}");
             }
+
+            _logger.Log("current directory is: WiP");
         }
 
 
@@ -276,15 +278,57 @@ namespace Presentation
                     extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
                     ExcelExporter excelExporter = new ExcelExporter(_logger);
+                    FileHandler fileHandler = new FileHandler(_logger);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter, fileHandler);
                     SetStatusBar(80);
+
+                    string bundleNumber = GetFileName(textFilePath);
+                    convertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, bundleNumber, GetFolderPath(textFilePath));
                     convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
             }
             catch (Exception ex)
             {
                 _logger.Log($"Error: {ex.Message}");
+            }
+        }
+
+        private string GetFileName(string filePath)
+        {
+            try
+            {
+                // Get the directory name containing the file
+                string directoryName = Path.GetDirectoryName(filePath);
+
+                // Get the directory name from the full path
+                string folderName = new DirectoryInfo(directoryName).Name;
+
+                // Extract the number from the folder name
+                string number = new String(folderName.Where(Char.IsDigit).ToArray());
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions, such as invalid file paths
+                _logger.Log($"Error occurred: {ex.Message}");
+                return null;
+            }
+        }
+
+        private string GetFolderPath(string filePath)
+        {
+            try
+            {
+                // Get the directory name containing the file
+                return Path.GetDirectoryName(filePath);                 
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions, such as invalid file paths
+                _logger.Log($"Error occurred: {ex.Message}");
+                return null;
             }
         }
 
@@ -486,7 +530,7 @@ namespace Presentation
         //Bundles
         private void productProtoButton_Click(object sender, EventArgs e)
         {
-            _logger.Log("productbutton_clicked");
+            _logger.Log("current directory is: Production/Proto");
             BundlesToggleButton(productProtoButton);
 
             folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
@@ -495,7 +539,7 @@ namespace Presentation
 
         private void reldasButton_Click(object sender, EventArgs e)
         {
-            _logger.Log("reldasbutton_clicked");
+            _logger.Log("current directory is: Release");
             BundlesToggleButton(reldasButton);
 
             folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
@@ -504,7 +548,7 @@ namespace Presentation
 
         private void designerButton_Click(object sender, EventArgs e)
         {
-            _logger.Log("designerButton_clicked");
+            _logger.Log("current directory is: WiP");
             BundlesToggleButton(designerButton);
 
             folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);

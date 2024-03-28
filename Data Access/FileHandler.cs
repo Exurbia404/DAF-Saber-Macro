@@ -1,23 +1,32 @@
 ﻿using Logic;
+using Data_Interfaces;
+using Logging;
 
 namespace Data_Access
 {
-    public class FileHandler
+    
+    public class FileHandler : iFileHandler
     {
-        public void WriteToFile(List<Converted_Wire> wires, List<Converted_Component> components, List<Bundle> extractedBundles, string fileName)
+
+        private Logger _logger;
+        
+        public FileHandler(Logger logger)
         {
-            fileName = fileName.Replace("_DSI", "");
+            _logger = logger;
+        }
 
-            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        public void WriteToFile(List<iConverted_Wire> wires, List<iConverted_Component> components, List<iBundle> extractedBundles, string fileName, string filePath)
+        {
+            filePath = filePath.Replace("_DSI", "");
 
-            // Construct the new file name
+            //Construct the new filePath
             string newFileName = $"{fileName}_generated_WCSPP.txt";
+            string newFilePath = Path.Combine(filePath, newFileName);
 
-            // Combine with the desired subdirectories and file name
-            string filePath = Path.Combine(exeDirectory, "data", "output", newFileName);
+            _logger.Log("Writing to: " + newFilePath);
 
             // Create or overwrite the file
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using (StreamWriter writer = new StreamWriter(newFilePath))
             {
                 // Write the header line
                 writer.WriteLine("Wire,Diam,Color,Type,Code_no,Length,Connector_1,Port_1,Term_1,Seal_1,Wire_connection,Term_2,Seal_2,Connector_2,Port_2,Variant,Bundle,Loc_1,Loc_2,");
@@ -34,15 +43,16 @@ namespace Data_Access
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
+
+                _logger.Log($"{fileName}_generated_WCSPP.txt generated");
             }
 
+            //Generate the new filePath
             newFileName = $"{fileName}_generated_parts.txt";
-
-
-            filePath = Path.Combine(exeDirectory, "data", "output", newFileName);
+            newFilePath = Path.Combine(filePath, newFileName);
 
             // Create or overwrite the file
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using (StreamWriter writer = new StreamWriter(newFilePath))
             {
                 // Write the header line
                 writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,,,,,,,,,,,,,,,,,,,,");
@@ -56,6 +66,7 @@ namespace Data_Access
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
+                _logger.Log($"{fileName}_generated_parts.txt generated");
             }
         }
 

@@ -66,7 +66,7 @@ namespace Logic
 
                         // Start the stopwatch
                         stopwatch.Start();
-                        wcsppConvertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
+                        //.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, fileName);
                         stopwatch.Stop();
                         Console.WriteLine("Writing to Text File...");
                         // Get the elapsed time
