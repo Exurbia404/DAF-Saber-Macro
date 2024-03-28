@@ -46,13 +46,16 @@
             programStatusButton = new Button();
             label1 = new Label();
             versionLabel = new Label();
+            lastMessageTextBox = new TextBox();
+            label2 = new Label();
+            currentProjectLabel = new Label();
             SuspendLayout();
             // 
             // bundlesListLabel
             // 
             bundlesListLabel.AutoSize = true;
             bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            bundlesListLabel.Location = new Point(10, 88);
+            bundlesListLabel.Location = new Point(10, 69);
             bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
             bundlesListLabel.Name = "bundlesListLabel";
             bundlesListLabel.Size = new Size(94, 24);
@@ -113,7 +116,7 @@
             // 
             schematicsListLabel.AutoSize = true;
             schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            schematicsListLabel.Location = new Point(404, 88);
+            schematicsListLabel.Location = new Point(407, 69);
             schematicsListLabel.Margin = new Padding(4, 0, 4, 0);
             schematicsListLabel.Name = "schematicsListLabel";
             schematicsListLabel.Size = new Size(95, 24);
@@ -159,7 +162,7 @@
             // releasedButton
             // 
             releasedButton.BackColor = Color.White;
-            releasedButton.Location = new Point(407, 141);
+            releasedButton.Location = new Point(407, 104);
             releasedButton.Margin = new Padding(2);
             releasedButton.Name = "releasedButton";
             releasedButton.Size = new Size(97, 23);
@@ -170,6 +173,7 @@
             // 
             // goToProfilesButton
             // 
+            goToProfilesButton.Enabled = false;
             goToProfilesButton.Location = new Point(14, 612);
             goToProfilesButton.Margin = new Padding(4, 3, 4, 3);
             goToProfilesButton.Name = "goToProfilesButton";
@@ -232,17 +236,47 @@
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(599, 631);
+            versionLabel.Location = new Point(599, 638);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(100, 15);
             versionLabel.TabIndex = 21;
             versionLabel.Text = "version: Alpha 0.1";
             // 
+            // lastMessageTextBox
+            // 
+            lastMessageTextBox.Location = new Point(449, 612);
+            lastMessageTextBox.Name = "lastMessageTextBox";
+            lastMessageTextBox.ReadOnly = true;
+            lastMessageTextBox.Size = new Size(250, 23);
+            lastMessageTextBox.TabIndex = 22;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(407, 615);
+            label2.Name = "label2";
+            label2.Size = new Size(42, 15);
+            label2.TabIndex = 23;
+            label2.Text = "Status:";
+            // 
+            // currentProjectLabel
+            // 
+            currentProjectLabel.AutoSize = true;
+            currentProjectLabel.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            currentProjectLabel.Location = new Point(407, 139);
+            currentProjectLabel.Name = "currentProjectLabel";
+            currentProjectLabel.Size = new Size(100, 20);
+            currentProjectLabel.TabIndex = 24;
+            currentProjectLabel.Text = "Select project";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(721, 655);
+            ClientSize = new Size(721, 666);
+            Controls.Add(currentProjectLabel);
+            Controls.Add(label2);
+            Controls.Add(lastMessageTextBox);
             Controls.Add(versionLabel);
             Controls.Add(label1);
             Controls.Add(programStatusButton);
@@ -288,5 +322,8 @@
         private Button programStatusButton;
         private Label label1;
         private Label versionLabel;
+        private TextBox lastMessageTextBox;
+        private Label label2;
+        private Label currentProjectLabel;
     }
 }

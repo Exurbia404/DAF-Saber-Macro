@@ -379,27 +379,58 @@ namespace Presentation
             // Get the selected ProjectName from schematicsListBox
             string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
 
+            //Check if a project or a yearweek has been selected
             if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
             {
                 // Filter the extractedReferences based on the selected ProjectName
                 List<string> bundleNumbers = extractedReferences
-                    .Where(reference => reference.ProjectName == selectedSchematic)
-                    .Select(reference => reference.BundleNumber)
-                    .ToList();
+                .Where(reference => reference.ProjectName == selectedSchematic)
+                .Select(reference => $"{reference.YearWeek} - {reference.BundleNumber}")
+                .ToList();
 
                 // Call AddSchematicsToListBox with the list of BundleNumbers
+                currentProjectLabel.Text = selectedSchematic;
                 AddSchematicsToListBox(bundleNumbers);
             }
             else if (IsRefSetNumber(selectedSchematic))
             {
-                OpenRefSetInExcel(selectedSchematic);
+                OpenRefSetInExcel(TrimString(selectedSchematic));
             }
+        }
+
+        //Gets the value after the - and returns it
+        private string TrimString(string input)
+        {
+            // Find the index of '-' character
+            int dashIndex = input.IndexOf('-');
+
+            // If '-' is found and it's not the last character
+            if (dashIndex != -1 && dashIndex != input.Length - 1)
+            {
+                // Extract the part after '-' character
+                return input.Substring(dashIndex + 1).Trim();
+            }
+
+            // If '-' is not found or it's the last character, return null
+            return null;
         }
 
         private bool IsRefSetNumber(string selectedSchematic)
         {
-            // Check if the string contains only numeric characters and has a length of 7 or 8
-            return selectedSchematic.All(char.IsDigit) && (selectedSchematic.Length == 7 || selectedSchematic.Length == 8);
+            // Trim the selectedSchematic to remove leading and trailing whitespace
+            string trimmedSchematic = selectedSchematic.Trim();
+
+            // Call TrimString to extract the part after '-' character
+            string bundleNumber = TrimString(trimmedSchematic);
+
+            // If bundleNumber is not null, check if it contains only numeric characters
+            if (bundleNumber != null)
+            {
+                return bundleNumber.All(char.IsDigit);
+            }
+
+            // If bundleNumber is null, return false
+            return false;
         }
 
         private void OpenRefSetInExcel(string selectedSchematic)
@@ -589,12 +620,14 @@ namespace Presentation
                 programStatusButton.BeginInvoke(new Action(() =>
                 {
                     programStatusButton.Text = messageCounter.ToString();
+                    lastMessageTextBox.Text = message;
                 }));
             }
             else
             {
                 // If the current thread is the UI thread, update the programStatusButton.Text directly
                 programStatusButton.Text = messageCounter.ToString();
+                lastMessageTextBox.Text = message;
             }
         }
 
