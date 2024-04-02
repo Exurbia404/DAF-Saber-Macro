@@ -49,6 +49,7 @@
             lastMessageTextBox = new TextBox();
             label2 = new Label();
             currentProjectLabel = new Label();
+            returnToProjectsButton = new Button();
             SuspendLayout();
             // 
             // bundlesListLabel
@@ -236,11 +237,11 @@
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(599, 638);
+            versionLabel.Location = new Point(590, 638);
             versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(100, 15);
+            versionLabel.Size = new Size(109, 15);
             versionLabel.TabIndex = 21;
-            versionLabel.Text = "version: Alpha 0.1";
+            versionLabel.Text = "version: Alpha 0.1.2";
             // 
             // lastMessageTextBox
             // 
@@ -269,11 +270,22 @@
             currentProjectLabel.TabIndex = 24;
             currentProjectLabel.Text = "Select project";
             // 
+            // returnToProjectsButton
+            // 
+            returnToProjectsButton.Location = new Point(624, 139);
+            returnToProjectsButton.Name = "returnToProjectsButton";
+            returnToProjectsButton.Size = new Size(75, 23);
+            returnToProjectsButton.TabIndex = 25;
+            returnToProjectsButton.Text = "Back";
+            returnToProjectsButton.UseVisualStyleBackColor = true;
+            returnToProjectsButton.Click += returnToProjectsButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(721, 666);
+            Controls.Add(returnToProjectsButton);
             Controls.Add(currentProjectLabel);
             Controls.Add(label2);
             Controls.Add(lastMessageTextBox);
@@ -325,5 +337,6 @@
         private TextBox lastMessageTextBox;
         private Label label2;
         private Label currentProjectLabel;
+        private Button returnToProjectsButton;
     }
 }

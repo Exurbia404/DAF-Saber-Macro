@@ -36,7 +36,7 @@ namespace Presentation
         private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
-        
+
         private int messageCounter;
         private string version = "Alpha 0.1";
 
@@ -49,7 +49,7 @@ namespace Presentation
 
             string computerName = Environment.MachineName;
             _logger.Log($"Computer Name: {computerName}");
-            
+
             _logger.LogEvent += Logger_LogEvent;
 
             messageCounter = 0;
@@ -231,11 +231,11 @@ namespace Presentation
                     _logger.Log($"No matching .txt files found in {selectedFolderPath}");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(ex.ToString());
             }
-            
+
         }
 
         private string GetFilePath(string inputName)
@@ -258,11 +258,11 @@ namespace Presentation
                 // No matching folder path found
                 return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(ex.ToString());
                 return null;
-            }            
+            }
         }
 
         private async void ExtractAndOpenExcel(string textFilePath)
@@ -322,7 +322,7 @@ namespace Presentation
             try
             {
                 // Get the directory name containing the file
-                return Path.GetDirectoryName(filePath);                 
+                return Path.GetDirectoryName(filePath);
             }
             catch (Exception ex)
             {
@@ -617,12 +617,12 @@ namespace Presentation
                 }
                 return refsetHandler.LoadRefSets();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(ex.ToString());
                 return null;
             }
-            
+
         }
 
         private void SetStatusBar(int percentage)
@@ -678,6 +678,13 @@ namespace Presentation
         private void bundlesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void returnToProjectsButton_Click(object sender, EventArgs e)
+        {
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            AddSchematicsToListBox(schematicNames);
+            currentProjectLabel.Text = "Select project";
         }
     }
 }

@@ -149,6 +149,9 @@ namespace Presentation
                 // Stop the stopwatch
                 stopwatch.Stop();
 
+                ProfileChoiceForm pcForm = new ProfileChoiceForm();
+                pcForm.ShowDialog();
+
                 _logger.Log($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
             catch (Exception ex)
@@ -178,7 +181,7 @@ namespace Presentation
                 string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
-            worksheet.View.FreezePanes(1, worksheet.Dimension.End.Column + 1);
+            worksheet.View.FreezePanes(2, worksheet.Dimension.End.Column + 1);
         }
 
 
