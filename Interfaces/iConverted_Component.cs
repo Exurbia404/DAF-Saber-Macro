@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UI_Interfaces;
-using Data_Interfaces;
 
-namespace Logic
+namespace Data_Interfaces
 {
-    public class Converted_Component : UI_Interfaces.iConverted_Component, Data_Interfaces.iConverted_Component
+    public interface iConverted_Component
     {
         public string Name { get; set; }
         public string Part_no { get; set; }
@@ -22,13 +20,5 @@ namespace Logic
 
         //9 spaces after this when writing ending with a ,
         public string EndText { get; set; }
-
-        public Converted_Component() { }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
     }
 }

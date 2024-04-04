@@ -36,9 +36,9 @@ namespace Presentation
         private static List<DSI_Component> extractedComponents;
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
-        
-        private int messageCounter;
 
+        private int messageCounter;
+        private string version = "Alpha 0.1";
 
         public MainForm(Logger logger)
         {
@@ -73,8 +73,9 @@ namespace Presentation
             bundlesToggleButtons.Add(designerButton);
 
             //Projects
-            projectsToggleButtons.Add(wipButton);
             projectsToggleButtons.Add(releasedButton);
+
+            versionLabel.Text = "Version: " + version;
 
             searchBundlesTextBox_SetText();
             schematicsSearchTextBox_SetText();
@@ -95,6 +96,8 @@ namespace Presentation
             {
                 _logger.Log($"Error: {ex.Message}");
             }
+
+            _logger.Log("current directory is: WiP");
         }
 
 
@@ -207,43 +210,59 @@ namespace Presentation
 
         private void OpenLatestBundleFile(string bundleName)
         {
-            // Get the corresponding folder path
-            string selectedFolderPath = GetFilePath(bundleName);
+            try
+            {
+                // Get the corresponding folder path
+                string selectedFolderPath = GetFilePath(bundleName);
 
-            // Search for the latest .txt file containing "_DSI" in the selected folder
-            string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
-            SetStatusBar(30);
-            if (txtFiles.Length > 0)
-            {
-                // Sort files by creation time and get the latest one
-                string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
-                ExtractAndOpenExcel(latestTxtFile);
-                // Do something with the latest .txt file, for example, display its path
-                _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                // Search for the latest .txt file containing "_DSI" in the selected folder
+                string[] txtFiles = Directory.GetFiles(selectedFolderPath, "*_DSI*.txt");
+                SetStatusBar(30);
+                if (txtFiles.Length > 0)
+                {
+                    // Sort files by creation time and get the latest one
+                    string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+                    ExtractAndOpenExcel(latestTxtFile);
+                    // Do something with the latest .txt file, for example, display its path
+                    _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
+                }
+                else
+                {
+                    _logger.Log($"No matching .txt files found in {selectedFolderPath}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log($"No matching .txt files found in {selectedFolderPath}");
+                _logger.Log(ex.ToString());
             }
+
         }
 
         private string GetFilePath(string inputName)
         {
-            inputName = Path.GetFileName(inputName);
-
-            foreach (string folderPath in folderPaths)
+            try
             {
-                string folderName = Path.GetFileName(folderPath);
+                inputName = Path.GetFileName(inputName);
 
-                // Case-insensitive comparison
-                if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
+                foreach (string folderPath in folderPaths)
                 {
-                    return folderPath;
-                }
-            }
+                    string folderName = Path.GetFileName(folderPath);
 
-            // No matching folder path found
-            return null;
+                    // Case-insensitive comparison
+                    if (string.Equals(folderName, inputName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return folderPath;
+                    }
+                }
+
+                // No matching folder path found
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.ToString());
+                return null;
+            }
         }
 
         private async void ExtractAndOpenExcel(string textFilePath)
@@ -259,15 +278,57 @@ namespace Presentation
                     extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
                     ExcelExporter excelExporter = new ExcelExporter(_logger);
+                    FileHandler fileHandler = new FileHandler(_logger);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter);
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter, fileHandler);
                     SetStatusBar(80);
+
+                    string bundleNumber = GetFileName(textFilePath);
+                    convertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, bundleNumber, GetFolderPath(textFilePath));
                     convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
             }
             catch (Exception ex)
             {
                 _logger.Log($"Error: {ex.Message}");
+            }
+        }
+
+        private string GetFileName(string filePath)
+        {
+            try
+            {
+                // Get the directory name containing the file
+                string directoryName = Path.GetDirectoryName(filePath);
+
+                // Get the directory name from the full path
+                string folderName = new DirectoryInfo(directoryName).Name;
+
+                // Extract the number from the folder name
+                string number = new String(folderName.Where(Char.IsDigit).ToArray());
+
+                return number;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions, such as invalid file paths
+                _logger.Log($"Error occurred: {ex.Message}");
+                return null;
+            }
+        }
+
+        private string GetFolderPath(string filePath)
+        {
+            try
+            {
+                // Get the directory name containing the file
+                return Path.GetDirectoryName(filePath);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions, such as invalid file paths
+                _logger.Log($"Error occurred: {ex.Message}");
+                return null;
             }
         }
 
@@ -311,17 +372,6 @@ namespace Presentation
             schematicsSearchTextBox.ForeColor = Color.Gray;
         }
 
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
-            bundlesListBox.ClearSelected();
-            if (extractedReferences != null)
-            {
-                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
-                AddSchematicsToListBox(schematicNames);
-            }
-        }
-
         private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             // Check if the Enter key is pressed
@@ -362,27 +412,58 @@ namespace Presentation
             // Get the selected ProjectName from schematicsListBox
             string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
 
+            //Check if a project or a yearweek has been selected
             if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
             {
                 // Filter the extractedReferences based on the selected ProjectName
                 List<string> bundleNumbers = extractedReferences
-                    .Where(reference => reference.ProjectName == selectedSchematic)
-                    .Select(reference => reference.BundleNumber)
-                    .ToList();
+                .Where(reference => reference.ProjectName == selectedSchematic)
+                .Select(reference => $"{reference.YearWeek} - {reference.BundleNumber}")
+                .ToList();
 
                 // Call AddSchematicsToListBox with the list of BundleNumbers
+                currentProjectLabel.Text = selectedSchematic;
                 AddSchematicsToListBox(bundleNumbers);
             }
             else if (IsRefSetNumber(selectedSchematic))
             {
-                OpenRefSetInExcel(selectedSchematic);
+                OpenRefSetInExcel(TrimString(selectedSchematic));
             }
+        }
+
+        //Gets the value after the - and returns it
+        private string TrimString(string input)
+        {
+            // Find the index of '-' character
+            int dashIndex = input.IndexOf('-');
+
+            // If '-' is found and it's not the last character
+            if (dashIndex != -1 && dashIndex != input.Length - 1)
+            {
+                // Extract the part after '-' character
+                return input.Substring(dashIndex + 1).Trim();
+            }
+
+            // If '-' is not found or it's the last character, return null
+            return null;
         }
 
         private bool IsRefSetNumber(string selectedSchematic)
         {
-            // Check if the string contains only numeric characters and has a length of 7 or 8
-            return selectedSchematic.All(char.IsDigit) && (selectedSchematic.Length == 7 || selectedSchematic.Length == 8);
+            // Trim the selectedSchematic to remove leading and trailing whitespace
+            string trimmedSchematic = selectedSchematic.Trim();
+
+            // Call TrimString to extract the part after '-' character
+            string bundleNumber = TrimString(trimmedSchematic);
+
+            // If bundleNumber is not null, check if it contains only numeric characters
+            if (bundleNumber != null)
+            {
+                return bundleNumber.All(char.IsDigit);
+            }
+
+            // If bundleNumber is null, return false
+            return false;
         }
 
         private void OpenRefSetInExcel(string selectedSchematic)
@@ -438,6 +519,7 @@ namespace Presentation
         //Bundles
         private void productProtoButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("current directory is: Production/Proto");
             BundlesToggleButton(productProtoButton);
 
             folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
@@ -446,6 +528,7 @@ namespace Presentation
 
         private void reldasButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("current directory is: Release");
             BundlesToggleButton(reldasButton);
 
             folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
@@ -454,6 +537,7 @@ namespace Presentation
 
         private void designerButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("current directory is: WiP");
             BundlesToggleButton(designerButton);
 
             folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
@@ -478,22 +562,19 @@ namespace Presentation
 
         private void releasedButton_Click(object sender, EventArgs e)
         {
-            ProjectsToggleButton(releasedButton);
-        }
 
-        private void wipButton_Click(object sender, EventArgs e)
-        {
-            ProjectsToggleButton(wipButton);
         }
 
         private void goToProfilesButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("goToProfilesButton_clicked");
             var newProfileForm = new ProfileCreator(_logger);
             newProfileForm.Show();
         }
 
         private void openRefSetFormButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("openrefSetFormButton_clicked");
             var RefSetForm = new RefSetForm(_logger);
 
             // Subscribe to the FormClosed event
@@ -513,21 +594,38 @@ namespace Presentation
 
         private List<DSI_Reference> LoadRefSets()
         {
-            return refsetHandler.LoadRefSets();
+            try
+            {
+                _logger.Log("refsets found: " + refsetHandler.LoadRefSets().Count.ToString());
+                //Check whether or not the refsets are empty
+                if (refsetHandler.LoadRefSets().Count == 0)
+                {
+                    ExcelImporter excelImporter = new ExcelImporter(_logger);
+                    _logger.Log("refsets found in Excel: " + excelImporter.DSIReferences.Count.ToString());
+                    return excelImporter.DSIReferences;
+                }
+                return refsetHandler.LoadRefSets();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.ToString());
+                return null;
+            }
+
         }
 
         private void SetStatusBar(int percentage)
         {
-            if (progressBar.InvokeRequired)
-            {
-                // If the current thread is not the UI thread, invoke this method on the UI thread
-                progressBar.BeginInvoke(new Action<int>(SetStatusBar), percentage);
-            }
-            else
-            {
-                // If the current thread is the UI thread, update the progress bar directly
-                progressBar.Value = percentage;
-            }
+            //if (progressBar.InvokeRequired)
+            //{
+            //    // If the current thread is not the UI thread, invoke this method on the UI thread
+            //    progressBar.BeginInvoke(new Action<int>(SetStatusBar), percentage);
+            //}
+            //else
+            //{
+            //    // If the current thread is the UI thread, update the progress bar directly
+            //    progressBar.Value = percentage;
+            //}
         }
 
         private void programStatusButton_Click(object sender, EventArgs e)
@@ -555,18 +653,27 @@ namespace Presentation
                 programStatusButton.BeginInvoke(new Action(() =>
                 {
                     programStatusButton.Text = messageCounter.ToString();
+                    lastMessageTextBox.Text = message;
                 }));
             }
             else
             {
                 // If the current thread is the UI thread, update the programStatusButton.Text directly
                 programStatusButton.Text = messageCounter.ToString();
+                lastMessageTextBox.Text = message;
             }
         }
 
         private void bundlesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void returnToProjectsButton_Click(object sender, EventArgs e)
+        {
+            List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+            AddSchematicsToListBox(schematicNames);
+            currentProjectLabel.Text = "Select project";
         }
     }
 }

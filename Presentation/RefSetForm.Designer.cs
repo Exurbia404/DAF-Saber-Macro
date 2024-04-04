@@ -44,7 +44,7 @@
             // 
             // projectsListBox
             // 
-            projectsListBox.Font = new Font("Segoe UI", 12F);
+            projectsListBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             projectsListBox.FormattingEnabled = true;
             projectsListBox.ItemHeight = 21;
             projectsListBox.Location = new Point(12, 21);
@@ -55,7 +55,7 @@
             // 
             // referencesListBox
             // 
-            referencesListBox.Font = new Font("Segoe UI", 12F);
+            referencesListBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             referencesListBox.FormattingEnabled = true;
             referencesListBox.ItemHeight = 21;
             referencesListBox.Location = new Point(237, 21);
@@ -115,7 +115,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 12F);
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label1.Location = new Point(12, 409);
             label1.Name = "label1";
             label1.Size = new Size(80, 21);
@@ -125,17 +125,17 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 12F);
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label2.Location = new Point(158, 409);
             label2.Name = "label2";
-            label2.Size = new Size(117, 21);
+            label2.Size = new Size(112, 21);
             label2.TabIndex = 9;
-            label2.Text = "Bundle number";
+            label2.Text = "Refset number";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 12F);
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label3.Location = new Point(304, 409);
             label3.Name = "label3";
             label3.Size = new Size(101, 21);
@@ -145,7 +145,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 12F);
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label4.Location = new Point(450, 409);
             label4.Name = "label4";
             label4.Size = new Size(89, 21);

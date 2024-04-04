@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UI_Interfaces;
+using Data_Interfaces;
 
 namespace Logic
 {
-    public class Converted_Wire : iConverted_Wire
+    public class Converted_Wire : UI_Interfaces.iConverted_Wire, Data_Interfaces.iConverted_Wire
     {
         public string Wire {  get; set; }
         public string Diameter { get; set; }

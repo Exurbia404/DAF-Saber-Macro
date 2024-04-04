@@ -38,21 +38,25 @@
             productProtoButton = new Button();
             reldasButton = new Button();
             designerButton = new Button();
-            wipButton = new Button();
             releasedButton = new Button();
             goToProfilesButton = new Button();
             button2 = new Button();
             button3 = new Button();
             openRefSetFormButton = new Button();
-            progressBar = new ProgressBar();
             programStatusButton = new Button();
+            label1 = new Label();
+            versionLabel = new Label();
+            lastMessageTextBox = new TextBox();
+            label2 = new Label();
+            currentProjectLabel = new Label();
+            returnToProjectsButton = new Button();
             SuspendLayout();
             // 
             // bundlesListLabel
             // 
             bundlesListLabel.AutoSize = true;
             bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            bundlesListLabel.Location = new Point(10, 88);
+            bundlesListLabel.Location = new Point(10, 69);
             bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
             bundlesListLabel.Name = "bundlesListLabel";
             bundlesListLabel.Size = new Size(94, 24);
@@ -113,7 +117,7 @@
             // 
             schematicsListLabel.AutoSize = true;
             schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            schematicsListLabel.Location = new Point(404, 88);
+            schematicsListLabel.Location = new Point(407, 69);
             schematicsListLabel.Margin = new Padding(4, 0, 4, 0);
             schematicsListLabel.Name = "schematicsListLabel";
             schematicsListLabel.Size = new Size(95, 24);
@@ -156,23 +160,10 @@
             designerButton.UseVisualStyleBackColor = false;
             designerButton.Click += designerButton_Click;
             // 
-            // wipButton
-            // 
-            wipButton.BackColor = Color.Gray;
-            wipButton.Enabled = false;
-            wipButton.Location = new Point(504, 141);
-            wipButton.Margin = new Padding(2);
-            wipButton.Name = "wipButton";
-            wipButton.Size = new Size(97, 23);
-            wipButton.TabIndex = 12;
-            wipButton.Text = "WiP";
-            wipButton.UseVisualStyleBackColor = false;
-            wipButton.Click += wipButton_Click;
-            // 
             // releasedButton
             // 
             releasedButton.BackColor = Color.White;
-            releasedButton.Location = new Point(407, 141);
+            releasedButton.Location = new Point(407, 104);
             releasedButton.Margin = new Padding(2);
             releasedButton.Name = "releasedButton";
             releasedButton.Size = new Size(97, 23);
@@ -183,6 +174,7 @@
             // 
             // goToProfilesButton
             // 
+            goToProfilesButton.Enabled = false;
             goToProfilesButton.Location = new Point(14, 612);
             goToProfilesButton.Margin = new Padding(4, 3, 4, 3);
             goToProfilesButton.Name = "goToProfilesButton";
@@ -224,13 +216,6 @@
             openRefSetFormButton.UseVisualStyleBackColor = true;
             openRefSetFormButton.Click += openRefSetFormButton_Click;
             // 
-            // progressBar
-            // 
-            progressBar.Location = new Point(560, 11);
-            progressBar.Name = "progressBar";
-            progressBar.Size = new Size(100, 23);
-            progressBar.TabIndex = 18;
-            // 
             // programStatusButton
             // 
             programStatusButton.Location = new Point(666, 11);
@@ -240,18 +225,77 @@
             programStatusButton.UseVisualStyleBackColor = true;
             programStatusButton.Click += programStatusButton_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(599, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(61, 15);
+            label1.TabIndex = 20;
+            label1.Text = "Messages:";
+            // 
+            // versionLabel
+            // 
+            versionLabel.AutoSize = true;
+            versionLabel.Location = new Point(590, 638);
+            versionLabel.Name = "versionLabel";
+            versionLabel.Size = new Size(109, 15);
+            versionLabel.TabIndex = 21;
+            versionLabel.Text = "version: Alpha 0.1.2";
+            // 
+            // lastMessageTextBox
+            // 
+            lastMessageTextBox.Location = new Point(449, 612);
+            lastMessageTextBox.Name = "lastMessageTextBox";
+            lastMessageTextBox.ReadOnly = true;
+            lastMessageTextBox.Size = new Size(250, 23);
+            lastMessageTextBox.TabIndex = 22;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(407, 615);
+            label2.Name = "label2";
+            label2.Size = new Size(42, 15);
+            label2.TabIndex = 23;
+            label2.Text = "Status:";
+            // 
+            // currentProjectLabel
+            // 
+            currentProjectLabel.AutoSize = true;
+            currentProjectLabel.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            currentProjectLabel.Location = new Point(407, 139);
+            currentProjectLabel.Name = "currentProjectLabel";
+            currentProjectLabel.Size = new Size(100, 20);
+            currentProjectLabel.TabIndex = 24;
+            currentProjectLabel.Text = "Select project";
+            // 
+            // returnToProjectsButton
+            // 
+            returnToProjectsButton.Location = new Point(624, 139);
+            returnToProjectsButton.Name = "returnToProjectsButton";
+            returnToProjectsButton.Size = new Size(75, 23);
+            returnToProjectsButton.TabIndex = 25;
+            returnToProjectsButton.Text = "Back";
+            returnToProjectsButton.UseVisualStyleBackColor = true;
+            returnToProjectsButton.Click += returnToProjectsButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(721, 655);
+            ClientSize = new Size(721, 666);
+            Controls.Add(returnToProjectsButton);
+            Controls.Add(currentProjectLabel);
+            Controls.Add(label2);
+            Controls.Add(lastMessageTextBox);
+            Controls.Add(versionLabel);
+            Controls.Add(label1);
             Controls.Add(programStatusButton);
-            Controls.Add(progressBar);
             Controls.Add(openRefSetFormButton);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(goToProfilesButton);
-            Controls.Add(wipButton);
             Controls.Add(releasedButton);
             Controls.Add(designerButton);
             Controls.Add(reldasButton);
@@ -266,7 +310,6 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
             Text = "Main form";
-            MouseClick += Form1_MouseClick;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -282,13 +325,17 @@
         private System.Windows.Forms.Button productProtoButton;
         private System.Windows.Forms.Button reldasButton;
         private System.Windows.Forms.Button designerButton;
-        private System.Windows.Forms.Button wipButton;
         private System.Windows.Forms.Button releasedButton;
         private System.Windows.Forms.Button goToProfilesButton;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private Button openRefSetFormButton;
-        private ProgressBar progressBar;
         private Button programStatusButton;
+        private Label label1;
+        private Label versionLabel;
+        private TextBox lastMessageTextBox;
+        private Label label2;
+        private Label currentProjectLabel;
+        private Button returnToProjectsButton;
     }
 }

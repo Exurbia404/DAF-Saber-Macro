@@ -663,6 +663,7 @@
           "EPPlus": "7.0.10",
           "Logging": "1.0.0",
           "Logic_Layer": "1.0.0",
+          "Newtonsoft.Json": "13.0.3",
           "System.Configuration.ConfigurationManager": "8.0.0"
         },
         "runtime": {

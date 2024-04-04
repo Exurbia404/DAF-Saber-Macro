@@ -1,4 +1,5 @@
-﻿using UI_Interfaces;
+﻿using Data_Interfaces;
+using UI_Interfaces;
 
 namespace Logic
 {
@@ -9,33 +10,36 @@ namespace Logic
 
         //Can inject this with in an interface
         private iExcelExporter excelExporter;
+        private iFileHandler fileHandler;
         //private FileHandler serialisation;
 
         private static List<DSI_Wire> wiresToConvert;
         private static List<DSI_Component> componentsToConvert;
 
-        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iExcelExporter _excelExporter) 
+        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iExcelExporter _excelExporter, iFileHandler _fileHandler) 
         {
             excelExporter = _excelExporter;
-            //serialisation = new FileHandler();
+            fileHandler = _fileHandler;
 
             wiresToConvert = wires;
             componentsToConvert = components;
         }
 
-        public WCSPP_Convertor() { }
-
-
         //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
-        public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName)
+        public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName, string filePath)
         {
-           // serialisation.WriteToFile(ConvertWireToWCSPP(wiresToConvert, extractedBundles), ConvertComponentToWCSPP(componentsToConvert, extractedBundles), extractedBundles, fileName);
+            List<Data_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Wire>().ToList();
+            List<Data_Interfaces.iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Component>().ToList();
+            List<Data_Interfaces.iBundle> bundles = extractedBundles.Cast<Data_Interfaces.iBundle>().ToList();
+
+            fileHandler.WriteToFile(wires, components, bundles, fileName, filePath);
         }
 
         public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles) 
         {
-            List<iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast<iConverted_Wire>().ToList();
-            List<iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<iConverted_Component>().ToList();
+            List<UI_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast < UI_Interfaces.iConverted_Wire > ().ToList();
+            List<UI_Interfaces.iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<UI_Interfaces.iConverted_Component>().ToList();
+            
             excelExporter.CreateExcelSheet(wires, components);
         }
 
