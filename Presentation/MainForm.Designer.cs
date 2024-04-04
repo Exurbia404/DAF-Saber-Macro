@@ -310,7 +310,6 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
             Text = "Main form";
-            MouseClick += Form1_MouseClick;
             ResumeLayout(false);
             PerformLayout();
         }

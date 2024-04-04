@@ -8,7 +8,7 @@ namespace Data_Access
     public class RefSetHandler
     {
         private Logger _logger;
-        private string filePath = @"N:\Saber Tool Plus\Data\refset.json";
+        private string filePath = @"W:\PD-Saber\5_PD_HD\Planning\Saber Tool Plus\Data\refset.json";
 
         public RefSetHandler(Logger logger) 
         {

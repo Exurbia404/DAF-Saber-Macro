@@ -372,17 +372,6 @@ namespace Presentation
             schematicsSearchTextBox.ForeColor = Color.Gray;
         }
 
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
-            bundlesListBox.ClearSelected();
-            if (extractedReferences != null)
-            {
-                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
-                AddSchematicsToListBox(schematicNames);
-            }
-        }
-
         private void searchBundlesTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             // Check if the Enter key is pressed

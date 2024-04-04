@@ -400,3 +400,6 @@ FodyWeavers.xsd
 # Allow the Presentation\Bin directory and all of its contents
 !Presentation/Bin/
 !Presentation/Bin/*
+
+# Exclude Excel files from Presentation\Bin and its subdirectories
+Presentation/Bin/**/*.xls*

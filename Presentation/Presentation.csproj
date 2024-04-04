@@ -24,6 +24,11 @@
     <Compile Update="ProfileCreator.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="userSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>userSettings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +43,13 @@
     <ProjectReference Include="..\Logging\Logging.csproj" />
     <ProjectReference Include="..\Logic_Layer\Logic_Layer.csproj" />
     <ProjectReference Include="..\UI_Interfaces\UI_Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="userSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>userSettings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
