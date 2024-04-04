@@ -35,12 +35,12 @@ namespace Logic
             fileHandler.WriteToFile(wires, components, bundles, fileName, filePath);
         }
 
-        public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles) 
+        public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string bundleNumber) 
         {
             List<UI_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast < UI_Interfaces.iConverted_Wire > ().ToList();
             List<UI_Interfaces.iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<UI_Interfaces.iConverted_Component>().ToList();
             
-            excelExporter.CreateExcelSheet(wires, components);
+            excelExporter.CreateExcelSheet(wires, components, bundleNumber);
         }
 
         private List<Converted_Wire> ConvertWireToWCSPP(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)

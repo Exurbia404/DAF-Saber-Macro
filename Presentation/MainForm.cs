@@ -274,7 +274,7 @@ namespace Presentation
 
                     string bundleNumber = GetFileName(textFilePath);
                     convertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, bundleNumber, GetFolderPath(textFilePath));
-                    convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+                    convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles, bundleNumber);
                 });
             }
             catch (Exception ex)
@@ -473,18 +473,18 @@ namespace Presentation
                     string latestCompFile = compFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
                     string latestWiresFile = wiresFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
 
-                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile);
+                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile, selectedSchematic);
                     // Do something with the latest .txt file, for example, display its path
                 }
             }
         }
 
-        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath)
+        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath, string bundleNumber)
         {
             List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
             List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
 
-            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList()); ;
+            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList(), bundleNumber);
         }
 
 

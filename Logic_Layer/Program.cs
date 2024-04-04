@@ -57,7 +57,7 @@ namespace Logic
                 switch (choice)
                 {
                     case 1:
-                        wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
+                        //wcsppConvertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                         Console.WriteLine("Opening in Excel...");
                         break;
 

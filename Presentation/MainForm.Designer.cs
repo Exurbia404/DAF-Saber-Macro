@@ -47,7 +47,7 @@
             // 
             bundlesListLabel.AutoSize = true;
             bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            bundlesListLabel.Location = new Point(10, 69);
+            bundlesListLabel.Location = new Point(13, 9);
             bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
             bundlesListLabel.Name = "bundlesListLabel";
             bundlesListLabel.Size = new Size(94, 24);
@@ -59,10 +59,10 @@
             bundlesListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             bundlesListBox.FormattingEnabled = true;
             bundlesListBox.ItemHeight = 16;
-            bundlesListBox.Location = new Point(14, 202);
+            bundlesListBox.Location = new Point(17, 142);
             bundlesListBox.Margin = new Padding(4, 3, 4, 3);
             bundlesListBox.Name = "bundlesListBox";
-            bundlesListBox.Size = new Size(292, 276);
+            bundlesListBox.Size = new Size(292, 340);
             bundlesListBox.TabIndex = 1;
             bundlesListBox.SelectedIndexChanged += bundlesListBox_SelectedIndexChanged;
             bundlesListBox.DoubleClick += bundlesListBox_DoubleClick;
@@ -70,7 +70,7 @@
             // searchBundlesTextBox
             // 
             searchBundlesTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            searchBundlesTextBox.Location = new Point(14, 168);
+            searchBundlesTextBox.Location = new Point(17, 108);
             searchBundlesTextBox.Margin = new Padding(4, 3, 4, 3);
             searchBundlesTextBox.Name = "searchBundlesTextBox";
             searchBundlesTextBox.Size = new Size(292, 23);
@@ -83,7 +83,7 @@
             // schematicsSearchTextBox
             // 
             schematicsSearchTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            schematicsSearchTextBox.Location = new Point(407, 168);
+            schematicsSearchTextBox.Location = new Point(410, 108);
             schematicsSearchTextBox.Margin = new Padding(4, 3, 4, 3);
             schematicsSearchTextBox.Name = "schematicsSearchTextBox";
             schematicsSearchTextBox.Size = new Size(292, 23);
@@ -97,10 +97,10 @@
             schematicsListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             schematicsListBox.FormattingEnabled = true;
             schematicsListBox.ItemHeight = 16;
-            schematicsListBox.Location = new Point(407, 202);
+            schematicsListBox.Location = new Point(410, 142);
             schematicsListBox.Margin = new Padding(4, 3, 4, 3);
             schematicsListBox.Name = "schematicsListBox";
-            schematicsListBox.Size = new Size(292, 276);
+            schematicsListBox.Size = new Size(292, 340);
             schematicsListBox.TabIndex = 6;
             schematicsListBox.DoubleClick += schematicsListBox_DoubleClick;
             // 
@@ -108,7 +108,7 @@
             // 
             schematicsListLabel.AutoSize = true;
             schematicsListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
-            schematicsListLabel.Location = new Point(407, 69);
+            schematicsListLabel.Location = new Point(410, 9);
             schematicsListLabel.Margin = new Padding(4, 0, 4, 0);
             schematicsListLabel.Name = "schematicsListLabel";
             schematicsListLabel.Size = new Size(95, 24);
@@ -118,7 +118,7 @@
             // productProtoButton
             // 
             productProtoButton.BackColor = Color.Gray;
-            productProtoButton.Location = new Point(14, 141);
+            productProtoButton.Location = new Point(17, 81);
             productProtoButton.Margin = new Padding(2);
             productProtoButton.Name = "productProtoButton";
             productProtoButton.Size = new Size(97, 23);
@@ -130,7 +130,7 @@
             // reldasButton
             // 
             reldasButton.BackColor = Color.Gray;
-            reldasButton.Location = new Point(111, 141);
+            reldasButton.Location = new Point(114, 81);
             reldasButton.Margin = new Padding(2);
             reldasButton.Name = "reldasButton";
             reldasButton.Size = new Size(97, 23);
@@ -142,7 +142,7 @@
             // designerButton
             // 
             designerButton.BackColor = Color.White;
-            designerButton.Location = new Point(209, 141);
+            designerButton.Location = new Point(212, 81);
             designerButton.Margin = new Padding(2);
             designerButton.Name = "designerButton";
             designerButton.Size = new Size(97, 23);
@@ -154,7 +154,7 @@
             // releasedButton
             // 
             releasedButton.BackColor = Color.White;
-            releasedButton.Location = new Point(407, 104);
+            releasedButton.Location = new Point(410, 44);
             releasedButton.Margin = new Padding(2);
             releasedButton.Name = "releasedButton";
             releasedButton.Size = new Size(97, 23);
@@ -167,7 +167,7 @@
             // 
             currentProjectLabel.AutoSize = true;
             currentProjectLabel.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            currentProjectLabel.Location = new Point(407, 139);
+            currentProjectLabel.Location = new Point(410, 79);
             currentProjectLabel.Name = "currentProjectLabel";
             currentProjectLabel.Size = new Size(100, 20);
             currentProjectLabel.TabIndex = 24;
@@ -175,7 +175,7 @@
             // 
             // returnToProjectsButton
             // 
-            returnToProjectsButton.Location = new Point(624, 139);
+            returnToProjectsButton.Location = new Point(627, 79);
             returnToProjectsButton.Name = "returnToProjectsButton";
             returnToProjectsButton.Size = new Size(75, 23);
             returnToProjectsButton.TabIndex = 25;
