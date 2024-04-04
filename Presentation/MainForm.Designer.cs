@@ -39,15 +39,6 @@
             reldasButton = new Button();
             designerButton = new Button();
             releasedButton = new Button();
-            goToProfilesButton = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            openRefSetFormButton = new Button();
-            programStatusButton = new Button();
-            label1 = new Label();
-            versionLabel = new Label();
-            lastMessageTextBox = new TextBox();
-            label2 = new Label();
             currentProjectLabel = new Label();
             returnToProjectsButton = new Button();
             SuspendLayout();
@@ -71,7 +62,7 @@
             bundlesListBox.Location = new Point(14, 202);
             bundlesListBox.Margin = new Padding(4, 3, 4, 3);
             bundlesListBox.Name = "bundlesListBox";
-            bundlesListBox.Size = new Size(292, 388);
+            bundlesListBox.Size = new Size(292, 276);
             bundlesListBox.TabIndex = 1;
             bundlesListBox.SelectedIndexChanged += bundlesListBox_SelectedIndexChanged;
             bundlesListBox.DoubleClick += bundlesListBox_DoubleClick;
@@ -109,7 +100,7 @@
             schematicsListBox.Location = new Point(407, 202);
             schematicsListBox.Margin = new Padding(4, 3, 4, 3);
             schematicsListBox.Name = "schematicsListBox";
-            schematicsListBox.Size = new Size(292, 388);
+            schematicsListBox.Size = new Size(292, 276);
             schematicsListBox.TabIndex = 6;
             schematicsListBox.DoubleClick += schematicsListBox_DoubleClick;
             // 
@@ -172,94 +163,6 @@
             releasedButton.UseVisualStyleBackColor = false;
             releasedButton.Click += releasedButton_Click;
             // 
-            // goToProfilesButton
-            // 
-            goToProfilesButton.Enabled = false;
-            goToProfilesButton.Location = new Point(14, 612);
-            goToProfilesButton.Margin = new Padding(4, 3, 4, 3);
-            goToProfilesButton.Name = "goToProfilesButton";
-            goToProfilesButton.Size = new Size(88, 27);
-            goToProfilesButton.TabIndex = 13;
-            goToProfilesButton.Text = "Profiles";
-            goToProfilesButton.UseVisualStyleBackColor = true;
-            goToProfilesButton.Click += goToProfilesButton_Click;
-            // 
-            // button2
-            // 
-            button2.Enabled = false;
-            button2.Location = new Point(10, 6);
-            button2.Margin = new Padding(4, 3, 4, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(88, 35);
-            button2.TabIndex = 15;
-            button2.Text = "Release";
-            button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            button3.Enabled = false;
-            button3.Location = new Point(105, 6);
-            button3.Margin = new Padding(4, 3, 4, 3);
-            button3.Name = "button3";
-            button3.Size = new Size(88, 35);
-            button3.TabIndex = 16;
-            button3.Text = "Compare";
-            button3.UseVisualStyleBackColor = true;
-            // 
-            // openRefSetFormButton
-            // 
-            openRefSetFormButton.Location = new Point(111, 612);
-            openRefSetFormButton.Name = "openRefSetFormButton";
-            openRefSetFormButton.Size = new Size(88, 27);
-            openRefSetFormButton.TabIndex = 17;
-            openRefSetFormButton.Text = "RefSets";
-            openRefSetFormButton.UseVisualStyleBackColor = true;
-            openRefSetFormButton.Click += openRefSetFormButton_Click;
-            // 
-            // programStatusButton
-            // 
-            programStatusButton.Location = new Point(666, 11);
-            programStatusButton.Name = "programStatusButton";
-            programStatusButton.Size = new Size(43, 24);
-            programStatusButton.TabIndex = 19;
-            programStatusButton.UseVisualStyleBackColor = true;
-            programStatusButton.Click += programStatusButton_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(599, 16);
-            label1.Name = "label1";
-            label1.Size = new Size(61, 15);
-            label1.TabIndex = 20;
-            label1.Text = "Messages:";
-            // 
-            // versionLabel
-            // 
-            versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(590, 638);
-            versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(109, 15);
-            versionLabel.TabIndex = 21;
-            versionLabel.Text = "version: Alpha 0.1.2";
-            // 
-            // lastMessageTextBox
-            // 
-            lastMessageTextBox.Location = new Point(449, 612);
-            lastMessageTextBox.Name = "lastMessageTextBox";
-            lastMessageTextBox.ReadOnly = true;
-            lastMessageTextBox.Size = new Size(250, 23);
-            lastMessageTextBox.TabIndex = 22;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(407, 615);
-            label2.Name = "label2";
-            label2.Size = new Size(42, 15);
-            label2.TabIndex = 23;
-            label2.Text = "Status:";
-            // 
             // currentProjectLabel
             // 
             currentProjectLabel.AutoSize = true;
@@ -284,18 +187,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(721, 666);
+            ClientSize = new Size(944, 501);
             Controls.Add(returnToProjectsButton);
             Controls.Add(currentProjectLabel);
-            Controls.Add(label2);
-            Controls.Add(lastMessageTextBox);
-            Controls.Add(versionLabel);
-            Controls.Add(label1);
-            Controls.Add(programStatusButton);
-            Controls.Add(openRefSetFormButton);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(goToProfilesButton);
             Controls.Add(releasedButton);
             Controls.Add(designerButton);
             Controls.Add(reldasButton);
@@ -306,6 +200,7 @@
             Controls.Add(searchBundlesTextBox);
             Controls.Add(bundlesListBox);
             Controls.Add(bundlesListLabel);
+            FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
@@ -326,15 +221,6 @@
         private System.Windows.Forms.Button reldasButton;
         private System.Windows.Forms.Button designerButton;
         private System.Windows.Forms.Button releasedButton;
-        private System.Windows.Forms.Button goToProfilesButton;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private Button openRefSetFormButton;
-        private Button programStatusButton;
-        private Label label1;
-        private Label versionLabel;
-        private TextBox lastMessageTextBox;
-        private Label label2;
         private Label currentProjectLabel;
         private Button returnToProjectsButton;
     }

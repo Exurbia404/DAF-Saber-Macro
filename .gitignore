@@ -403,3 +403,6 @@ FodyWeavers.xsd
 
 # Exclude Excel files from Presentation\Bin and its subdirectories
 Presentation/Bin/**/*.xls*
+
+# Exclude Zip files from Presentation\Bin and its subdirectories
+Presentation/Bin/**/*.zip*
