@@ -50,6 +50,7 @@
             Controls.Add(messagesListBox);
             Name = "MessageViewer";
             Text = "MessageViewer";
+            Resize += MessageViewer_Resize;
             ResumeLayout(false);
         }
 

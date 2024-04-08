@@ -30,11 +30,12 @@
         {
             goToProfilesButton = new Button();
             goToRefsetsButton = new Button();
+            clearTempDataButton = new Button();
             SuspendLayout();
             // 
             // goToProfilesButton
             // 
-            goToProfilesButton.Location = new Point(45, 76);
+            goToProfilesButton.Location = new Point(16, 41);
             goToProfilesButton.Name = "goToProfilesButton";
             goToProfilesButton.Size = new Size(75, 23);
             goToProfilesButton.TabIndex = 0;
@@ -44,7 +45,7 @@
             // 
             // goToRefsetsButton
             // 
-            goToRefsetsButton.Location = new Point(155, 81);
+            goToRefsetsButton.Location = new Point(16, 70);
             goToRefsetsButton.Name = "goToRefsetsButton";
             goToRefsetsButton.Size = new Size(75, 23);
             goToRefsetsButton.TabIndex = 1;
@@ -52,13 +53,25 @@
             goToRefsetsButton.UseVisualStyleBackColor = true;
             goToRefsetsButton.Click += goToRefsetsButton_Click;
             // 
+            // clearTempDataButton
+            // 
+            clearTempDataButton.Location = new Point(16, 12);
+            clearTempDataButton.Name = "clearTempDataButton";
+            clearTempDataButton.Size = new Size(104, 23);
+            clearTempDataButton.TabIndex = 2;
+            clearTempDataButton.Text = "Clear TempData";
+            clearTempDataButton.UseVisualStyleBackColor = true;
+            clearTempDataButton.Click += clearTempDataButton_Click;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(944, 501);
+            Controls.Add(clearTempDataButton);
             Controls.Add(goToRefsetsButton);
             Controls.Add(goToProfilesButton);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "SettingsForm";
             Text = "SettingsForm";
             ResumeLayout(false);
@@ -68,5 +81,6 @@
 
         private Button goToProfilesButton;
         private Button goToRefsetsButton;
+        private Button clearTempDataButton;
     }
 }

@@ -169,6 +169,7 @@
             Controls.Add(yearWeekTextBox);
             Controls.Add(referencesListBox);
             Controls.Add(projectsListBox);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "RefSetForm";
             Text = "RefSetForm";
             ResumeLayout(false);

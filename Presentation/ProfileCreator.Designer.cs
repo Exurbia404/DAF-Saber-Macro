@@ -122,6 +122,7 @@
             Controls.Add(profileNameTextBox);
             Controls.Add(profilesListBox);
             Controls.Add(saveProfileButton);
+            FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4, 3, 4, 3);
             Name = "ProfileCreator";
             Text = "F";

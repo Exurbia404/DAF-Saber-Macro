@@ -18,10 +18,17 @@ namespace Presentation
             Confidential,
             HighlyConfidential
         }
-
+        private string directory;
         public ExcelExporter(Logger logger)
         {
             _logger = logger;
+            directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
         }
 
         public void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components, string fileName)
@@ -67,10 +74,10 @@ namespace Presentation
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo($"{fileName}.xlsx"));
+                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(Environment.CurrentDirectory, $"{fileName}.xlsx");
+                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -134,10 +141,10 @@ namespace Presentation
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo($"{fileName}.xlsx"));
+                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(Environment.CurrentDirectory, $"{fileName}.xlsx");
+                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -178,6 +185,7 @@ namespace Presentation
                 string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
+            //Freeze the top row (headers)
             worksheet.View.FreezePanes(2, 1);
         }
 

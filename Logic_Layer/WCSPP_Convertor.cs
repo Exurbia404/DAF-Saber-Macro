@@ -25,7 +25,6 @@ namespace Logic
             componentsToConvert = components;
         }
 
-        //TODO: this can probably be one function that takes in an argument to swtich between text and excel file since conversion is the same
         public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName, string filePath)
         {
             List<Data_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Wire>().ToList();

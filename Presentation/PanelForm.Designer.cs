@@ -35,6 +35,7 @@
             label2 = new Label();
             lastMessageTextBox = new TextBox();
             settingsButton = new Button();
+            homeButton = new Button();
             SuspendLayout();
             // 
             // panel
@@ -91,7 +92,7 @@
             // 
             // settingsButton
             // 
-            settingsButton.Location = new Point(12, 4);
+            settingsButton.Location = new Point(93, 4);
             settingsButton.Name = "settingsButton";
             settingsButton.Size = new Size(75, 23);
             settingsButton.TabIndex = 0;
@@ -99,11 +100,22 @@
             settingsButton.UseVisualStyleBackColor = true;
             settingsButton.Click += settingsButton_Click;
             // 
+            // homeButton
+            // 
+            homeButton.Location = new Point(12, 4);
+            homeButton.Name = "homeButton";
+            homeButton.Size = new Size(75, 23);
+            homeButton.TabIndex = 27;
+            homeButton.Text = "Home";
+            homeButton.UseVisualStyleBackColor = true;
+            homeButton.Click += homeButton_Click;
+            // 
             // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(988, 612);
+            Controls.Add(homeButton);
             Controls.Add(settingsButton);
             Controls.Add(label2);
             Controls.Add(lastMessageTextBox);
@@ -111,6 +123,7 @@
             Controls.Add(programStatusButton);
             Controls.Add(versionLabel);
             Controls.Add(panel);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "PanelForm";
             Text = "PanelForm";
             ResumeLayout(false);
@@ -126,5 +139,6 @@
         private Label label2;
         private TextBox lastMessageTextBox;
         private Button settingsButton;
+        private Button homeButton;
     }
 }

@@ -64,7 +64,12 @@ namespace Presentation
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
+            SettingsForm settingsForm = new SettingsForm(_logger);
+            settingsForm.TopLevel = false;
 
+            panel.Controls.Clear();
+            panel.Controls.Add(settingsForm);
+            settingsForm.Show();
         }
 
         private void programStatusButton_Click(object sender, EventArgs e)
@@ -78,6 +83,16 @@ namespace Presentation
             // Open MessageViewer form
             messageViewerForm = new MessageViewer(_logger);
             messageViewerForm.Show();
+        }
+
+        private void homeButton_Click(object sender, EventArgs e)
+        {
+            MainForm mainForm = new MainForm(_logger);
+            mainForm.TopLevel = false;
+
+            panel.Controls.Clear();
+            panel.Controls.Add(mainForm);
+            mainForm.Show();
         }
     }
 }

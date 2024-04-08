@@ -35,5 +35,39 @@ namespace Presentation
             var RefSetForm = new RefSetForm(_logger);
             RefSetForm.Show();
         }
+
+        private void clearTempDataButton_Click(object sender, EventArgs e)
+        {
+            // Get the path to the TempData directory
+            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+
+            // Check if the directory exists
+            if (Directory.Exists(directoryPath))
+            {
+                try
+                {
+                    // Get all files in the directory
+                    string[] files = Directory.GetFiles(directoryPath);
+
+                    // Delete each file
+                    foreach (string file in files)
+                    {
+                        File.Delete(file);
+                    }
+
+                    MessageBox.Show("Temp data cleared successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _logger.Log("An error occurred: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Temp data directory does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _logger.Log("Temp data directory does not exist");
+            }
+        }
     }
 }
