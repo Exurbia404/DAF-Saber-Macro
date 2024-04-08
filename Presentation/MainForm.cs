@@ -254,6 +254,7 @@ namespace Presentation
             }
         }
 
+
         private async void ExtractAndOpenExcel(string textFilePath)
         {
             try
@@ -265,20 +266,14 @@ namespace Presentation
                     extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
                     extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    ExcelExporter excelExporter = new ExcelExporter(_logger);
                     FileHandler fileHandler = new FileHandler(_logger);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter, fileHandler);
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
 
                     List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
                     List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
-
-                    //TODO: maybe move this function to ProfileChooserForm?
-                    excelExporter.CreateExcelSheet();
                     
                     string bundleNumber = GetFileName(textFilePath);
-                    convertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, bundleNumber, GetFolderPath(textFilePath));
-                    convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles, bundleNumber);
                 });
             }
             catch (Exception ex)

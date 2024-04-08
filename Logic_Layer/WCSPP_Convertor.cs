@@ -9,37 +9,15 @@ namespace Logic
         //Wire, Diameter, Color, Type, Code_no, Length, Connector_1, Port_1, Term_1, Seal_1, Wire_connection, Term_2, Seal_2, Connector_2, Port_2, Variant, Bundle, Loc_1, Loc_2
 
         //Can inject this with in an interface
-        private iExcelExporter excelExporter;
         private iFileHandler fileHandler;
         //private FileHandler serialisation;
 
         private static List<DSI_Wire> wiresToConvert;
         private static List<DSI_Component> componentsToConvert;
 
-        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iExcelExporter _excelExporter, iFileHandler _fileHandler) 
+        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iFileHandler _fileHandler) 
         {
-            excelExporter = _excelExporter;
             fileHandler = _fileHandler;
-
-            wiresToConvert = wires;
-            componentsToConvert = components;
-        }
-
-        public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName, string filePath)
-        {
-            List<Data_Interfaces.iConverted_Wire> wires = ConvertWires(wiresToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Wire>().ToList();
-            List<Data_Interfaces.iConverted_Component> components = ConvertComponents(componentsToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Component>().ToList();
-            List<Data_Interfaces.iBundle> bundles = extractedBundles.Cast<Data_Interfaces.iBundle>().ToList();
-
-            fileHandler.WriteToFile(wires, components, bundles, fileName, filePath);
-        }
-
-        public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string bundleNumber) 
-        {
-            List<UI_Interfaces.iConverted_Wire> wires = ConvertWires(wiresToConvert, extractedBundles).Cast < UI_Interfaces.iConverted_Wire > ().ToList();
-            List<UI_Interfaces.iConverted_Component> components = ConvertComponents(componentsToConvert, extractedBundles).Cast<UI_Interfaces.iConverted_Component>().ToList();
-            
-            excelExporter.CreateExcelSheet(wires, components, bundleNumber);
         }
 
         public List<Converted_Wire> ConvertWires(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)
