@@ -10,6 +10,6 @@ namespace UI_Interfaces
     public interface iExcelExporter
     {
         void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components, string fileName);
-        void CreateExcelSheet(List<iConverted_Wire> wires, List<iConverted_Component> components, string fileName);
+        void CreateExcelSheet(List<iConverted_Wire> wires, List<iConverted_Component> components, string fileName, List<string> profile);
     }
 }

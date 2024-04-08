@@ -27,8 +27,8 @@ namespace Logic
 
         public void ConvertListToWCSPPTextFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string fileName, string filePath)
         {
-            List<Data_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Wire>().ToList();
-            List<Data_Interfaces.iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Component>().ToList();
+            List<Data_Interfaces.iConverted_Wire> wires = ConvertWires(wiresToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Wire>().ToList();
+            List<Data_Interfaces.iConverted_Component> components = ConvertComponents(componentsToConvert, extractedBundles).Cast<Data_Interfaces.iConverted_Component>().ToList();
             List<Data_Interfaces.iBundle> bundles = extractedBundles.Cast<Data_Interfaces.iBundle>().ToList();
 
             fileHandler.WriteToFile(wires, components, bundles, fileName, filePath);
@@ -36,13 +36,13 @@ namespace Logic
 
         public void ConvertListToWCSPPExcelFile(List<DSI_Wire> wiresToConvert, List<DSI_Component> componentsToConvert, List<Bundle> extractedBundles, string bundleNumber) 
         {
-            List<UI_Interfaces.iConverted_Wire> wires = ConvertWireToWCSPP(wiresToConvert, extractedBundles).Cast < UI_Interfaces.iConverted_Wire > ().ToList();
-            List<UI_Interfaces.iConverted_Component> components = ConvertComponentToWCSPP(componentsToConvert, extractedBundles).Cast<UI_Interfaces.iConverted_Component>().ToList();
+            List<UI_Interfaces.iConverted_Wire> wires = ConvertWires(wiresToConvert, extractedBundles).Cast < UI_Interfaces.iConverted_Wire > ().ToList();
+            List<UI_Interfaces.iConverted_Component> components = ConvertComponents(componentsToConvert, extractedBundles).Cast<UI_Interfaces.iConverted_Component>().ToList();
             
             excelExporter.CreateExcelSheet(wires, components, bundleNumber);
         }
 
-        private List<Converted_Wire> ConvertWireToWCSPP(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)
+        public List<Converted_Wire> ConvertWires(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)
         {
             List<Converted_Wire> convertedList = new List<Converted_Wire>();
 
@@ -161,7 +161,7 @@ namespace Logic
             return false;
         }
 
-        private List<Converted_Component> ConvertComponentToWCSPP(List<DSI_Component> componentsToConvert, List<Bundle> bundles)
+        public List<Converted_Component> ConvertComponents(List<DSI_Component> componentsToConvert, List<Bundle> bundles)
         {
             List<Converted_Component> convertedList = new List<Converted_Component>();
 

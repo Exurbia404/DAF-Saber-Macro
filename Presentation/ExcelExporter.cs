@@ -98,7 +98,7 @@ namespace Presentation
         }
 
 
-        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName)
+        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<string> profile)
         {
             try
             {
