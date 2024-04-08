@@ -18,13 +18,20 @@ namespace Presentation
             Confidential,
             HighlyConfidential
         }
-
+        private string directory;
         public ExcelExporter(Logger logger)
         {
             _logger = logger;
+            directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
         }
 
-        public void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components)
+        public void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components, string fileName)
         {
             try
             {
@@ -35,7 +42,7 @@ namespace Presentation
                 // Close any existing instances of "ExtractedData.xlsx"
                 foreach (var process in Process.GetProcessesByName("EXCEL"))
                 {
-                    if (process.MainWindowTitle.Contains("ExtractedData.xlsx"))
+                    if (process.MainWindowTitle.Contains($"{fileName}.xlsx"))
                     {
                         process.Kill();
                         process.WaitForExit(); // Wait for the process to exit before continuing
@@ -67,10 +74,10 @@ namespace Presentation
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
+                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(Environment.CurrentDirectory, "ExtractedData.xlsx");
+                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -91,7 +98,7 @@ namespace Presentation
         }
 
 
-        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents)
+        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<string> profile)
         {
             try
             {
@@ -102,7 +109,7 @@ namespace Presentation
                 // Close any existing instances of "ExtractedData.xlsx"
                 foreach (var process in Process.GetProcessesByName("EXCEL"))
                 {
-                    if (process.MainWindowTitle.Contains("ExtractedData.xlsx"))
+                    if (process.MainWindowTitle.Contains($"{fileName}.xlsx"))
                     {
                         process.Kill();
                         process.WaitForExit(); // Wait for the process to exit before continuing
@@ -119,7 +126,7 @@ namespace Presentation
 
                     // Write wire data
                     WriteDataToSheet(wireWorksheet, extractedWires);
-                    wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(wireWorksheet);
 
                     // Add a worksheet for Components
@@ -130,14 +137,14 @@ namespace Presentation
 
                     // Write component data
                     WriteDataToSheet(componentWorksheet, extractedComponents);
-                    componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo("ExtractedData.xlsx"));
+                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(Environment.CurrentDirectory, "ExtractedData.xlsx");
+                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -148,9 +155,6 @@ namespace Presentation
 
                 // Stop the stopwatch
                 stopwatch.Stop();
-
-                ProfileChoiceForm pcForm = new ProfileChoiceForm();
-                pcForm.ShowDialog();
 
                 _logger.Log($"Excel file created successfully. Time elapsed: {stopwatch.Elapsed.TotalSeconds}s");
             }
@@ -181,7 +185,8 @@ namespace Presentation
                 string header = $"{properties[i].Name}";
                 worksheet.Cells[1, i + 1].Value = header;
             }
-            worksheet.View.FreezePanes(2, worksheet.Dimension.End.Column + 1);
+            //Freeze the top row (headers)
+            worksheet.View.FreezePanes(2, 1);
         }
 
 

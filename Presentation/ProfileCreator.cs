@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Logging;
+using Logic_Layer;
 using Newtonsoft.Json;
 using Point = System.Drawing.Point;
 
@@ -7,139 +8,6 @@ namespace Presentation
 {
     public partial class ProfileCreator : Form
     {
-        //Default profiles, user can create their own based on these
-        private enum Wire_WCSPP_Profile_Options
-        {
-            Wire,
-            Diameter,
-            Color,
-            Type,
-            Code_no,
-            Length,
-            Connector_1,
-            Port_1,
-            Term_1,
-            Seal_1,
-            Wire_connection,
-            Term_2,
-            Seal_2,
-            Connector_2,
-            Port_2,
-            Variant,
-            Bundle,
-            Loc_1,
-            Loc_2,
-        }
-        private enum Wire_Profile_Options
-        {
-            WireName,
-            WireOption,
-            WireType,
-            Color,
-            CrossSectionalArea,
-            Material,
-            UserModule,
-            MulticoreName,
-            End1NodeName,
-            End1Route,
-            End1Cavity,
-            End1MaterialCode,
-            End2NodeName,
-            End2Route,
-            End2Cavity,
-            End2MaterialCode,
-            IncludeOnBOM,
-            IncludeOnChart,
-            WireTag,
-            WireNote,
-            WireLengthChangeType,
-            WireLengthChangeValue,
-            AssemblyItemNumber,
-            MulticoreOption,
-        }
-        private enum Wire_Project_Profile_Options
-        {
-            Wire,
-            Diameter,
-            Color,
-            Type,
-            Connector_1,
-            Port_1,
-            Term_1,
-            Seal_1,
-            Lokation_1,
-            Wire_connection,
-            Term_2,
-            Seal_2,
-            Connector_2,
-            Port_2,
-            Lokation_2,
-            Harness,
-            Variant,
-            Bundle,
-            Kodenr_wire,
-            Tag,
-        }
-
-        private enum Component_WCSPP_Profile_Options
-        {
-            Name,
-            Part_no,
-            Passive,
-            Instruction,
-            Variant,
-            Bundle,
-            Description,
-            Lokation,
-            EndText,
-        }
-        private enum Component_Profile_Options
-        {
-            NodeName,
-            CavityName,
-            WireName,
-            SequenceNumber,
-            ComponentTypeCode,
-            CircuitOption,
-            ServiceFunction,
-            Route,
-            PartNumber1,
-            Quantity,
-            CrossSectionalArea,
-            PartNumber2,
-            PartNumber3,
-            SelectTerminal,
-            Seal,
-            Plugged,
-            BlockNumber,
-            TerminationMethod,
-            MaterialCode,
-            ComponentTypeCode2,
-        }
-        private enum Component_Project_Profile_Options
-        {
-
-            Type,
-            Ref,
-            Description,
-            Location,
-            Connector,
-            SecLock,
-            Harness,
-            Variant,
-            Bundle,
-            Tag,
-            System,
-            Fuse_value,
-            Color,
-            N_pins,
-        }
-
-        //TODO: not yet implemented
-        //private ProfileController profileController;
-
-        private Dictionary<string, List<string>> defaultProfiles;
-        private Dictionary<string, List<string>> userProfiles;
         private List<ComboBox> comboBoxes;
         private List<Label> comboBox_Labels;
 
@@ -149,76 +17,23 @@ namespace Presentation
 
         //Used by buttons, labels and comboBoxes
         private int initalXOffset = 210;
-
+        private ProfileController profileController;
         public ProfileCreator(Logger logger)
         {
             InitializeComponent();
 
-            //profileController = new ProfileController();
-            defaultProfiles = new Dictionary<string, List<string>>();
-            userProfiles = new Dictionary<string, List<string>>();
+            profileController = new ProfileController();
+
             comboBoxes = new List<ComboBox>();
             comboBox_Labels = new List<Label>();
 
-            LoadDefaultProfiles();
-
-            Dictionary<string, List<string>> loadedProfiles = LoadProfilesFromSettings();
-            if (loadedProfiles != null)
-            {
-                // Assign the loaded profiles to userProfiles
-                userProfiles = loadedProfiles;
-
-                // Add the names of each profile to profilesListBox.Items
-                foreach (string profileName in loadedProfiles.Keys)
-                {
-                    profilesListBox.Items.Add(profileName);
-                }
-            }
-
+            SetDefaultComboBox();
             GenerateComboBoxes(headerCounter);
         }
 
-        private void LoadDefaultProfiles()
-        {
-            //Programatically load in each enum (if the enum changes you don't have to worry about this)
-            var wireWCSPPProfile = Enum.GetValues(typeof(Wire_WCSPP_Profile_Options))
-                                        .Cast<Wire_WCSPP_Profile_Options>()
-                                        .Select(option => option.ToString())
-                                        .ToList();
-
-            var wireProfile = Enum.GetValues(typeof(Wire_Profile_Options))
-                                  .Cast<Wire_Profile_Options>()
-                                  .Select(option => option.ToString())
-                                  .ToList();
-
-            var wireProjectProfile = Enum.GetValues(typeof(Wire_Project_Profile_Options))
-                                        .Cast<Wire_Project_Profile_Options>()
-                                        .Select(option => option.ToString())
-                                        .ToList();
-
-            var componentWCSPPProfile = Enum.GetValues(typeof(Component_WCSPP_Profile_Options))
-                                            .Cast<Component_WCSPP_Profile_Options>()
-                                            .Select(option => option.ToString())
-                                            .ToList();
-
-            var componentProfile = Enum.GetValues(typeof(Component_Profile_Options))
-                                      .Cast<Component_Profile_Options>()
-                                      .Select(option => option.ToString())
-                                      .ToList();
-
-            var componentProjectProfile = Enum.GetValues(typeof(Component_Project_Profile_Options))
-                                              .Cast<Component_Project_Profile_Options>()
-                                              .Select(option => option.ToString())
-                                              .ToList();
-
-            defaultProfiles.Add("Wire_WCSPP_Profile", wireWCSPPProfile);
-            defaultProfiles.Add("Wire_Profile", wireProfile);
-            defaultProfiles.Add("Wire_Project_Profile", wireProjectProfile);
-            defaultProfiles.Add("Component_WCSPP_Profile", componentWCSPPProfile);
-            defaultProfiles.Add("Component_Profile", componentProfile);
-            defaultProfiles.Add("Component_Project_Profile", componentProjectProfile);
-
-            foreach (string profileName in defaultProfiles.Keys)
+        private void SetDefaultComboBox()
+        { 
+            foreach (string profileName in profileController.defaultProfiles.Keys)
             {
                 profileTypeComboBox.Items.Add(profileName);
             }
@@ -259,7 +74,7 @@ namespace Presentation
             }
 
             GenerateLabels(headerCount);
-            AddOptionsToComboBoxes(defaultProfiles);
+            AddOptionsToComboBoxes(profileController.defaultProfiles);
             MoveHeaderButtons(headerCount);
         }
 
@@ -326,7 +141,7 @@ namespace Presentation
 
         private void AddOptionsToComboBoxes(Dictionary<string, List<string>> profile)
         {
-            if (defaultProfiles.Count > 0)
+            if (profileController.defaultProfiles.Count > 0)
             {
                 // Get the first KeyValuePair from the dictionary
                 KeyValuePair<string, List<string>> keyValueProfile = profile.First();
@@ -413,11 +228,11 @@ namespace Presentation
             string selectedProfileName = profileTypeComboBox.SelectedItem.ToString();
 
             // Check if the selected profile name exists in the dictionary
-            if (defaultProfiles.ContainsKey(selectedProfileName))
+            if (profileController.defaultProfiles.ContainsKey(selectedProfileName))
             {
                 // Get the dictionary associated with the selected profile name
                 selectedProfileDictionary = new Dictionary<string, List<string>>();
-                selectedProfileDictionary.Add(selectedProfileName, defaultProfiles[selectedProfileName]);
+                selectedProfileDictionary.Add(selectedProfileName, profileController.defaultProfiles[selectedProfileName]);
 
                 // Call AddOptionsToComboBoxes with the selected dictionary
                 AddOptionsToComboBoxes(selectedProfileDictionary);
@@ -441,10 +256,10 @@ namespace Presentation
             if (!string.IsNullOrWhiteSpace(profileName))
             {
                 // Check if the profile name already exists in the userProfiles dictionary
-                if (userProfiles.ContainsKey(profileName))
+                if (profileController.defaultProfiles.ContainsKey(profileName))
                 {
                     // Overwrite the existing profile
-                    userProfiles[profileName] = GetComboBoxesValues();
+                    profileController.defaultProfiles[profileName] = GetComboBoxesValues();
                 }
                 else
                 {
@@ -452,7 +267,7 @@ namespace Presentation
                     List<string> newProfile = GetComboBoxesValues();
 
                     // Add the new profile to the userProfiles dictionary
-                    userProfiles.Add(profileName, newProfile);
+                    profileController.defaultProfiles.Add(profileName, newProfile);
                     profilesListBox.Items.Add(profileName);
                 }
 
@@ -461,7 +276,7 @@ namespace Presentation
                 UnselectAllComboBoxes();
                 profileNameTextBox.Clear();
 
-                SaveProfilesToSettings();
+                profileController.SaveProfiles();
             }
             else
             {
@@ -484,12 +299,12 @@ namespace Presentation
                 if (result == DialogResult.Yes)
                 {
                     // Remove the selected profile from the userProfiles dictionary
-                    userProfiles.Remove(selectedProfileName);
+                    profileController.defaultProfiles.Remove(selectedProfileName);
                     profilesListBox.Items.Remove(selectedProfileName);
 
                     // Optionally, you can clear the selection in the profileTypeComboBox
                     profileTypeComboBox.SelectedIndex = -1;
-                    SaveProfilesToSettings();
+                    profileController.SaveProfiles();
 
                 }
             }
@@ -515,10 +330,10 @@ namespace Presentation
             profileNameTextBox.Text = loadedProfileName;
 
             // Check if the loaded profile exists in userProfiles
-            if (userProfiles.ContainsKey(loadedProfileName))
+            if (profileController.defaultProfiles.ContainsKey(loadedProfileName))
             {
                 // Retrieve the dictionary corresponding to the loaded profile name
-                List<string> loadedProfile = userProfiles[loadedProfileName];
+                List<string> loadedProfile = profileController.defaultProfiles[loadedProfileName];
 
                 GenerateComboBoxes(loadedProfile.Count);
 
@@ -537,27 +352,6 @@ namespace Presentation
                     MessageBox.Show("The number of values in the loaded profile does not match the number of ComboBoxes.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void SaveProfilesToSettings()
-        {
-            string userProfileJson = JsonConvert.SerializeObject(userProfiles);
-
-            //TODO: fix this
-            // Save the serialized string to the application setting
-            //Properties.Settings.Default.UserProfiles = userProfileJson;
-            //Properties.Settings.Default.Save();
-        }
-
-        private Dictionary<string, List<string>> LoadProfilesFromSettings()
-        {
-            //TODO: fix this one as well
-            // Retrieve the serialized string from the application setting
-            //string userProfileJson = Properties.Settings.Default.UserProfiles;
-
-            // Deserialize the string back to the dictionary
-            //Dictionary<string, List<string>> userProfiles = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(userProfileJson);
-            return userProfiles;
         }
     }
 }

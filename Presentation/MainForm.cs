@@ -27,7 +27,6 @@ namespace Presentation
         private WCSPP_Convertor convertor;
         private Logger _logger;
         private RefSetHandler refsetHandler;
-        private MessageViewer messageViewerForm;
 
         private ExcelImporter excelImporter;
         private ExcelExporter excelHandler;
@@ -37,8 +36,7 @@ namespace Presentation
         private static List<Bundle> extractedBundles;
         private static List<DSI_Reference> extractedReferences;
 
-        private int messageCounter;
-        private string version = "Alpha 0.1";
+        private string computerName = Environment.MachineName;
 
         public MainForm(Logger logger)
         {
@@ -47,12 +45,6 @@ namespace Presentation
             _logger = logger;
             InitializeComponent();
 
-            string computerName = Environment.MachineName;
-            _logger.Log($"Computer Name: {computerName}");
-
-            _logger.LogEvent += Logger_LogEvent;
-
-            messageCounter = 0;
 
             //Commented out for replacement with localSettingsFiles
             //excelImporter = new ExcelImporter(_logger);
@@ -74,9 +66,6 @@ namespace Presentation
 
             //Projects
             projectsToggleButtons.Add(releasedButton);
-
-            versionLabel.Text = "Version: " + version;
-
             searchBundlesTextBox_SetText();
             schematicsSearchTextBox_SetText();
 
@@ -265,11 +254,11 @@ namespace Presentation
             }
         }
 
+
         private async void ExtractAndOpenExcel(string textFilePath)
         {
             try
             {
-                SetStatusBar(60);
                 // Run the time-consuming code asynchronously
                 await Task.Run(() =>
                 {
@@ -277,15 +266,14 @@ namespace Presentation
                     extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
                     extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    ExcelExporter excelExporter = new ExcelExporter(_logger);
                     FileHandler fileHandler = new FileHandler(_logger);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, excelExporter, fileHandler);
-                    SetStatusBar(80);
+                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
 
+                    List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
+                    List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
+                    
                     string bundleNumber = GetFileName(textFilePath);
-                    convertor.ConvertListToWCSPPTextFile(extractedWires, extractedComponents, extractedBundles, bundleNumber, GetFolderPath(textFilePath));
-                    convertor.ConvertListToWCSPPExcelFile(extractedWires, extractedComponents, extractedBundles);
                 });
             }
             catch (Exception ex)
@@ -484,18 +472,18 @@ namespace Presentation
                     string latestCompFile = compFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
                     string latestWiresFile = wiresFilePaths.OrderByDescending(f => new FileInfo(f).CreationTime).First();
 
-                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile);
+                    Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile, selectedSchematic);
                     // Do something with the latest .txt file, for example, display its path
                 }
             }
         }
 
-        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath)
+        private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath, string bundleNumber)
         {
             List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
             List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
 
-            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList()); ;
+            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList(), bundleNumber);
         }
 
 
@@ -565,23 +553,9 @@ namespace Presentation
 
         }
 
-        private void goToProfilesButton_Click(object sender, EventArgs e)
-        {
-            _logger.Log("goToProfilesButton_clicked");
-            var newProfileForm = new ProfileCreator(_logger);
-            newProfileForm.Show();
-        }
+        
 
-        private void openRefSetFormButton_Click(object sender, EventArgs e)
-        {
-            _logger.Log("openrefSetFormButton_clicked");
-            var RefSetForm = new RefSetForm(_logger);
-
-            // Subscribe to the FormClosed event
-            RefSetForm.FormClosed += RefSetForm_FormClosed;
-
-            RefSetForm.Show();
-        }
+        
 
         //When the refset form is closed you should update the refsets present in the document
         private void RefSetForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -630,39 +604,10 @@ namespace Presentation
 
         private void programStatusButton_Click(object sender, EventArgs e)
         {
-            // Check if MessageViewer form is open
-            if (messageViewerForm != null && !messageViewerForm.IsDisposed)
-            {
-                messageViewerForm.Close(); // Close it
-            }
 
-            // Open MessageViewer form
-            messageViewerForm = new MessageViewer(_logger);
-            messageViewerForm.Show();
         }
 
-        private void Logger_LogEvent(object sender, string message)
-        {
-            //get recent message count
-            messageCounter = _logger.messages.Count;
 
-            // Update programStatusButton.Text on the UI thread
-            if (programStatusButton.InvokeRequired)
-            {
-                // If the current thread is not the UI thread, invoke this method on the UI thread
-                programStatusButton.BeginInvoke(new Action(() =>
-                {
-                    programStatusButton.Text = messageCounter.ToString();
-                    lastMessageTextBox.Text = message;
-                }));
-            }
-            else
-            {
-                // If the current thread is the UI thread, update the programStatusButton.Text directly
-                programStatusButton.Text = messageCounter.ToString();
-                lastMessageTextBox.Text = message;
-            }
-        }
 
         private void bundlesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -674,6 +619,11 @@ namespace Presentation
             List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
             AddSchematicsToListBox(schematicNames);
             currentProjectLabel.Text = "Select project";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

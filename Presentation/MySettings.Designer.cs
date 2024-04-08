@@ -13,11 +13,11 @@ namespace Presentation {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
-    internal sealed partial class userSettings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class MySettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static userSettings defaultInstance = ((userSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new userSettings())));
+        private static MySettings defaultInstance = ((MySettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new MySettings())));
         
-        public static userSettings Default {
+        public static MySettings Default {
             get {
                 return defaultInstance;
             }
@@ -26,24 +26,12 @@ namespace Presentation {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string UserProfiles {
+        public string RefSets {
             get {
-                return ((string)(this["UserProfiles"]));
+                return ((string)(this["RefSets"]));
             }
             set {
-                this["UserProfiles"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string UserRefsets {
-            get {
-                return ((string)(this["UserRefsets"]));
-            }
-            set {
-                this["UserRefsets"] = value;
+                this["RefSets"] = value;
             }
         }
     }

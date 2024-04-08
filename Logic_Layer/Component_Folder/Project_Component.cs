@@ -7,7 +7,7 @@ using UI_Interfaces;
 
 namespace Logic
 {
-    public class Project_Component : IProject_Component
+    public class Project_Component : UI_Interfaces.IProject_Component, Data_Interfaces.IProject_Component
     {
         public string Type { get; set; }
         public string Ref { get; set; }

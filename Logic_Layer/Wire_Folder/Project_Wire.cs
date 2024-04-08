@@ -7,7 +7,7 @@ using UI_Interfaces;
 
 namespace Logic
 {
-    public class Project_Wire : iProject_Wire
+    public class Project_Wire : UI_Interfaces.iProject_Wire, Data_Interfaces.iProject_Wire
     {
         public string Wire { get; set; }
         public string Diameter { get; set; }

@@ -18,16 +18,13 @@
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ProfileChoiceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ProfileCreator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="userSettings.Designer.cs">
+    <Compile Update="MySettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>userSettings.settings</DependentUpon>
+      <DependentUpon>MySettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="ProfileChoiceForm.cs">
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
 
@@ -46,9 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="userSettings.settings">
+    <None Update="MySettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>userSettings.Designer.cs</LastGenOutput>
+      <LastGenOutput>MySettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
