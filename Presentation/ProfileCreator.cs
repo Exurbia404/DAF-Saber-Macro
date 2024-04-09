@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Data_Access;
 using Logging;
 using Logic_Layer;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace Presentation
         {
             InitializeComponent();
 
-            profileController = new ProfileController();
+            profileController = new ProfileController(new FileHandler(logger));
 
             comboBoxes = new List<ComboBox>();
             comboBox_Labels = new List<Label>();
@@ -33,9 +34,9 @@ namespace Presentation
 
         private void SetDefaultComboBox()
         { 
-            foreach (string profileName in profileController.defaultProfiles.Keys)
+            foreach (Profile profile in profileController.defaultProfiles)
             {
-                profileTypeComboBox.Items.Add(profileName);
+                profileTypeComboBox.Items.Add(profile.Name);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Presentation
             }
 
             GenerateLabels(headerCount);
-            AddOptionsToComboBoxes(profileController.defaultProfiles);
+            AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
             MoveHeaderButtons(headerCount);
         }
 
@@ -139,19 +140,20 @@ namespace Presentation
             }
         }
 
-        private void AddOptionsToComboBoxes(Dictionary<string, List<string>> profile)
+        private void AddOptionsToComboBoxes(Profile profile)
         {
-            if (profileController.defaultProfiles.Count > 0)
+            if (profile != null)
             {
-                // Get the first KeyValuePair from the dictionary
-                KeyValuePair<string, List<string>> keyValueProfile = profile.First();
-                foreach(ComboBox comboBox in comboBoxes)
+                List<string> parameters = profile.Parameters;
+
+                foreach (ComboBox comboBox in comboBoxes)
                 {
                     comboBox.Items.Clear();
-                    // Add items from the first list to the ComboBox
-                    foreach (string item in keyValueProfile.Value)
+
+                    // Add items from the profile parameters to the ComboBox
+                    foreach (string parameter in parameters)
                     {
-                        comboBox.Items.Add(item);
+                        comboBox.Items.Add(parameter);
                     }
                 }
             }
@@ -224,18 +226,17 @@ namespace Presentation
 
         private void profileTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Dictionary<string, List<string>> selectedProfileDictionary;
-            string selectedProfileName = profileTypeComboBox.SelectedItem.ToString();
+            List<Profile> defaultProfiles = profileController.defaultProfiles;
+            List<string> selectedProfileParameters = new List<string>();
 
-            // Check if the selected profile name exists in the dictionary
-            if (profileController.defaultProfiles.ContainsKey(selectedProfileName))
+            // Get the selected profile
+            Profile selectedProfile = defaultProfiles.FirstOrDefault(p => p.Name == profileTypeComboBox.SelectedItem.ToString());
+
+            // Check if the selected profile exists
+            if (selectedProfile != null)
             {
-                // Get the dictionary associated with the selected profile name
-                selectedProfileDictionary = new Dictionary<string, List<string>>();
-                selectedProfileDictionary.Add(selectedProfileName, profileController.defaultProfiles[selectedProfileName]);
-
-                // Call AddOptionsToComboBoxes with the selected dictionary
-                AddOptionsToComboBoxes(selectedProfileDictionary);
+                // Call AddOptionsToComboBoxes with the selected profile parameters
+                AddOptionsToComboBoxes(selectedProfile);
             }
         }
 
@@ -255,27 +256,29 @@ namespace Presentation
             // Check if the profile name is not empty
             if (!string.IsNullOrWhiteSpace(profileName))
             {
-                // Check if the profile name already exists in the userProfiles dictionary
-                if (profileController.defaultProfiles.ContainsKey(profileName))
+                // Check if the profile name already exists in the defaultProfiles list
+                Profile existingProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == profileName);
+
+                if (existingProfile != null)
                 {
                     // Overwrite the existing profile
-                    profileController.defaultProfiles[profileName] = GetComboBoxesValues();
+                    existingProfile.Parameters = GetComboBoxesValues();
                 }
                 else
                 {
-                    // Create a new dictionary for the profile with an empty list
-                    List<string> newProfile = GetComboBoxesValues();
+                    // Create a new profile with the given name and parameters
+                    Profile newProfile = new Profile(profileName, GetComboBoxesValues(), Profile.ProfileType.User);
 
-                    // Add the new profile to the userProfiles dictionary
-                    profileController.defaultProfiles.Add(profileName, newProfile);
+                    // Add the new profile to the defaultProfiles list
+                    profileController.defaultProfiles.Add(newProfile);
                     profilesListBox.Items.Add(profileName);
                 }
 
                 // Optionally, you can clear the text in the profileNameTextBox
-
                 UnselectAllComboBoxes();
                 profileNameTextBox.Clear();
 
+                // Optionally, you can save the profiles to a file or database
                 profileController.SaveProfiles();
             }
             else
@@ -287,7 +290,7 @@ namespace Presentation
 
         private void deleteProfileButton_Click(object sender, EventArgs e)
         {
-            // Get the selected profile name from the profileTypeComboBox
+            // Get the selected profile name from the profileNameTextBox
             string selectedProfileName = profileNameTextBox.Text.Trim();
 
             // Check if a profile is selected
@@ -298,19 +301,24 @@ namespace Presentation
 
                 if (result == DialogResult.Yes)
                 {
-                    // Remove the selected profile from the userProfiles dictionary
-                    profileController.defaultProfiles.Remove(selectedProfileName);
-                    profilesListBox.Items.Remove(selectedProfileName);
+                    // Find the selected profile
+                    Profile selectedProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == selectedProfileName);
 
-                    // Optionally, you can clear the selection in the profileTypeComboBox
-                    profileTypeComboBox.SelectedIndex = -1;
-                    profileController.SaveProfiles();
+                    if (selectedProfile != null)
+                    {
+                        // Remove the selected profile from the defaultProfiles list
+                        profileController.defaultProfiles.Remove(selectedProfile);
+                        profilesListBox.Items.Remove(selectedProfileName);
 
+                        //clear the selection in the profileTypeComboBox
+                        profileTypeComboBox.SelectedIndex = -1;
+                        profileController.SaveProfiles();
+                    }
                 }
             }
             else
             {
-                // Optionally, display an error message if no profile is selected
+                //display an error message if no profile is selected
                 MessageBox.Show("Please select a profile to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -325,26 +333,27 @@ namespace Presentation
 
         private void LoadProfileToComboBoxes(string loadedProfileName)
         {
-            
             // Set the profile name in profileNameTextBox
             profileNameTextBox.Text = loadedProfileName;
 
-            // Check if the loaded profile exists in userProfiles
-            if (profileController.defaultProfiles.ContainsKey(loadedProfileName))
+            // Check if the loaded profile exists in defaultProfiles
+            Profile loadedProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+
+            if (loadedProfile != null)
             {
-                // Retrieve the dictionary corresponding to the loaded profile name
-                List<string> loadedProfile = profileController.defaultProfiles[loadedProfileName];
+                // Get the parameters of the loaded profile
+                List<string> loadedProfileParameters = loadedProfile.Parameters;
 
-                GenerateComboBoxes(loadedProfile.Count);
+                GenerateComboBoxes(loadedProfileParameters.Count);
 
-                // Ensure that the loadedProfile count matches the number of comboBoxes
-                if (loadedProfile.Count == comboBoxes.Count)
+                // Ensure that the loadedProfileParameters count matches the number of comboBoxes
+                if (loadedProfileParameters.Count == comboBoxes.Count)
                 {
                     // Iterate through each ComboBox in comboBoxes
                     for (int i = 0; i < comboBoxes.Count; i++)
                     {
                         // Set the selected item in the ComboBox
-                        comboBoxes[i].SelectedItem = loadedProfile[i]; // Assign the value from loadedProfile directly
+                        comboBoxes[i].SelectedItem = loadedProfileParameters[i];
                     }
                 }
                 else

@@ -64,7 +64,7 @@ namespace Presentation
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-            SettingsForm settingsForm = new SettingsForm(_logger);
+            SettingsForm settingsForm = new SettingsForm(_logger, this);
             settingsForm.TopLevel = false;
 
             panel.Controls.Clear();

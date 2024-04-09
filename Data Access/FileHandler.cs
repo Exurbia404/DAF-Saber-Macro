@@ -79,5 +79,15 @@ namespace Data_Access
         {
 
         }
+
+        public void SaveProfiles(List<iProfile> profiles)
+        {
+
+        }
+
+        public List<iProfile> LoadProfiles()
+        {
+            return null;
+        }
     }
 }

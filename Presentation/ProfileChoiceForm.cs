@@ -1,4 +1,5 @@
-﻿using Logging;
+﻿using Data_Access;
+using Logging;
 using Logic;
 using Logic_Layer;
 using System;
@@ -20,7 +21,8 @@ namespace Presentation
         
         private Logger _logger;
         private ExcelExporter exporter;
-        private ProfileController profiles;
+        private ProfileController profileController;
+        private List<Profile> profileList;
 
         private string filename;
 
@@ -34,9 +36,9 @@ namespace Presentation
         {
             InitializeComponent();
             exporter = new ExcelExporter(logger);
-            profiles = new ProfileController();
+            profileController = new ProfileController(new FileHandler(logger));
 
-
+            profileList = profileController.userProfiles.ToList();
         }
 
         public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components)
