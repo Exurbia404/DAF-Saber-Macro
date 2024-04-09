@@ -1,6 +1,7 @@
 ﻿using Logic;
 using Data_Interfaces;
 using Logging;
+using Newtonsoft.Json;
 
 namespace Data_Access
 {
@@ -9,10 +10,18 @@ namespace Data_Access
     {
 
         private Logger _logger;
+        private string profilesFolder;
         
         public FileHandler(Logger logger)
         {
             _logger = logger;
+            profilesFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "UserData");
+
+            // Create the directory if it doesn't exist
+            if (!Directory.Exists(profilesFolder))
+            {
+                Directory.CreateDirectory(profilesFolder);
+            }
         }
 
         public void WriteToFile(List<iConverted_Wire> wires, List<iConverted_Component> components, List<iBundle> extractedBundles, string fileName, string filePath)
@@ -82,12 +91,42 @@ namespace Data_Access
 
         public void SaveProfiles(List<iProfile> profiles)
         {
-
+            try
+            {
+                string json = JsonConvert.SerializeObject(profiles);
+                string filePath = Path.Combine(profilesFolder, "profiles.json");
+                File.WriteAllText(filePath, json);
+                _logger.Log("Profiles saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Error saving profiles: {ex.Message}");
+            }
         }
 
         public List<iProfile> LoadProfiles()
         {
-            return null;
+            try
+            {
+                string filePath = Path.Combine(profilesFolder, "profiles.json");
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    List<iProfile> profiles = JsonConvert.DeserializeObject<List<iProfile>>(json);
+                    _logger.Log("Profiles loaded successfully.");
+                    return profiles;
+                }
+                else
+                {
+                    _logger.Log("No profiles found.");
+                    return new List<iProfile>();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Error loading profiles: {ex.Message}");
+                return new List<iProfile>();
+            }
         }
     }
 }
