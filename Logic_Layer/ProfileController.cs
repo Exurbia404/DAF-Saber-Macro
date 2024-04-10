@@ -155,20 +155,21 @@ namespace Logic_Layer
         public ProfileController(iFileHandler filehandler)
         {
             defaultProfiles = new List<Profile>();
-            userProfiles = LoadProfiles();
             fileHandler = filehandler;
+
+            userProfiles = LoadProfiles();
 
             InitializeDefaultProfiles();
         }
 
         private void InitializeDefaultProfiles()
         { 
-            defaultProfiles.Add(new Profile("Wire WCSPP Profile", Wire_WCSPP_Profile_Options_List, Profile.ProfileType.Wire));
-            defaultProfiles.Add(new Profile("Wire Profile", Wire_Profile_Options_List, Profile.ProfileType.Wire));
-            defaultProfiles.Add(new Profile("Wire Project Profile", Wire_Project_Profile_Options_List, Profile.ProfileType.Project_Wire));
-            defaultProfiles.Add(new Profile("Component WCSPP Profile", Component_WCSPP_Profile_Options_List, Profile.ProfileType.Component));
-            defaultProfiles.Add(new Profile("Component Profile", Component_Profile_Options_List, Profile.ProfileType.Component));
-            defaultProfiles.Add(new Profile("Component Project Profile", Component_Project_Profile_Options_List, Profile.ProfileType.Project_Component));
+            defaultProfiles.Add(new Profile("Wire WCSPP Profile", Wire_WCSPP_Profile_Options_List, ProfileType.Wire));
+            defaultProfiles.Add(new Profile("Wire Profile", Wire_Profile_Options_List, ProfileType.Wire));
+            defaultProfiles.Add(new Profile("Wire Project Profile", Wire_Project_Profile_Options_List, ProfileType.Project_Wire));
+            defaultProfiles.Add(new Profile("Component WCSPP Profile", Component_WCSPP_Profile_Options_List, ProfileType.Component));
+            defaultProfiles.Add(new Profile("Component Profile", Component_Profile_Options_List, ProfileType.Component));
+            defaultProfiles.Add(new Profile("Component Project Profile", Component_Project_Profile_Options_List, ProfileType.Project_Component));
         }
 
         public void SaveProfiles()
@@ -178,7 +179,16 @@ namespace Logic_Layer
 
         public List<Profile> LoadProfiles()
         {
-            return fileHandler.LoadProfiles().Cast<Profile>().ToList();
+            List<Profile> foundProfiles = new List<Profile>();
+
+            foreach (iProfile loadedProfile in fileHandler.LoadProfiles()) 
+            {
+                if(loadedProfile.Type == ProfileType.User)
+                {
+                    foundProfiles.Add(new Profile(loadedProfile.Name, loadedProfile.Parameters, loadedProfile.Type));
+                }
+            }
+            return foundProfiles;
         }
     }
 }

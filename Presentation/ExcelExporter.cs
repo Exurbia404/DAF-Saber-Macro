@@ -1,15 +1,15 @@
 ﻿using Logging;
-using Logic;
-using UI_Interfaces;
 using System.IO;
 using OfficeOpenXml;
 using System.Diagnostics;
 using System.Reflection;
+using Logic_Layer;
+using UI_Interfaces;
 
 
 namespace Presentation
 {
-    public class ExcelExporter : iExcelExporter
+    public class ExcelExporter
     {
         private Logger _logger;
         private enum SensitivityLabel
@@ -54,22 +54,24 @@ namespace Presentation
                     // Add a worksheet for Wires
                     var wireWorksheet = package.Workbook.Worksheets.Add("Project_Wires");
 
+                    //TODO: fix this
                     // Write column headers for wires
-                    WriteHeaders(wireWorksheet, wires);
+                    //WriteHeaders(wireWorksheet, wires);
 
                     // Write wire data
-                    WriteDataToSheet(wireWorksheet, wires);
+                    //WriteDataToSheet(wireWorksheet, wires);
                     //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(wireWorksheet);
 
                     // Add a worksheet for Components
                     var componentWorksheet = package.Workbook.Worksheets.Add("Project_Components");
 
+                    //TODO: fix this
                     // Write column headers for components
-                    WriteHeaders(componentWorksheet, components);
+                    //WriteHeaders(componentWorksheet, components);
 
                     // Write component data
-                    WriteDataToSheet(componentWorksheet, components);
+                    //WriteDataToSheet(componentWorksheet, components);
                     //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
@@ -97,8 +99,7 @@ namespace Presentation
             }
         }
 
-
-        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<string> profile)
+        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<Profile> profiles)
         {
             try
             {
@@ -121,11 +122,12 @@ namespace Presentation
                     // Add a worksheet for Wires
                     var wireWorksheet = package.Workbook.Worksheets.Add("Wires");
 
+
                     // Write column headers for wires
-                    WriteHeaders(wireWorksheet, extractedWires);
+                    WriteHeaders(wireWorksheet, profiles[0]);
 
                     // Write wire data
-                    WriteDataToSheet(wireWorksheet, extractedWires);
+                    WriteDataToSheet(wireWorksheet, extractedWires, profiles[0]);
                     //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(wireWorksheet);
 
@@ -133,10 +135,10 @@ namespace Presentation
                     var componentWorksheet = package.Workbook.Worksheets.Add("Components");
 
                     // Write column headers for components
-                    WriteHeaders(componentWorksheet, extractedComponents);
+                    WriteHeaders(componentWorksheet, profiles[1]);
 
                     // Write component data
-                    WriteDataToSheet(componentWorksheet, extractedComponents);
+                    WriteDataToSheet(componentWorksheet, extractedComponents, profiles[1]);
                     //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
@@ -170,22 +172,26 @@ namespace Presentation
             worksheet.Cells["A1:" + worksheet.Dimension.End.Address].AutoFilter = true;
         }
 
-        private static void WriteHeaders<T>(ExcelWorksheet worksheet, List<T> objects)
+        private static void WriteHeaders(ExcelWorksheet worksheet, Profile profile)
         {
-            if (objects.Count == 0)
+            if (profile == null)
             {
                 // Handle the case where the list is empty
                 return;
             }
 
-            PropertyInfo[] properties = objects[0].GetType().GetProperties();
+            PropertyInfo[] properties = typeof(Profile).GetProperties();
 
-            for (int i = 0; i < properties.Length; i++)
+            // Get the parameters of the profile
+            List<string> parameters = profile.Parameters;
+
+            // Write the parameters as headers
+            for (int i = 0; i < parameters.Count; i++)
             {
-                string header = $"{properties[i].Name}";
-                worksheet.Cells[1, i + 1].Value = header;
+                worksheet.Cells[1, i + 1].Value = parameters[i];
             }
-            //Freeze the top row (headers)
+
+            // Freeze the top row (headers)
             worksheet.View.FreezePanes(2, 1);
         }
 
@@ -212,21 +218,30 @@ namespace Presentation
             return maxLength;
         }
 
-        private static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects)
+        private static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects, Profile profile)
         {
-            if (objects.Count == 0)
+            if (objects.Count == 0 || profile == null)
             {
-                // Handle the case where the list is empty
+                // Handle the case where the list is empty or profile is null
                 return;
             }
 
-            PropertyInfo[] properties = typeof(T).GetProperties();
+            // Get the properties to write based on the parameters in the profile
+            List<PropertyInfo> propertiesToWrite = new List<PropertyInfo>();
+            foreach (string parameter in profile.Parameters)
+            {
+                PropertyInfo property = typeof(T).GetProperty(parameter);
+                if (property != null)
+                {
+                    propertiesToWrite.Add(property);
+                }
+            }
 
             for (int row = 0; row < objects.Count; row++)
             {
-                for (int col = 0; col < properties.Length; col++)
+                for (int col = 0; col < propertiesToWrite.Count; col++)
                 {
-                    var propertyValue = properties[col].GetValue(objects[row]);
+                    var propertyValue = propertiesToWrite[col].GetValue(objects[row]);
                     worksheet.Cells[row + 2, col + 1].Value = propertyValue;
                 }
             }

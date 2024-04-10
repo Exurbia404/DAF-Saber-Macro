@@ -4,6 +4,8 @@ using Logging;
 using Logic_Layer;
 using Newtonsoft.Json;
 using Point = System.Drawing.Point;
+using Data_Interfaces;
+using System.Security.Cryptography;
 
 namespace Presentation
 {
@@ -28,8 +30,18 @@ namespace Presentation
             comboBoxes = new List<ComboBox>();
             comboBox_Labels = new List<Label>();
 
+            AddUserProfilesToListBox();
+
             SetDefaultComboBox();
             GenerateComboBoxes(headerCounter);
+        }
+
+        private void AddUserProfilesToListBox()
+        {
+            foreach(Profile profile in profileController.userProfiles)
+            {
+                profilesListBox.Items.Add(profile.Name);
+            }
         }
 
         private void SetDefaultComboBox()
@@ -267,7 +279,7 @@ namespace Presentation
                 else
                 {
                     // Create a new profile with the given name and parameters
-                    Profile newProfile = new Profile(profileName, GetComboBoxesValues(), Profile.ProfileType.User);
+                    Profile newProfile = new Profile(profileName, GetComboBoxesValues(), ProfileType.User);
 
                     // Add the new profile to the defaultProfiles list
                     profileController.defaultProfiles.Add(newProfile);
@@ -337,7 +349,7 @@ namespace Presentation
             profileNameTextBox.Text = loadedProfileName;
 
             // Check if the loaded profile exists in defaultProfiles
-            Profile loadedProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+            Profile loadedProfile = profileController.allProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
 
             if (loadedProfile != null)
             {

@@ -32,7 +32,7 @@ namespace Presentation
             messageCounter = 0;
             versionLabel.Text = "Version: " + version;
 
-            MainForm mainForm = new MainForm(_logger);
+            MainForm mainForm = new MainForm(_logger, this);
             mainForm.TopLevel = false;
 
             panel.Controls.Add(mainForm);
@@ -87,7 +87,7 @@ namespace Presentation
 
         private void homeButton_Click(object sender, EventArgs e)
         {
-            MainForm mainForm = new MainForm(_logger);
+            MainForm mainForm = new MainForm(_logger, this);
             mainForm.TopLevel = false;
 
             panel.Controls.Clear();

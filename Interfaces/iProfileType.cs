@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Data_Interfaces
 {
-    public class iProfile
+    public enum ProfileType
     {
-        public string Name;
-        public List<string> Parameters;
-        public ProfileType Type;
-    }
+        Wire,
+        Component,
+        Project_Component,
+        Project_Wire,
+        User
+    };
 }

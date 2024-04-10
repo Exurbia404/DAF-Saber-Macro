@@ -93,7 +93,7 @@ namespace Data_Access
         {
             try
             {
-                string json = JsonConvert.SerializeObject(profiles);
+                string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
                 string filePath = Path.Combine(profilesFolder, "profiles.json");
                 File.WriteAllText(filePath, json);
                 _logger.Log("Profiles saved successfully.");

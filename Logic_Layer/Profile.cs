@@ -9,14 +9,6 @@ namespace Logic_Layer
 {
     public class Profile : iProfile
     {
-        public enum ProfileType
-        {
-            Wire,
-            Component,
-            Project_Component,
-            Project_Wire,
-            User
-        }
         public string Name;
         public List<string> Parameters;
         public ProfileType Type;

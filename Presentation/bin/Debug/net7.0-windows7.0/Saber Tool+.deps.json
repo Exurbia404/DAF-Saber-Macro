@@ -9,6 +9,7 @@
       "Saber Tool+/1.0.0": {
         "dependencies": {
           "Data_Access": "1.0.0",
+          "Data_Interfaces": "1.0.0",
           "EPPlus": "7.0.10",
           "Logging": "1.0.0",
           "Logic_Layer": "1.0.0",
