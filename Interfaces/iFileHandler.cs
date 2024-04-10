@@ -10,6 +10,8 @@ namespace Data_Interfaces
     public interface iFileHandler
     {
         public void WriteToFile(List<iConverted_Wire> wires, List<iConverted_Component> components, List<iBundle> extractedBundles, string fileName, string filePath);
+        public void SaveProfiles(List<iProfile> profiles);
+        public List<iProfile> LoadProfiles();
 
     }
 }

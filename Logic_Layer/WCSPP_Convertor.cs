@@ -15,9 +15,11 @@ namespace Logic
         private static List<DSI_Wire> wiresToConvert;
         private static List<DSI_Component> componentsToConvert;
 
-        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iFileHandler _fileHandler) 
+        public WCSPP_Convertor(List<DSI_Wire> wires, List<DSI_Component> components, iFileHandler _fileHandler)
         {
             fileHandler = _fileHandler;
+            wiresToConvert = wires;
+            componentsToConvert = components;
         }
 
         public List<Converted_Wire> ConvertWires(List<DSI_Wire> wiresToConvert, List<Bundle> bundles)

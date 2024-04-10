@@ -37,11 +37,13 @@ namespace Presentation
         private static List<DSI_Reference> extractedReferences;
 
         private string computerName = Environment.MachineName;
+        private PanelForm panelForm;
 
-        public MainForm(Logger logger)
+        public MainForm(Logger logger, PanelForm panelform)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
+            panelForm = panelform;
             _logger = logger;
             InitializeComponent();
 
@@ -193,7 +195,6 @@ namespace Presentation
         {
             // Get the selected index
             string selectedBundle = bundlesListBox.SelectedItem.ToString();
-            SetStatusBar(10);
             OpenLatestBundleFile(selectedBundle);
         }
 
@@ -211,6 +212,7 @@ namespace Presentation
                 {
                     // Sort files by creation time and get the latest one
                     string latestTxtFile = txtFiles.OrderByDescending(f => new FileInfo(f).CreationTime).First();
+
                     ExtractAndOpenExcel(latestTxtFile);
                     // Do something with the latest .txt file, for example, display its path
                     _logger.Log($"Latest .txt file in {selectedFolderPath} is: {latestTxtFile}");
@@ -255,26 +257,40 @@ namespace Presentation
         }
 
 
-        private async void ExtractAndOpenExcel(string textFilePath)
+        private void ExtractAndOpenExcel(string textFilePath)
         {
             try
             {
-                // Run the time-consuming code asynchronously
-                await Task.Run(() =>
-                {
-                    extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                    extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                    extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    FileHandler fileHandler = new FileHandler(_logger);
+                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
 
-                    convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
+                FileHandler fileHandler = new FileHandler(_logger);
 
-                    List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
-                    List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
-                    
-                    string bundleNumber = GetFileName(textFilePath);
-                });
+                convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
+
+                List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
+                List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
+
+                string bundleNumber = GetFileName(textFilePath);
+
+                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
+
+                // Set the newProfileForm's TopLevel property to false
+                pcForm.TopLevel = false;
+
+                (panelForm.Controls["panel"] as Panel).Controls.Clear();
+
+                // Add the newProfileForm to the panel's controls of the parent form
+                (panelForm.Controls["panel"] as Panel).Controls.Add(pcForm);
+
+                pcForm.Dock = DockStyle.Fill;
+
+                pcForm.SetBundleData(convertedWires, convertedComponents);
+
+                pcForm.Show();
+
             }
             catch (Exception ex)
             {
@@ -483,7 +499,8 @@ namespace Presentation
             List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
             List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
 
-            excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList(), bundleNumber);
+            //TODO: fix this
+            //excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList(), bundleNumber);
         }
 
 
@@ -553,9 +570,9 @@ namespace Presentation
 
         }
 
-        
 
-        
+
+
 
         //When the refset form is closed you should update the refsets present in the document
         private void RefSetForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -622,6 +639,11 @@ namespace Presentation
         }
 
         private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
         {
 
         }
