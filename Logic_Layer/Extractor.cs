@@ -429,15 +429,15 @@ namespace Logic
                     if (line.Contains(startNode) && line.Contains(endNode) && line.Contains("sleeve_partnumber"))
                     {
                         // Split the line by '::' to get individual parts
-                        string[] parts = line.Split(new string[] { "::" }, StringSplitOptions.None);
+                        string[] parts = line.Split(':');
 
-                        if(foundInsulations != "")
+                        if (foundInsulations != "")
                         {
-                            foundInsulations += "and ";
+                            foundInsulations = foundInsulations + "and ";
                         }
 
                         //Insulation is found in the fifth location
-                        foundInsulations += parts[5];
+                        foundInsulations = parts[5];
                     }
 
                 }

@@ -55,6 +55,7 @@
             // 
             // wireProfilesComboBox
             // 
+            wireProfilesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             wireProfilesComboBox.FormattingEnabled = true;
             wireProfilesComboBox.Location = new Point(12, 27);
             wireProfilesComboBox.Name = "wireProfilesComboBox";
@@ -63,6 +64,7 @@
             // 
             // componentProfilesComboBox
             // 
+            componentProfilesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             componentProfilesComboBox.FormattingEnabled = true;
             componentProfilesComboBox.Location = new Point(165, 27);
             componentProfilesComboBox.Name = "componentProfilesComboBox";
