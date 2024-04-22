@@ -431,7 +431,7 @@ namespace Logic
                     // Split the line by '::' to get individual parts
                     string[] parts = line.Split(':');
 
-                    if ((parts[10] == "sleeve_partnumber") && (parts[0] == startNode) && (parts[2] == endNode))
+                    if ((parts[0] == startNode) && (parts[2] == endNode))
                     {
                         if (foundInsulations != "")
                         {

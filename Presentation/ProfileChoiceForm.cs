@@ -74,12 +74,12 @@ namespace Presentation
             exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList);
         }
 
-        private void ExportProjectToExcel()
+        private void ExportProjectToExcel(List<Profile> profile)
         {
             List<iProject_Wire> wiresToExport = project_wires.Cast<iProject_Wire>().ToList();
             List<IProject_Component> componentsToExport = project_components.Cast<IProject_Component>().ToList();
 
-            exporter.CreateProjectExcelSheet(wiresToExport, componentsToExport, fileName);
+            exporter.CreateProjectExcelSheet(wiresToExport, componentsToExport, fileName, profile);
         }
 
         private void exportToExcelButton_Click(object sender, EventArgs e)
@@ -97,6 +97,23 @@ namespace Presentation
 
             // Call the method to export to Excel with the selected profiles
             ExportBundleToExcel(selectedProfiles);
+        }
+
+        private void exportProjectButton_Click(object sender, EventArgs e)
+        {
+            // Get selected profile names from combo boxes
+            string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
+            string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
+
+            // Find selected profiles from the profile list
+            Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
+            Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
+
+            // Create a list containing wires at index 0 and components at index 1
+            List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
+
+            // Call the method to export to Excel with the selected profiles
+            ExportProjectToExcel(selectedProfiles);
         }
     }
 }

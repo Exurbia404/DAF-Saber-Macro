@@ -498,12 +498,33 @@ namespace Presentation
 
         private void Project_ExtractAndOpenExcel(string compFilePath, string wiresFilePath, string bundleNumber)
         {
-            List<Project_Component> foundComponents = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
-            List<Project_Wire> foundWires = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
+            try
+            {
+                List<Project_Wire> projectWire = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
+                List<Project_Component> projectComponent = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
 
-            //TODO: fix this
-            //excelHandler.CreateProjectExcelSheet(foundWires.Cast<iProject_Wire>().ToList(), foundComponents.Cast<IProject_Component>().ToList(), bundleNumber);
-        }
+
+                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
+
+                // Set the newProfileForm's TopLevel property to false
+                pcForm.TopLevel = false;
+
+                (panelForm.Controls["panel"] as Panel).Controls.Clear();
+
+                // Add the newProfileForm to the panel's controls of the parent form
+                (panelForm.Controls["panel"] as Panel).Controls.Add(pcForm);
+
+                pcForm.Dock = DockStyle.Fill;
+
+                pcForm.SetProjectData(projectWire, projectComponent);
+
+                pcForm.Show();
+            }
+            catch
+            {
+
+            }
+           }
 
 
         //Buttons to choose directory:

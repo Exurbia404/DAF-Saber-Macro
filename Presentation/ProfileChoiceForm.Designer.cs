@@ -33,6 +33,7 @@
             wireProfilesComboBox = new ComboBox();
             componentProfilesComboBox = new ComboBox();
             exportToExcelButton = new Button();
+            exportProjectButton = new Button();
             SuspendLayout();
             // 
             // label1
@@ -81,11 +82,22 @@
             exportToExcelButton.UseVisualStyleBackColor = true;
             exportToExcelButton.Click += exportToExcelButton_Click;
             // 
+            // exportProjectButton
+            // 
+            exportProjectButton.Location = new Point(460, 27);
+            exportProjectButton.Name = "exportProjectButton";
+            exportProjectButton.Size = new Size(101, 23);
+            exportProjectButton.TabIndex = 5;
+            exportProjectButton.Text = "ExportProject";
+            exportProjectButton.UseVisualStyleBackColor = true;
+            exportProjectButton.Click += exportProjectButton_Click;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(exportProjectButton);
             Controls.Add(exportToExcelButton);
             Controls.Add(componentProfilesComboBox);
             Controls.Add(wireProfilesComboBox);
@@ -105,5 +117,6 @@
         private ComboBox wireProfilesComboBox;
         private ComboBox componentProfilesComboBox;
         private Button exportToExcelButton;
+        private Button exportProjectButton;
     }
 }

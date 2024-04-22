@@ -31,7 +31,7 @@ namespace Presentation
 
         }
 
-        public void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components, string fileName)
+        public void CreateProjectExcelSheet(List<iProject_Wire> wires, List<IProject_Component> components, string fileName, List<Profile> profiles)
         {
             try
             {
@@ -54,25 +54,22 @@ namespace Presentation
                     // Add a worksheet for Wires
                     var wireWorksheet = package.Workbook.Worksheets.Add("Project_Wires");
 
-                    //TODO: fix this
                     // Write column headers for wires
-                    //WriteHeaders(wireWorksheet, wires);
+                    WriteHeaders(wireWorksheet, profiles[0]);
 
                     // Write wire data
-                    //WriteDataToSheet(wireWorksheet, wires);
-                    //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
+                    WriteDataToSheet(wireWorksheet, wires, profiles[0]);
+                    
                     AddAutoFilterButtons(wireWorksheet);
 
                     // Add a worksheet for Components
                     var componentWorksheet = package.Workbook.Worksheets.Add("Project_Components");
 
-                    //TODO: fix this
-                    // Write column headers for components
-                    //WriteHeaders(componentWorksheet, components);
+                    //Write column headers for components
+                    WriteHeaders(componentWorksheet, profiles[1]);
 
                     // Write component data
-                    //WriteDataToSheet(componentWorksheet, components);
-                    //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
+                    WriteDataToSheet(componentWorksheet, components, profiles[1]);
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
