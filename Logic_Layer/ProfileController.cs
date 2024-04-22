@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic_Layer
+namespace Logic
 {
     public class ProfileController
     {

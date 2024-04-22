@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -360,5 +362,94 @@ namespace Logic
 
             return componentObject;
         }
+
+        public List<DSI_Tube> ExtractDSITubes(string filePath)
+        {
+            string sectionStart = "%Section 4";
+            string sectionEnd = "%Section 5";
+            bool isInSection4 = false;
+
+            List<DSI_Tube> foundTubes = new List<DSI_Tube>();
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection4)
+                {
+                    DSI_Tube tube = ExtractDSITubeFromString(line, filePath);
+                    // Process lines between Section 3 and Section 4
+                    if (tube != null)
+                    {
+                        foundTubes.Add(tube);
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection4 = true;
+                }
+            }
+            return foundTubes;
+        }
+
+        private DSI_Tube ExtractDSITubeFromString(string line, string filePath)
+        {
+            string[] parts = line.Split(':');
+            string startNode = parts[0];
+            string endNode = parts[3];
+            string length = parts[6];
+            string insulations = GetInsulationForBranch(startNode, endNode, filePath);
+
+            return new DSI_Tube(length, insulations, startNode, endNode);
+        }
+
+        private string GetInsulationForBranch(string startNode, string endNode, string filePath)
+        {
+            string sectionStart = "%Section 7";
+            string sectionEnd = "%Section 8";
+            bool isInSection7 = false;
+
+            string foundInsulations = "";
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection7)
+                {
+                    // Split the line by '::' to get individual parts
+                    string[] parts = line.Split(':');
+
+                    if ((parts[10] == "sleeve_partnumber") && (parts[0] == startNode) && (parts[2] == endNode))
+                    {
+                        if (foundInsulations != "")
+                        {
+                            foundInsulations += " and ";
+                        }
+
+                        //Insulation is found in the fifth location
+                        foundInsulations += parts[5];
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection7 = true;
+                }
+            }
+            return foundInsulations;
+        }
+
     }
 }

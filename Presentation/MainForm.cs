@@ -31,10 +31,11 @@ namespace Presentation
         private ExcelImporter excelImporter;
         private ExcelExporter excelHandler;
 
-        private static List<DSI_Wire> extractedWires;
-        private static List<DSI_Component> extractedComponents;
-        private static List<Bundle> extractedBundles;
-        private static List<DSI_Reference> extractedReferences;
+        private List<DSI_Wire> extractedWires;
+        private List<DSI_Component> extractedComponents;
+        private List<Bundle> extractedBundles;
+        private List<DSI_Reference> extractedReferences;
+        private List<DSI_Tube> extractedTubes;
 
         private string computerName = Environment.MachineName;
         private PanelForm panelForm;
@@ -265,6 +266,7 @@ namespace Presentation
                 extractedWires = extractor.ExtractWiresFromFile(textFilePath);
                 extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
                 extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                extractedTubes = extractor.ExtractDSITubes(textFilePath);
 
                 FileHandler fileHandler = new FileHandler(_logger);
 
@@ -287,7 +289,7 @@ namespace Presentation
 
                 pcForm.Dock = DockStyle.Fill;
 
-                pcForm.SetBundleData(convertedWires, convertedComponents);
+                pcForm.SetBundleData(convertedWires, convertedComponents, extractedTubes);
 
                 pcForm.Show();
 

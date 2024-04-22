@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Data_Access;
 using Logging;
-using Logic_Layer;
+using Logic;
 using Newtonsoft.Json;
 using Point = System.Drawing.Point;
 using Data_Interfaces;

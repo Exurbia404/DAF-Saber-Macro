@@ -1,7 +1,6 @@
 ﻿using Data_Access;
 using Logging;
 using Logic;
-using Logic_Layer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +31,8 @@ namespace Presentation
         private List<Project_Component> project_components;
         private List<Project_Wire> project_wires;
 
+        private List<DSI_Tube> tubesList;
+
         public ProfileChoiceForm(Logger logger, string filename)
         {
             InitializeComponent();
@@ -43,10 +44,11 @@ namespace Presentation
             SetProfilesToComboBoxes();
         }
 
-        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components)
+        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes)
         {
             converted_components = components;
             converted_wires = wires;
+            tubesList = tubes;
         }
 
         public void SetProjectData(List<Project_Wire> wires, List<Project_Component> components)
@@ -69,7 +71,7 @@ namespace Presentation
             List<iConverted_Wire> wiresToExport = converted_wires.Cast<iConverted_Wire>().ToList();
             List<iConverted_Component> componentsToExport = converted_components.Cast<iConverted_Component>().ToList();
 
-            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles);
+            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList);
         }
 
         private void ExportProjectToExcel()

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data_Interfaces;
 
-namespace Logic_Layer
+namespace Logic
 {
     public class Profile : iProfile
     {
