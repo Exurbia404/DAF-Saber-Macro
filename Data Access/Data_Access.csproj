@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Data_Interfaces.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
-    <ProjectReference Include="..\Logic_Layer\Logic_Layer.csproj" />
+    <ProjectReference Include="..\Logic_Layer\Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

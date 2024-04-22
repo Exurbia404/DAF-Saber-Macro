@@ -3,7 +3,7 @@ using System.IO;
 using OfficeOpenXml;
 using System.Diagnostics;
 using System.Reflection;
-using Logic_Layer;
+using Logic;
 using UI_Interfaces;
 
 
@@ -99,7 +99,7 @@ namespace Presentation
             }
         }
 
-        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<Profile> profiles)
+        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<Profile> profiles, List<DSI_Tube> tubes)
         {
             try
             {
@@ -141,6 +141,12 @@ namespace Presentation
                     WriteDataToSheet(componentWorksheet, extractedComponents, profiles[1]);
                     //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
+
+                    var tubeWorksheet = package.Workbook.Worksheets.Add("DSI_Tubing");
+
+                    WriteHeaders_alt(tubeWorksheet, tubes);
+                    WriteDataToSheet_alt(tubeWorksheet, tubes);
+                    AddAutoFilterButtons(tubeWorksheet);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -195,6 +201,24 @@ namespace Presentation
             worksheet.View.FreezePanes(2, 1);
         }
 
+        private static void WriteHeaders_alt<T>(ExcelWorksheet worksheet, List<T> objects)
+        {
+            if (objects.Count == 0)
+            {
+                // Handle the case where the list is empty
+                return;
+            }
+
+            PropertyInfo[] properties = objects[0].GetType().GetProperties();
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                string header = $"{properties[i].Name}";
+                worksheet.Cells[1, i + 1].Value = header;
+            }
+            worksheet.View.FreezePanes(2, worksheet.Dimension.End.Column + 1);
+        }
+
 
         private static int GetMaxLength<T>(List<T> objects, PropertyInfo property)
         {
@@ -242,6 +266,26 @@ namespace Presentation
                 for (int col = 0; col < propertiesToWrite.Count; col++)
                 {
                     var propertyValue = propertiesToWrite[col].GetValue(objects[row]);
+                    worksheet.Cells[row + 2, col + 1].Value = propertyValue;
+                }
+            }
+        }
+
+        private static void WriteDataToSheet_alt<T>(ExcelWorksheet worksheet, List<T> objects)
+        {
+            if (objects.Count == 0)
+            {
+                // Handle the case where the list is empty
+                return;
+            }
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            for (int row = 0; row < objects.Count; row++)
+            {
+                for (int col = 0; col < properties.Length; col++)
+                {
+                    var propertyValue = properties[col].GetValue(objects[row]);
                     worksheet.Cells[row + 2, col + 1].Value = propertyValue;
                 }
             }

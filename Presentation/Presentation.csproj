@@ -39,7 +39,7 @@
     <ProjectReference Include="..\Data Access\Data_Access.csproj" />
     <ProjectReference Include="..\Interfaces\Data_Interfaces.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
-    <ProjectReference Include="..\Logic_Layer\Logic_Layer.csproj" />
+    <ProjectReference Include="..\Logic_Layer\Logic.csproj" />
     <ProjectReference Include="..\UI_Interfaces\UI_Interfaces.csproj" />
   </ItemGroup>
 

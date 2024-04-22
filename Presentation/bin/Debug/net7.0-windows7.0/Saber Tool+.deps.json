@@ -12,7 +12,7 @@
           "Data_Interfaces": "1.0.0",
           "EPPlus": "7.0.10",
           "Logging": "1.0.0",
-          "Logic_Layer": "1.0.0",
+          "Logic": "1.0.0",
           "Microsoft.Graph": "5.44.0",
           "Microsoft.Identity.Client": "4.59.0",
           "Newtonsoft.Json": "13.0.3",
@@ -663,7 +663,7 @@
           "Data_Interfaces": "1.0.0",
           "EPPlus": "7.0.10",
           "Logging": "1.0.0",
-          "Logic_Layer": "1.0.0",
+          "Logic": "1.0.0",
           "Newtonsoft.Json": "13.0.3",
           "System.Configuration.ConfigurationManager": "8.0.0"
         },
@@ -681,14 +681,14 @@
           "Logging.dll": {}
         }
       },
-      "Logic_Layer/1.0.0": {
+      "Logic/1.0.0": {
         "dependencies": {
           "Data_Interfaces": "1.0.0",
           "Logging": "1.0.0",
           "UI_Interfaces": "1.0.0"
         },
         "runtime": {
-          "Logic_Layer.dll": {}
+          "Logic.dll": {}
         }
       },
       "UI_Interfaces/1.0.0": {
@@ -1184,7 +1184,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Logic_Layer/1.0.0": {
+    "Logic/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
