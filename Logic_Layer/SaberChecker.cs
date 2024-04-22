@@ -229,11 +229,15 @@ namespace Logic_Layer
         //TODO: what is an assembly and where are the issues defined?
 
         //DSI_23 Issue assembly may not be higher than drawing issue
+        //TODO: psuedo code does not make sense
 
         //DSI_24 Bundle issue may not be lower than previous version
+        //TODO: cannot be done in this program
 
         //DSI_29 Branch length must be more than minimum
+        //TODO: is already checked by checking minimum length?
 
         //DSI_30 Bundle issue may not be deleted until a new drawing is released
+        //TODO: also does not make a whole lot of sense for this program
     }
 }
