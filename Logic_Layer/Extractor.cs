@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -426,20 +427,19 @@ namespace Logic
 
                 if (isInSection7)
                 {
-                    if (line.Contains(startNode) && line.Contains(endNode) && line.Contains("sleeve_partnumber"))
-                    {
-                        // Split the line by '::' to get individual parts
-                        string[] parts = line.Split(':');
+                    // Split the line by '::' to get individual parts
+                    string[] parts = line.Split(':');
 
+                    if ((parts[10] == "sleeve_partnumber") && (parts[0] == startNode) && (parts[2] == endNode))
+                    {
                         if (foundInsulations != "")
                         {
-                            foundInsulations = foundInsulations + "and ";
+                            foundInsulations += " and ";
                         }
 
                         //Insulation is found in the fifth location
-                        foundInsulations = parts[5];
+                        foundInsulations += parts[5];
                     }
-
                 }
 
                 if (line.StartsWith(sectionStart))
