@@ -429,10 +429,13 @@ namespace Presentation
 
                 // Call AddSchematicsToListBox with the list of BundleNumbers
                 currentProjectLabel.Text = selectedSchematic;
+                _logger.Log("Loading project: " + selectedSchematic);
+
                 AddSchematicsToListBox(bundleNumbers);
             }
             else if (IsRefSetNumber(selectedSchematic))
             {
+                _logger.Log("Loading following schematic :" + selectedSchematic);
                 OpenRefSetInExcel(TrimString(selectedSchematic));
             }
         }
@@ -500,6 +503,7 @@ namespace Presentation
         {
             try
             {
+                _logger.Log("Opening project in Excel");
                 List<Project_Wire> projectWire = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
                 List<Project_Component> projectComponent = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
 
