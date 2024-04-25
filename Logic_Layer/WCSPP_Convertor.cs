@@ -1,4 +1,5 @@
 ﻿using Data_Interfaces;
+using System.ComponentModel;
 using UI_Interfaces;
 
 namespace Logic
@@ -42,14 +43,23 @@ namespace Logic
                 wCSPP_Wire.Term_1 = FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
                 wCSPP_Wire.Seal_1 = FindSealCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
 
+                //If bundle is modularized
+                if(wCSPP_Wire.Term_1 == "")
+                {
+                    wCSPP_Wire.Term_1 = Modularized_FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
+                }
+
 
                 //Set Connector 2 info
                 wCSPP_Wire.Term_2 = FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);
                 wCSPP_Wire.Seal_2 = FindSealCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);
 
-                //Stills needs to extract Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from connector itself
+                //If bundle is modularized
+                if (wCSPP_Wire.Term_2 == "")
+                {
+                    wCSPP_Wire.Term_2 = Modularized_FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
+                }
 
-                
                 wCSPP_Wire.Wire_connection = GetWireConnection(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2);
 
                 convertedList.Add(wCSPP_Wire);
@@ -82,6 +92,29 @@ namespace Logic
                     component.CavityName == port_1 &&
                     component.ComponentTypeCode == "TERM" &&
                     VariantIsPresent(component.CircuitOption, wireVariants))
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        private string Modularized_FindTerminalCode(string connector, string port_1)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = componentsToConvert
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "TERM")
                 .ToList();
 
             if (filteredComponents.Count == 0)
@@ -149,6 +182,8 @@ namespace Logic
             {
                 if (component.ComponentTypeCode == "CONNECTOR")
                 {
+                    
+
                     // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
                     Converted_Component wCSPP_Component = new Converted_Component
                     {
@@ -156,7 +191,7 @@ namespace Logic
                         Part_no = component.PartNumber2,
                         Passive = GetPassivesForComponent(componentsToConvert, component.NodeName, GetEndTextForComponent(componentsToConvert, component.NodeName)),
                         Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
-                        Variant = component.CircuitOption,
+                        Variant = GetVariantForComponent(component),
                         Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
                         Description = "",
                         Location = "",
@@ -170,6 +205,18 @@ namespace Logic
             }
 
             return convertedList.OrderBy(component => component.Name).ToList(); ;
+        }
+
+        private string GetVariantForComponent(DSI_Component component)
+        {
+            if(component.CircuitOption != "")
+            {
+                return component.CircuitOption;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         private static string GetBundlesForVariant(List<Bundle> bundles, string variant)
