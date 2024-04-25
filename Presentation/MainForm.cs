@@ -275,7 +275,12 @@ namespace Presentation
                 List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
                 List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
 
+
                 string bundleNumber = GetFileName(textFilePath);
+                string filePath = GetFolderPath(textFilePath);
+
+                fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
+
 
                 ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
 
@@ -429,10 +434,13 @@ namespace Presentation
 
                 // Call AddSchematicsToListBox with the list of BundleNumbers
                 currentProjectLabel.Text = selectedSchematic;
+                _logger.Log("Loading project: " + selectedSchematic);
+
                 AddSchematicsToListBox(bundleNumbers);
             }
             else if (IsRefSetNumber(selectedSchematic))
             {
+                _logger.Log("Loading following schematic :" + selectedSchematic);
                 OpenRefSetInExcel(TrimString(selectedSchematic));
             }
         }
@@ -500,6 +508,7 @@ namespace Presentation
         {
             try
             {
+                _logger.Log("Opening project in Excel");
                 List<Project_Wire> projectWire = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
                 List<Project_Component> projectComponent = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
 

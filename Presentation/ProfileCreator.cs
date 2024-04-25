@@ -15,7 +15,7 @@ namespace Presentation
         private List<Label> comboBox_Labels;
 
         //Distance between buttons
-        private int horizontalOffset = 120;
+        private int horizontalOffset = 80;
         private int headerCounter = 3;
 
         //Used by buttons, labels and comboBoxes

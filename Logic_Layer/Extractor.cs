@@ -24,7 +24,7 @@ namespace Logic
             string sectionStart = "%Section 3";
             string sectionEnd = "%Section 4";
             bool isInSection3 = false;
-            
+
             List<Bundle> foundBundles = new List<Bundle>();
 
             foreach (string line in File.ReadLines(filePath))
@@ -52,6 +52,39 @@ namespace Logic
                 }
             }
             return foundBundles;
+        }
+
+        private bool CheckIfModularized(string filePath)
+        {
+            string sectionStart = "%Section 1";
+            string sectionEnd = "%Section 2";
+            bool isInSection1 = false;
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection1)
+                {
+                    string[] parts = line.Split(":");
+                    if ((parts[52] == "yes") && parts[59] == "yes")
+                    {
+                        return true;
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection1 = true;
+                }
+            }
+
+            return false;
         }
 
         private Bundle ExtractBundleFromString(string input)
@@ -91,6 +124,8 @@ namespace Logic
             string sectionStart = "%Section 5";
             string sectionEnd = "%Section 6";
             bool isInSection5 = false;
+
+            bool isModularized = CheckIfModularized(filePath);
 
             foreach (string line in File.ReadLines(filePath))
             {

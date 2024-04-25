@@ -96,7 +96,7 @@ namespace Presentation
             }
         }
 
-        public void CreateExcelSheet(List<iConverted_Wire> extractedWires, List<iConverted_Component> extractedComponents, string fileName, List<Profile> profiles, List<DSI_Tube> tubes)
+        public void CreateExcelSheet(List<iConverted_Wire> wires, List<iConverted_Component> components, string fileName, List<Profile> profiles, List<DSI_Tube> tubes)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace Presentation
                     WriteHeaders(wireWorksheet, profiles[0]);
 
                     // Write wire data
-                    WriteDataToSheet(wireWorksheet, extractedWires, profiles[0]);
+                    WriteDataToSheet(wireWorksheet, wires, profiles[0]);
                     //wireWorksheet.Cells[wireWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(wireWorksheet);
 
@@ -135,7 +135,7 @@ namespace Presentation
                     WriteHeaders(componentWorksheet, profiles[1]);
 
                     // Write component data
-                    WriteDataToSheet(componentWorksheet, extractedComponents, profiles[1]);
+                    WriteDataToSheet(componentWorksheet, components, profiles[1]);
                     //componentWorksheet.Cells[componentWorksheet.Dimension.Address].AutoFitColumns();
                     AddAutoFilterButtons(componentWorksheet);
 
@@ -144,6 +144,8 @@ namespace Presentation
                     WriteHeaders_alt(tubeWorksheet, tubes);
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
+
+                    CreateALL_PE_sheet(wires, package);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -307,6 +309,75 @@ namespace Presentation
 
             // Return null if the property is not found
             return null;
+        }
+
+        public void CreateALL_PE_sheet(List<iConverted_Wire> wires, ExcelPackage excelPackege)
+        {
+            //Prepare ALL_PE profile
+            List<string> ALL_PE_Strings = new List<string>();
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
+            ALL_PE_Strings.AddRange(stringsToAdd);
+
+            Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
+
+            int originalCount = wires.Count;
+            for (int i = 0; i < originalCount; i++)
+            {
+                Converted_Wire newWire = new Converted_Wire(
+                    wires[i].Wire,
+                    wires[i].Diameter,
+                    wires[i].Color,
+                    wires[i].Type,
+                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wires[i].Length,
+                    wires[i].Connector_2,
+                    wires[i].Port_2,
+                    wires[i].Term_2,
+                    wires[i].Seal_2,
+                    wires[i].Wire_connection,
+                    wires[i].Term_1,
+                    wires[i].Seal_1,
+                    wires[i].Connector_1,
+                    wires[i].Port_1,
+                    wires[i].Variant,
+                    wires[i].Bundle,
+                    wires[i].Loc_1,
+                    wires[i].Loc_2
+                    );
+
+                string tempConnector = wires[i].Connector_1;
+                string tempTerm = wires[i].Term_1;
+                string tempSeal = wires[i].Seal_1;
+                string tempPort = wires[i].Port_1;
+
+                newWire.Connector_1 = wires[i].Connector_2;
+                newWire.Term_1 = wires[i].Term_2;
+                newWire.Seal_1 = wires[i].Seal_2;
+                newWire.Port_1 = wires[i].Port_2;
+
+                newWire.Connector_2 = tempConnector;
+                newWire.Term_2 = tempTerm;
+                newWire.Seal_2 = tempSeal;
+                newWire.Port_2 = tempPort;
+
+                wires.Add(newWire);
+            }
+
+            var wireWorksheet = excelPackege.Workbook.Worksheets.Add("ALL_PE");
+
+            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+                               .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
+                               .ToList();
+
+
+            // Write column headers for wires
+            WriteHeaders(wireWorksheet, ALL_PE_Profile);
+
+            // Write wire data
+            WriteDataToSheet(wireWorksheet, sortedWires, ALL_PE_Profile);
+            
+            
+            AddAutoFilterButtons(wireWorksheet);
         }
     }
 }
