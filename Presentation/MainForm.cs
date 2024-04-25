@@ -275,7 +275,12 @@ namespace Presentation
                 List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
                 List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
 
+
                 string bundleNumber = GetFileName(textFilePath);
+                string filePath = GetFolderPath(textFilePath);
+
+                fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
+
 
                 ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
 
