@@ -56,6 +56,11 @@ namespace Logic
             Loc_2 = loc_2;
         }
 
+        public Converted_Wire()
+        {
+
+        }
+
         public override string ToString()
         {
             return base.ToString();

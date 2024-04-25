@@ -14,31 +14,536 @@ namespace Logic
     public class Extractor_Copy
     {
         public List<Converted_Component> Components { get; private set; }
+        public List<Project_Component> Project_Components { get; private set; }
         public List<Converted_Wire> Wires { get; private set; }
+        public List<Project_Wire> Project_Wires { get; private set; }
 
         public List<Bundle> Bundles { get; private set; }
 
         private Logger _logger;
         private List<List<string[]>> sections;
         private string filePath;
+        private List<DSI_Component> dsi_Components;
         
-        public Extractor_Copy(Logger logger, string filepath)
+        public Extractor_Copy(Logger logger)
         {
             _logger = logger;
+            
+            
+        }
+
+        public void ExtractBundleFromFilePath(string filepath)
+        {
             filePath = filepath;
 
             //1 get the sections
             sections = RetrieveSectionsFromFile();
 
+            //4 Get the bundles
+            Bundles = GetBundlesFromSection(sections[2]);
+
+            dsi_Components = GetDSI_ComponentsFromSection(sections[5]);
+
             //2 Get the Wires
+            Wires = GetWiresFromSection(sections[4], Bundles);
 
             //3 Get the Components
+            Components = ConvertComponents(dsi_Components, Bundles);
+        }
 
-            //4 Get the bundles
+        private List<Converted_Component> ConvertComponents(List<DSI_Component> componentsToConvert, List<Bundle> bundles)
+        {
+            List<Converted_Component> convertedList = new List<Converted_Component>();
 
-            //Conversion 
+            foreach (DSI_Component component in componentsToConvert)
+            {
+                if (component.ComponentTypeCode == "CONNECTOR")
+                {
 
-            //Load them into public properties
+
+                    // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
+                    Converted_Component wCSPP_Component = new Converted_Component
+                    {
+                        Name = component.NodeName,
+                        Part_no = component.PartNumber2,
+                        Passive = GetPassivesForComponent(componentsToConvert, component.NodeName, GetEndTextForComponent(componentsToConvert, component.NodeName)),
+                        Instruction = GetInstructionForComponent(componentsToConvert, component.NodeName),
+                        Variant = GetVariantForComponent(component),
+                        Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
+                        Description = "",
+                        Location = "",
+                        EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
+
+                        // Set other properties here as needed
+                    };
+
+                    if(component.BlockNumber != "")
+                    {
+                        wCSPP_Component.Bundle = GetBundleForModularizedComponent(component.BlockNumber);
+                        GetVariantForModularizedComponent(wCSPP_Component.Bundle);
+                    }
+
+                    convertedList.Add(wCSPP_Component);
+                }
+            }
+
+            return convertedList.OrderBy(component => component.Name).ToList(); ;
+        }
+
+        private string GetBundleForModularizedComponent(string blockNumber)
+        {
+            foreach (string[] line in sections[9])
+            {
+                if (line[0] == blockNumber)
+                {
+                    return line[2];
+                }
+            }
+            return "";
+        }
+
+        private string GetVariantForModularizedComponent(string bundleNumber)
+        {
+            foreach (string[] line in sections[3])
+            {
+                if (line[0] == bundleNumber)
+                {
+                    return line[13];
+                }
+            }
+            return "";
+        }
+
+        private string GetVariantForComponent(DSI_Component component)
+        {
+            if (component.CircuitOption != "")
+            {
+                return component.CircuitOption;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        private string GetPassivesForComponent(List<DSI_Component> fullList, string componentName, string endText)
+        {
+            // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains numbers
+            var filteredComponents = fullList
+                .Where(component =>
+                    component.NodeName == componentName &&
+                    component.ComponentTypeCode == "PASSIVES" &&
+                    StartsWithNumber(component.PartNumber2) &&
+                    (component.PartNumber2.Length >= 7) &&
+                    component.ComponentTypeCode2 == endText)
+                .ToList();
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.PartNumber2));
+
+            return result;
+        }
+
+        private string GetEndTextForComponent(List<DSI_Component> fullList, string componentName)
+        {
+            // Filter components based on ComponentName and ServiceFunction
+            var filteredComponents = fullList
+                .Where(component => component.NodeName == componentName &&
+                                    component.ComponentTypeCode == "CONNECTOR")
+                .ToList();
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.ComponentTypeCode2));
+
+            return result;
+        }
+
+        private string GetInstructionForComponent(List<DSI_Component> fullList, string componentName)
+        {
+            //Include the component if:
+            //  -NodeName matches a specified name.
+            //  -ComponentTypeCode is "PASSIVES".
+            //  - If PartNumber2 doesn't start with a number OR starts with a number:
+            //    - Include if ComponentTypeCode2 is not "additional instructions".
+            //    - Include if PartNumber2 is not equal to NodeName.
+            //  - PartNumber2 contains letters.
+
+            var filteredComponents = fullList
+            .Where(component =>
+                component.NodeName == componentName &&
+                component.ComponentTypeCode == "PASSIVES" &&
+                (
+                    (!StartsWithNumber(component.PartNumber2)) ||
+                    (StartsWithNumber(component.PartNumber2) && (IsAlphanumericEqual(component.PartNumber2, component.NodeName) || IsStringPresent(component.PartNumber2, component.NodeName))
+                )) &&
+                HasLetters(component.PartNumber2) &&
+                component.ComponentTypeCode2 != "additional instructions")
+            .ToList();
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.PartNumber2));
+
+            return result;
+        }
+
+        private bool HasNumbers(string input)
+        {
+            return input.Any(char.IsDigit);
+        }
+
+        private bool HasLetters(string input)
+        {
+            return input.Any(char.IsLetter);
+        }
+
+        private bool IsStringPresent(string str1, string str2)
+        {
+            // Implement this function to check if str1 is present in str2
+            return str2.IndexOf(str1, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool IsAlphanumericEqual(string str1, string str2)
+        {
+            // Implement this function to check if two alphanumeric strings are equal
+            return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool StartsWithNumber(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                // Handle empty or null strings
+                return false;
+            }
+
+            char firstChar = input[0];
+            return char.IsDigit(firstChar);
+        }
+
+        private List<DSI_Component> GetDSI_ComponentsFromSection(List<string[]> section6)
+        {
+            List<DSI_Component> foundDSI_Components = new List<DSI_Component>();
+
+            foreach (string[] line in section6)
+            {
+                // Create a new Component object and set its properties based on the fields
+                foundDSI_Components.Add(new DSI_Component
+                {
+                    NodeName = GetStringAtIndex(line, 0),
+                    CavityName = GetStringAtIndex(line, 1),
+                    WireName = GetStringAtIndex(line, 2),
+                    SequenceNumber = GetStringAtIndex(line, 3),
+                    ComponentTypeCode = GetStringAtIndex(line, 4),
+                    CircuitOption = GetStringAtIndex(line, 5),
+                    ServiceFunction = GetStringAtIndex(line, 6),
+                    Route = GetStringAtIndex(line, 7),
+                    PartNumber1 = GetStringAtIndex(line, 8),
+                    Quantity = GetStringAtIndex(line, 9),
+                    CrossSectionalArea = GetStringAtIndex(line, 10),
+                    PartNumber2 = GetStringAtIndex(line, 11),
+                    PartNumber3 = GetStringAtIndex(line, 12),
+                    SelectTerminal = GetStringAtIndex(line, 13),
+                    Seal = GetStringAtIndex(line, 14),
+                    Plugged = GetStringAtIndex(line, 15),
+                    BlockNumber = GetStringAtIndex(line, 16),
+                    TerminationMethod = GetStringAtIndex(line, 17),
+                    MaterialCode = GetStringAtIndex(line, 18),
+                    ComponentTypeCode2 = GetLastValueBetweenColons1(line.ToString()),
+                }); ;
+            }
+
+            return foundDSI_Components;
+        }
+
+        private string GetLastValueBetweenColons1(string input)
+        {
+            // Split the input string by colons
+            string[] parts = input.Split(':');
+
+            // Find the last value excluding consecutive colons and those within curly braces
+            if (parts.Length >= 2)
+            {
+                // Return the second-to-last non-empty value
+                return parts[parts.Length - 2].Trim(); // Trim to remove any leading or trailing spaces
+            }
+
+            return string.Empty; // Return empty string if no value is found
+        }
+
+        private static string GetStringAtIndex(string[] fields, int index)
+        {
+            return index < fields.Length ? fields[index].Trim() : "";
+        }
+
+        private List<Bundle> GetBundlesFromSection(List<string[]> section3)
+        {
+            List<Bundle> foundbundles = new List<Bundle>();
+
+            foreach (string[] line in section3)
+            {
+                foundbundles.Add(ExtractBundleFromString(line));
+            }
+
+            return foundbundles;
+        }
+
+        private Bundle ExtractBundleFromString(string[] fields)
+        {
+            {
+                Bundle bundle = new Bundle();
+
+                // Assign fields to properties
+                if (fields.Length >= 1) bundle.VariantNumber = fields[0].Trim();
+                if (fields.Length >= 2) bundle.Issue = fields[1].Trim();
+                if (fields.Length >= 3) bundle.Date = fields[2].Trim();
+
+                // Check if there are references separated by '|'
+                if (fields.Length >= 4)
+                {
+                    string[] referencesArray = fields[16].Split('|');
+                    bundle.References = referencesArray.Select(reference => reference.Trim()).ToArray();
+                }
+
+                return bundle;
+            }
+        }
+
+        private List<Converted_Wire> GetWiresFromSection(List<string[]> section5, List<Bundle> bundles)
+        {
+            List<Converted_Wire> foundWires = new List<Converted_Wire>();
+
+            foreach (string[] line in section5)
+            {
+                Converted_Wire newWire = new Converted_Wire
+                {
+                    Wire = line[0],
+                    Diameter = line[4],
+                    Color = line[3],
+                    Type = line[5],
+                    Code_no = GetValueFromInputString(line[19], 1),
+                    Length = GetValueFromInputString(line[19], 0),
+                    Connector_1 = line[8],
+                    Port_1 = line[10],
+                    Term_1 = "?",
+                    Seal_1 = "?",
+                    Wire_connection = "connection",
+                    Term_2 = "?",
+                    Seal_2 = "?",
+                    Connector_2 = line[12],
+                    Port_2 = line[14],
+                    Variant = "?",
+                    Bundle = "?",
+                    Loc_1 = "?",
+                    Loc_2 = "?"
+                };
+
+                newWire.Variant = GetWireVariants(line[1]);
+
+                //Set Connector 1 info
+                newWire.Term_1 = FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
+                newWire.Seal_1 = FindSealCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
+
+                //Set Connector 2 info
+                newWire.Term_2 = FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
+                newWire.Seal_2 = FindSealCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
+
+                if (line[6] != "") //Check if modularized
+                {
+                    newWire.Term_1 = Modularized_FindTerminalCode(newWire.Connector_1, newWire.Port_1);
+                    newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2);
+                    newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1);
+                    newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2);
+
+
+                }
+
+                newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);
+
+                foundWires.Add(newWire);
+
+            }
+
+            return foundWires;
+        }
+
+        private string Modularized_FindTerminalCode(string connector, string port_1)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = dsi_Components
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "TERM")
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        private string GetWireConnection(string connector_1, string port_1, string connector_2, string port_2)
+        {
+            // Combine the info into the specified format
+            string result = $"{connector_1}{(string.IsNullOrEmpty(port_1) ? "" : $":{port_1}")} to {connector_2}{(string.IsNullOrEmpty(port_2) ? "" : $":{port_2}")}";
+
+            return result;
+        }
+
+        private string GetWireVariants(string variantString)
+        {
+            // Replace '/' with a space
+
+            return variantString.Replace('/', ' '); ;
+        }
+
+        private string FindTerminalCode(string connector, string port_1, string wireVariants)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = dsi_Components
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "TERM" &&
+                    VariantIsPresent(component.CircuitOption, wireVariants))
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        private string FindSealCode(string connector, string port_1, string wireVariants)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = dsi_Components
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "SEAL" &&
+                    VariantIsPresent(component.CircuitOption, wireVariants))
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        private string Modularized_FindSealCode(string connector, string port_1)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = dsi_Components
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "SEAL")
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            return filteredComponents[0].PartNumber2;
+        }
+
+        private bool VariantIsPresent(string componentVariants, string wireVariants)
+        {
+            // Split wireVariants into an array
+            string[] wireVariantArray = wireVariants.Split(' ');
+
+            // Split componentVariants into an array using '/'
+            string[] componentVariantArray = componentVariants.Split('/');
+
+            // Check if any wire variant is present in component variants
+            foreach (string wireVariant in wireVariantArray)
+            {
+                if (componentVariantArray.Contains(wireVariant))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private string GetValueFromInputString(string input, int keyIndex)
+        {
+            string[] keyValuePairs = input.Split(',');
+
+            int currentIndex = 0;
+
+            foreach (string pair in keyValuePairs)
+            {
+                string[] keyValue = pair.Split('=');
+
+                if (keyValue.Length == 2)
+                {
+                    if (currentIndex == keyIndex)
+                    {
+                        return keyValue[1].Trim();
+                    }
+
+                    currentIndex++;
+                }
+            }
+
+            // If the specified index is out of range, you might want to handle this case accordingly
+            return "Index out of range";
+        }
+
+        private string GetBundlesForVariant(List<Bundle> bundles, string variant)
+        {
+            // Split the variant into individual variants
+            string[] variantArray = variant.Split('/');
+
+            // Filter bundles where any of the variants is present in the references
+            IEnumerable<string> matchingVariants = bundles
+                .Where(bundle => variantArray.Any(v => bundle.References.Contains(v)))
+                .Select(bundle => bundle.VariantNumber);
+
+            // Concatenate matching variants into a single string
+            string result = string.Join(" ", matchingVariants);
+
+            return result;
+        }
+
+        private bool CheckIfModularized(string[] line)
+        {
+            return (line[59] == "yes");
+        }
+
+        public void ExtractRefsetFromFolderPath(string folderPath)
+        {
+
         }
 
         private List<List<string[]>> RetrieveSectionsFromFile()

@@ -43,13 +43,6 @@ namespace Logic
                 wCSPP_Wire.Term_1 = FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
                 wCSPP_Wire.Seal_1 = FindSealCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1, wCSPP_Wire.Variant);
 
-                //If bundle is modularized
-                if(wCSPP_Wire.Term_1 == "")
-                {
-                    wCSPP_Wire.Term_1 = Modularized_FindTerminalCode(wCSPP_Wire.Connector_1, wCSPP_Wire.Port_1);
-                }
-
-
                 //Set Connector 2 info
                 wCSPP_Wire.Term_2 = FindTerminalCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);
                 wCSPP_Wire.Seal_2 = FindSealCode(wCSPP_Wire.Connector_2, wCSPP_Wire.Port_2, wCSPP_Wire.Variant);

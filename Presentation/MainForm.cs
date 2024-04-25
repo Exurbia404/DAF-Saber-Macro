@@ -262,20 +262,36 @@ namespace Presentation
         {
             try
             {
+                Extractor_Copy copyExtractor = new Extractor_Copy(_logger);
 
-                extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                copyExtractor.ExtractBundleFromFilePath(textFilePath);
+
+                extractedBundles = copyExtractor.Bundles;
                 extractedTubes = extractor.ExtractDSITubes(textFilePath);
+
+                //extractedWires = extractor.ExtractWiresFromFile(textFilePath);
+                //extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
+                //extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
+                //extractedTubes = extractor.ExtractDSITubes(textFilePath);
 
                 FileHandler fileHandler = new FileHandler(_logger);
 
                 convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
+                
+                
 
-                List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
-                List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
+                //List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
+                //List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
+
+                List<Converted_Component> convertedComponents = copyExtractor.Components;
+                List<Converted_Wire> convertedWires = copyExtractor.Wires;
 
                 string bundleNumber = GetFileName(textFilePath);
+
+                string filePath = GetFolderPath(textFilePath);
+
+                fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
+
 
                 ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
 
