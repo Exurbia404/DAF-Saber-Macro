@@ -270,6 +270,7 @@ namespace Presentation
             {
                 // Check if the profile name already exists in the defaultProfiles list
                 Profile existingProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == profileName);
+                existingProfile = profileController.userProfiles.FirstOrDefault(profile => profile.Name == profileName);
 
                 if (existingProfile != null)
                 {
@@ -314,7 +315,7 @@ namespace Presentation
                 if (result == DialogResult.Yes)
                 {
                     // Find the selected profile
-                    Profile selectedProfile = profileController.defaultProfiles.FirstOrDefault(profile => profile.Name == selectedProfileName);
+                    Profile selectedProfile = profileController.userProfiles.FirstOrDefault(profile => profile.Name == selectedProfileName);
 
                     if (selectedProfile != null)
                     {

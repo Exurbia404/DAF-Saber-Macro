@@ -244,26 +244,16 @@ namespace Logic
                     BlockNumber = line[21],
                     TerminationMethod = line[17],
                     MaterialCode = line[18],
-                    ComponentTypeCode2 = GetLastValueBetweenColons1(line.ToString()),
+                    ComponentTypeCode2 = line[29],
                 });
             }
 
             return foundDSI_Components;
         }
 
-        private string GetLastValueBetweenColons1(string input)
+        private string GetLastValueBetweenColons1(string[] input)
         {
-            // Split the input string by colons
-            string[] parts = input.Split(':');
-
-            // Find the last value excluding consecutive colons and those within curly braces
-            if (parts.Length >= 2)
-            {
-                // Return the second-to-last non-empty value
-                return parts[parts.Length - 2].Trim(); // Trim to remove any leading or trailing spaces
-            }
-
-            return string.Empty; // Return empty string if no value is found
+            return input[30];
         }
 
         private static string GetStringAtIndex(string[] fields, int index)
@@ -327,13 +317,11 @@ namespace Logic
                     Seal_2 = "?",
                     Connector_2 = line[12],
                     Port_2 = line[14],
-                    Variant = "?",
-                    Bundle = "?", //TODO: bundle is never set
+                    Variant = GetWireVariants(line[1]),
+                    Bundle = GetBundlesForVariant(Bundles, line[1]), 
                     Loc_1 = "?",
                     Loc_2 = "?"
                 };
-
-                newWire.Variant = GetWireVariants(line[1]);
 
                 //Set Connector 1 info
                 newWire.Term_1 = FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
