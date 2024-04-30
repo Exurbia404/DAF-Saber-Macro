@@ -320,7 +320,7 @@ namespace Presentation
                     if (selectedProfile != null)
                     {
                         // Remove the selected profile from the defaultProfiles list
-                        profileController.defaultProfiles.Remove(selectedProfile);
+                        profileController.userProfiles.Remove(selectedProfile);
                         profilesListBox.Items.Remove(selectedProfileName);
 
                         //clear the selection in the profileTypeComboBox

@@ -329,7 +329,7 @@ namespace Presentation
         {
             //Prepare ALL_PE profile
             List<string> ALL_PE_Strings = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire" ,"", "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire" , "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
             ALL_PE_Strings.AddRange(stringsToAdd);
 
             Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
@@ -467,7 +467,8 @@ namespace Presentation
         {
             //Prepare RC profile
             List<string> OC_Profile_List = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1" }; //TODO: add length tabel, weight/kg length wire_connection, variant, bundle
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
+                "", "Length table", "", "", "Weight (Kg)", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
             OC_Profile_List.AddRange(stringsToAdd);
 
             Profile OC_Profile = new Profile("OC sheet", OC_Profile_List, Data_Interfaces.ProfileType.User);
