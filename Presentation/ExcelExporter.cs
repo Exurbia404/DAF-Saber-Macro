@@ -146,6 +146,7 @@ namespace Presentation
                     AddAutoFilterButtons(tubeWorksheet);
 
                     CreateALL_PE_sheet(wires, package);
+                    CreateRC_Sheet(wires, package);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -377,6 +378,144 @@ namespace Presentation
             WriteDataToSheet(wireWorksheet, sortedWires, ALL_PE_Profile);
             
             
+            AddAutoFilterButtons(wireWorksheet);
+        }
+
+        private void CreateRC_Sheet(List<iConverted_Wire> wires, ExcelPackage excelPackage)
+        {
+            //Prepare RC profile
+            List<string> RC_Profile_List = new List<string>();
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Type", "Code_no" }; //TODO: add CC_t and CC_s
+            RC_Profile_List.AddRange(stringsToAdd);
+
+            Profile RC_Profile = new Profile("RC sheet", RC_Profile_List, Data_Interfaces.ProfileType.User);
+
+            int originalCount = wires.Count;
+            for (int i = 0; i < originalCount; i++)
+            {
+                Converted_Wire newWire = new Converted_Wire(
+                    wires[i].Wire,
+                    wires[i].Diameter,
+                    wires[i].Color,
+                    wires[i].Type,
+                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wires[i].Length,
+                    wires[i].Connector_2,
+                    wires[i].Port_2,
+                    wires[i].Term_2,
+                    wires[i].Seal_2,
+                    wires[i].Wire_connection,
+                    wires[i].Term_1,
+                    wires[i].Seal_1,
+                    wires[i].Connector_1,
+                    wires[i].Port_1,
+                    wires[i].Variant,
+                    wires[i].Bundle,
+                    wires[i].Loc_1,
+                    wires[i].Loc_2
+                    );
+
+                string tempConnector = wires[i].Connector_1;
+                string tempTerm = wires[i].Term_1;
+                string tempSeal = wires[i].Seal_1;
+                string tempPort = wires[i].Port_1;
+
+                newWire.Connector_1 = wires[i].Connector_2;
+                newWire.Term_1 = wires[i].Term_2;
+                newWire.Seal_1 = wires[i].Seal_2;
+                newWire.Port_1 = wires[i].Port_2;
+
+                newWire.Connector_2 = tempConnector;
+                newWire.Term_2 = tempTerm;
+                newWire.Seal_2 = tempSeal;
+                newWire.Port_2 = tempPort;
+
+                wires.Add(newWire);
+            }
+
+            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("RC");
+
+            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+                               .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
+                               .ToList();
+
+
+            // Write column headers for wires
+            WriteHeaders(wireWorksheet, RC_Profile);
+
+            // Write wire data
+            WriteDataToSheet(wireWorksheet, sortedWires, RC_Profile);
+
+
+            AddAutoFilterButtons(wireWorksheet);
+        }
+
+        private void CreateOC_Sheet(List<iConverted_Wire> wires, ExcelPackage excelPackage)
+        {
+            //Prepare RC profile
+            List<string> OC_Profile_List = new List<string>();
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1" }; //TODO: add length tabel, weight/kg length wire_connection, variant, bundle
+            OC_Profile_List.AddRange(stringsToAdd);
+
+            Profile OC_Profile = new Profile("OC sheet", OC_Profile_List, Data_Interfaces.ProfileType.User);
+
+            int originalCount = wires.Count;
+            for (int i = 0; i < originalCount; i++)
+            {
+                Converted_Wire newWire = new Converted_Wire(
+                    wires[i].Wire,
+                    wires[i].Diameter,
+                    wires[i].Color,
+                    wires[i].Type,
+                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wires[i].Length,
+                    wires[i].Connector_2,
+                    wires[i].Port_2,
+                    wires[i].Term_2,
+                    wires[i].Seal_2,
+                    wires[i].Wire_connection,
+                    wires[i].Term_1,
+                    wires[i].Seal_1,
+                    wires[i].Connector_1,
+                    wires[i].Port_1,
+                    wires[i].Variant,
+                    wires[i].Bundle,
+                    wires[i].Loc_1,
+                    wires[i].Loc_2
+                    );
+
+                string tempConnector = wires[i].Connector_1;
+                string tempTerm = wires[i].Term_1;
+                string tempSeal = wires[i].Seal_1;
+                string tempPort = wires[i].Port_1;
+
+                newWire.Connector_1 = wires[i].Connector_2;
+                newWire.Term_1 = wires[i].Term_2;
+                newWire.Seal_1 = wires[i].Seal_2;
+                newWire.Port_1 = wires[i].Port_2;
+
+                newWire.Connector_2 = tempConnector;
+                newWire.Term_2 = tempTerm;
+                newWire.Seal_2 = tempSeal;
+                newWire.Port_2 = tempPort;
+
+                wires.Add(newWire);
+            }
+
+            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("OC"); //TODO: add number? although what is the number based off
+
+            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+                               .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
+                               .ToList();
+
+
+            // Write column headers for wires
+            WriteHeaders(wireWorksheet, OC_Profile);
+
+            // Write wire data
+            WriteDataToSheet(wireWorksheet, sortedWires, OC_Profile);
+
+
             AddAutoFilterButtons(wireWorksheet);
         }
     }
