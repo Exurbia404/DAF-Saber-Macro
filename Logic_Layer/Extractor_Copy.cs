@@ -28,8 +28,6 @@ namespace Logic
         public Extractor_Copy(Logger logger)
         {
             _logger = logger;
-            
-            
         }
 
         public void ExtractBundleFromFilePath(string filepath)
@@ -42,7 +40,6 @@ namespace Logic
             //4 Get the bundles
             Bundles = GetBundlesFromSection(sections[2]);
 
-            
             dsi_Components = GetDSI_ComponentsFromSection(sections[5]);
 
             //2 Get the Wires

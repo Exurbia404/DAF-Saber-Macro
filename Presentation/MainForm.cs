@@ -269,19 +269,9 @@ namespace Presentation
                 extractedBundles = copyExtractor.Bundles;
                 extractedTubes = extractor.ExtractDSITubes(textFilePath);
 
-                //extractedWires = extractor.ExtractWiresFromFile(textFilePath);
-                //extractedComponents = extractor.ExtractComponentsFromFile(textFilePath);
-                //extractedBundles = extractor.ExtractBundlesFromFile(textFilePath);
-                //extractedTubes = extractor.ExtractDSITubes(textFilePath);
-
                 FileHandler fileHandler = new FileHandler(_logger);
 
                 convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
-                
-                
-
-                //List<Converted_Component> convertedComponents = convertor.ConvertComponents(extractedComponents, extractedBundles);
-                //List<Converted_Wire> convertedWires = convertor.ConvertWires(extractedWires, extractedBundles);
 
                 List<Converted_Component> convertedComponents = copyExtractor.Components;
                 List<Converted_Wire> convertedWires = copyExtractor.Wires;
