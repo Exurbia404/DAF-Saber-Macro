@@ -292,12 +292,6 @@ namespace Presentation
 
                 fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
 
-
-                string filePath = GetFolderPath(textFilePath);
-
-                fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
-
-
                 ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
 
                 // Set the newProfileForm's TopLevel property to false
