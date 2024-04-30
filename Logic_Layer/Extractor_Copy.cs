@@ -42,6 +42,7 @@ namespace Logic
             //4 Get the bundles
             Bundles = GetBundlesFromSection(sections[2]);
 
+            
             dsi_Components = GetDSI_ComponentsFromSection(sections[5]);
 
             //2 Get the Wires
@@ -59,8 +60,6 @@ namespace Logic
             {
                 if (component.ComponentTypeCode == "CONNECTOR")
                 {
-
-
                     // Add logic to extract and set Term_1, Seal_1, Term_2, Seal_2, Connector_2, Port_2 info from the component itself
                     Converted_Component wCSPP_Component = new Converted_Component
                     {
@@ -77,10 +76,10 @@ namespace Logic
                         // Set other properties here as needed
                     };
 
-                    if(component.BlockNumber != "")
+                    if(wCSPP_Component.Variant == "" || wCSPP_Component.Bundle == "")
                     {
-                        wCSPP_Component.Bundle = GetBundleForModularizedComponent(component.BlockNumber);
-                        GetVariantForModularizedComponent(wCSPP_Component.Bundle);
+                        wCSPP_Component.Bundle = GetModuleNumberForComponent(component.BlockNumber);
+                        wCSPP_Component.Variant = GetVariantForModularizedComponent(wCSPP_Component.Bundle);
                     }
 
                     convertedList.Add(wCSPP_Component);
@@ -90,7 +89,7 @@ namespace Logic
             return convertedList.OrderBy(component => component.Name).ToList(); ;
         }
 
-        private string GetBundleForModularizedComponent(string blockNumber)
+        private string GetModuleNumberForComponent(string blockNumber)
         {
             foreach (string[] line in sections[9])
             {
@@ -104,11 +103,11 @@ namespace Logic
 
         private string GetVariantForModularizedComponent(string bundleNumber)
         {
-            foreach (string[] line in sections[3])
+            foreach (string[] line in sections[2])
             {
                 if (line[0] == bundleNumber)
                 {
-                    return line[13];
+                    return line[16];
                 }
             }
             return "";
@@ -229,27 +228,27 @@ namespace Logic
                 // Create a new Component object and set its properties based on the fields
                 foundDSI_Components.Add(new DSI_Component
                 {
-                    NodeName = GetStringAtIndex(line, 0),
-                    CavityName = GetStringAtIndex(line, 1),
-                    WireName = GetStringAtIndex(line, 2),
-                    SequenceNumber = GetStringAtIndex(line, 3),
-                    ComponentTypeCode = GetStringAtIndex(line, 4),
-                    CircuitOption = GetStringAtIndex(line, 5),
-                    ServiceFunction = GetStringAtIndex(line, 6),
-                    Route = GetStringAtIndex(line, 7),
-                    PartNumber1 = GetStringAtIndex(line, 8),
-                    Quantity = GetStringAtIndex(line, 9),
-                    CrossSectionalArea = GetStringAtIndex(line, 10),
-                    PartNumber2 = GetStringAtIndex(line, 11),
-                    PartNumber3 = GetStringAtIndex(line, 12),
-                    SelectTerminal = GetStringAtIndex(line, 13),
-                    Seal = GetStringAtIndex(line, 14),
-                    Plugged = GetStringAtIndex(line, 15),
-                    BlockNumber = GetStringAtIndex(line, 16),
-                    TerminationMethod = GetStringAtIndex(line, 17),
-                    MaterialCode = GetStringAtIndex(line, 18),
+                    NodeName = line[0],
+                    CavityName = line[1],
+                    WireName = line[2],
+                    SequenceNumber = line[3],
+                    ComponentTypeCode = line[4],
+                    CircuitOption = line[5],
+                    ServiceFunction = line[6],
+                    Route = line[7],
+                    PartNumber1 = line[8],
+                    Quantity = line[9],
+                    CrossSectionalArea = line[10],
+                    PartNumber2 = line[11],
+                    PartNumber3 = line[12],
+                    SelectTerminal = line[13],
+                    Seal = line[14],
+                    Plugged = line[15],
+                    BlockNumber = line[21],
+                    TerminationMethod = line[17],
+                    MaterialCode = line[18],
                     ComponentTypeCode2 = GetLastValueBetweenColons1(line.ToString()),
-                }); ;
+                });
             }
 
             return foundDSI_Components;
@@ -332,7 +331,7 @@ namespace Logic
                     Connector_2 = line[12],
                     Port_2 = line[14],
                     Variant = "?",
-                    Bundle = "?",
+                    Bundle = "?", //TODO: bundle is never set
                     Loc_1 = "?",
                     Loc_2 = "?"
                 };
@@ -353,8 +352,6 @@ namespace Logic
                     newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2);
                     newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1);
                     newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2);
-
-
                 }
 
                 newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);
