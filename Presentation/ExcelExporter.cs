@@ -242,31 +242,43 @@ namespace Presentation
             return maxLength;
         }
 
-        private static void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects, Profile profile)
+        private void WriteDataToSheet<T>(ExcelWorksheet worksheet, List<T> objects, Profile profile)
         {
-            if (objects.Count == 0 || profile == null)
+            if (objects.Count == 0 || profile == null || profile.Parameters == null || profile.Parameters.Count == 0)
             {
-                // Handle the case where the list is empty or profile is null
+                // Handle the case where the list is empty or profile is null or parameters are not defined
                 return;
             }
 
-            // Get the properties to write based on the parameters in the profile
-            List<PropertyInfo> propertiesToWrite = new List<PropertyInfo>();
-            foreach (string parameter in profile.Parameters)
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            // Create a mapping between parameter names and column indices
+            Dictionary<string, int> columnMap = new Dictionary<string, int>();
+            for (int i = 0; i < profile.Parameters.Count; i++)
             {
-                PropertyInfo property = typeof(T).GetProperty(parameter);
-                if (property != null)
-                {
-                    propertiesToWrite.Add(property);
-                }
+                string parameter = profile.Parameters[i];
+                // Skip empty parameters
+                if (string.IsNullOrEmpty(parameter))
+                    continue;
+                columnMap[parameter] = i + 1; // Add 1 to account for Excel's 1-based indexing
             }
 
             for (int row = 0; row < objects.Count; row++)
             {
-                for (int col = 0; col < propertiesToWrite.Count; col++)
+                foreach (var kvp in columnMap)
                 {
-                    var propertyValue = propertiesToWrite[col].GetValue(objects[row]);
-                    worksheet.Cells[row + 2, col + 1].Value = propertyValue;
+                    string propertyName = kvp.Key;
+                    int columnIndex = kvp.Value;
+
+                    // Find the property with the matching name
+                    PropertyInfo property = properties.FirstOrDefault(p => p.Name == propertyName);
+                    if (property != null)
+                    {
+                        // Get the value of the property for the current object
+                        var propertyValue = property.GetValue(objects[row]);
+                        // Write the value to the corresponding cell in the worksheet
+                        worksheet.Cells[row + 2, columnIndex].Value = propertyValue;
+                    }
                 }
             }
         }
@@ -316,7 +328,7 @@ namespace Presentation
         {
             //Prepare ALL_PE profile
             List<string> ALL_PE_Strings = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire" ,"", "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
             ALL_PE_Strings.AddRange(stringsToAdd);
 
             Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
