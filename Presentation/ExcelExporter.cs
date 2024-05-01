@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Logic;
 using UI_Interfaces;
+using Microsoft.Graph.Drives.Item.Bundles;
 
 
 namespace Presentation
@@ -97,7 +98,7 @@ namespace Presentation
             }
         }
 
-        public void CreateExcelSheet(List<iConverted_Wire> wires, List<iConverted_Component> components, string fileName, List<Profile> profiles, List<DSI_Tube> tubes)
+        public void CreateExcelSheet(List<iConverted_Wire> wires, List<iConverted_Component> components, string fileName, List<Profile> profiles, List<DSI_Tube> tubes, List<Bundle> bundles, List<bool> selectedSheets)
         {
             try
             {
@@ -148,9 +149,7 @@ namespace Presentation
 
                     excelPackage = package;
 
-                    CreateALL_PE_sheet(wires);
-                    CreateRC_Sheet(wires);
-                    CreateOC_Sheet(wires);
+                    CreateExtraSheets(excelPackage, wires, bundles, selectedSheets);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -174,6 +173,11 @@ namespace Presentation
             {
                 _logger.Log(ex.Message);
             }
+        }
+
+        private void CreateExtraSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets)
+        {
+
         }
 
         private static void AddAutoFilterButtons(ExcelWorksheet worksheet)

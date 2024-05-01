@@ -37,6 +37,9 @@
             bundlesListBox = new ListBox();
             selectAllBundlesButton = new Button();
             selectNoneBundlesButton = new Button();
+            createPECheckBox = new CheckBox();
+            createRCCheckBox = new CheckBox();
+            createOCCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -125,11 +128,44 @@
             selectNoneBundlesButton.UseVisualStyleBackColor = true;
             selectNoneBundlesButton.Click += selectNoneBundlesButton_Click;
             // 
+            // createPECheckBox
+            // 
+            createPECheckBox.AutoSize = true;
+            createPECheckBox.Location = new Point(139, 185);
+            createPECheckBox.Name = "createPECheckBox";
+            createPECheckBox.Size = new Size(39, 19);
+            createPECheckBox.TabIndex = 9;
+            createPECheckBox.Text = "PE";
+            createPECheckBox.UseVisualStyleBackColor = true;
+            // 
+            // createRCCheckBox
+            // 
+            createRCCheckBox.AutoSize = true;
+            createRCCheckBox.Location = new Point(139, 210);
+            createRCCheckBox.Name = "createRCCheckBox";
+            createRCCheckBox.Size = new Size(41, 19);
+            createRCCheckBox.TabIndex = 10;
+            createRCCheckBox.Text = "RC";
+            createRCCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // createOCCheckBox
+            // 
+            createOCCheckBox.AutoSize = true;
+            createOCCheckBox.Location = new Point(139, 235);
+            createOCCheckBox.Name = "createOCCheckBox";
+            createOCCheckBox.Size = new Size(43, 19);
+            createOCCheckBox.TabIndex = 11;
+            createOCCheckBox.Text = "OC";
+            createOCCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(createOCCheckBox);
+            Controls.Add(createRCCheckBox);
+            Controls.Add(createPECheckBox);
             Controls.Add(selectNoneBundlesButton);
             Controls.Add(selectAllBundlesButton);
             Controls.Add(bundlesListBox);
@@ -157,5 +193,8 @@
         private ListBox bundlesListBox;
         private Button selectAllBundlesButton;
         private Button selectNoneBundlesButton;
+        private CheckBox createPECheckBox;
+        private CheckBox createRCCheckBox;
+        private CheckBox createOCCheckBox;
     }
 }

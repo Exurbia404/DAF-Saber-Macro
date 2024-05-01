@@ -77,12 +77,12 @@ namespace Presentation
             }
         }
 
-        private void ExportBundleToExcel(List<Profile> profiles, List<Bundle> selectedBundles)
+        private void ExportBundleToExcel(List<Profile> profiles, List<Bundle> selectedBundles, List<bool> selectedSheets)
         {
             List<iConverted_Wire> wiresToExport = converted_wires.Cast<iConverted_Wire>().ToList();
             List<iConverted_Component> componentsToExport = converted_components.Cast<iConverted_Component>().ToList();
 
-            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList, selectedBundles);
+            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList, selectedBundles, selectedSheets);
         }
 
         private void ExportProjectToExcel(List<Profile> profile)
@@ -104,12 +104,13 @@ namespace Presentation
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
 
             List<Bundle> selectedBundles = GetSelectedBundles();
+            List<bool> selectedSheets = GetSelectedSheets();
 
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
 
             // Call the method to export to Excel with the selected profiles
-            ExportBundleToExcel(selectedProfiles, selectedBundles);
+            ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
         }
 
         private List<Bundle> GetSelectedBundles()
@@ -122,6 +123,18 @@ namespace Presentation
             }
 
             return selectedBundles;
+        }
+
+        private List<bool> GetSelectedSheets()
+        {
+            List<bool> selectedSheets = new List<bool>();
+            
+            //Get the selected sheets
+            selectedSheets.Add(createRCCheckBox.Checked);
+            selectedSheets.Add(createOCCheckBox.Checked);
+            selectedSheets.Add(createRCCheckBox.Checked);
+
+            return selectedSheets;
         }
 
         private void exportProjectButton_Click(object sender, EventArgs e)
