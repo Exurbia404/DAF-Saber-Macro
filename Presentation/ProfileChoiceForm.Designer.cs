@@ -34,6 +34,12 @@
             componentProfilesComboBox = new ComboBox();
             exportToExcelButton = new Button();
             exportProjectButton = new Button();
+            bundlesListBox = new ListBox();
+            selectAllBundlesButton = new Button();
+            selectNoneBundlesButton = new Button();
+            createPECheckBox = new CheckBox();
+            createRCCheckBox = new CheckBox();
+            createOCCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -92,11 +98,77 @@
             exportProjectButton.UseVisualStyleBackColor = true;
             exportProjectButton.Click += exportProjectButton_Click;
             // 
+            // bundlesListBox
+            // 
+            bundlesListBox.FormattingEnabled = true;
+            bundlesListBox.ItemHeight = 15;
+            bundlesListBox.Location = new Point(13, 210);
+            bundlesListBox.Name = "bundlesListBox";
+            bundlesListBox.SelectionMode = SelectionMode.MultiSimple;
+            bundlesListBox.Size = new Size(120, 199);
+            bundlesListBox.TabIndex = 6;
+            // 
+            // selectAllBundlesButton
+            // 
+            selectAllBundlesButton.Location = new Point(12, 181);
+            selectAllBundlesButton.Name = "selectAllBundlesButton";
+            selectAllBundlesButton.Size = new Size(121, 23);
+            selectAllBundlesButton.TabIndex = 7;
+            selectAllBundlesButton.Text = "Select all";
+            selectAllBundlesButton.UseVisualStyleBackColor = true;
+            selectAllBundlesButton.Click += selectAllBundlesButton_Click;
+            // 
+            // selectNoneBundlesButton
+            // 
+            selectNoneBundlesButton.Location = new Point(12, 415);
+            selectNoneBundlesButton.Name = "selectNoneBundlesButton";
+            selectNoneBundlesButton.Size = new Size(121, 23);
+            selectNoneBundlesButton.TabIndex = 8;
+            selectNoneBundlesButton.Text = "Select none";
+            selectNoneBundlesButton.UseVisualStyleBackColor = true;
+            selectNoneBundlesButton.Click += selectNoneBundlesButton_Click;
+            // 
+            // createPECheckBox
+            // 
+            createPECheckBox.AutoSize = true;
+            createPECheckBox.Location = new Point(139, 185);
+            createPECheckBox.Name = "createPECheckBox";
+            createPECheckBox.Size = new Size(39, 19);
+            createPECheckBox.TabIndex = 9;
+            createPECheckBox.Text = "PE";
+            createPECheckBox.UseVisualStyleBackColor = true;
+            // 
+            // createRCCheckBox
+            // 
+            createRCCheckBox.AutoSize = true;
+            createRCCheckBox.Location = new Point(139, 210);
+            createRCCheckBox.Name = "createRCCheckBox";
+            createRCCheckBox.Size = new Size(41, 19);
+            createRCCheckBox.TabIndex = 10;
+            createRCCheckBox.Text = "RC";
+            createRCCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // createOCCheckBox
+            // 
+            createOCCheckBox.AutoSize = true;
+            createOCCheckBox.Location = new Point(139, 235);
+            createOCCheckBox.Name = "createOCCheckBox";
+            createOCCheckBox.Size = new Size(43, 19);
+            createOCCheckBox.TabIndex = 11;
+            createOCCheckBox.Text = "OC";
+            createOCCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(createOCCheckBox);
+            Controls.Add(createRCCheckBox);
+            Controls.Add(createPECheckBox);
+            Controls.Add(selectNoneBundlesButton);
+            Controls.Add(selectAllBundlesButton);
+            Controls.Add(bundlesListBox);
             Controls.Add(exportProjectButton);
             Controls.Add(exportToExcelButton);
             Controls.Add(componentProfilesComboBox);
@@ -118,5 +190,11 @@
         private ComboBox componentProfilesComboBox;
         private Button exportToExcelButton;
         private Button exportProjectButton;
+        private ListBox bundlesListBox;
+        private Button selectAllBundlesButton;
+        private Button selectNoneBundlesButton;
+        private CheckBox createPECheckBox;
+        private CheckBox createRCCheckBox;
+        private CheckBox createOCCheckBox;
     }
 }

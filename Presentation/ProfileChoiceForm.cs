@@ -32,6 +32,7 @@ namespace Presentation
         private List<Project_Wire> project_wires;
 
         private List<DSI_Tube> tubesList;
+        private List<Bundle> bundlesList;
 
         public ProfileChoiceForm(Logger logger, string filename)
         {
@@ -44,11 +45,27 @@ namespace Presentation
             SetProfilesToComboBoxes();
         }
 
-        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes)
+        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes, List<Bundle> bundles)
         {
             converted_components = components;
             converted_wires = wires;
             tubesList = tubes;
+            bundlesList = bundles;
+            SetBundleListBoxData(bundlesList);
+        }
+
+        private void SetBundleListBoxData(List<Bundle> bundles)
+        {
+            foreach (Bundle bundle in bundles)
+            {
+                bundlesListBox.Items.Add(bundle.VariantNumber);
+            }
+
+            //Auto set if there is only 1 bundle variant present i.e. non modularized
+            if (bundlesListBox.Items.Count == 1)
+            {
+                bundlesListBox.SetSelected(0, true);
+            }
         }
 
         public void SetProjectData(List<Project_Wire> wires, List<Project_Component> components)
@@ -66,12 +83,12 @@ namespace Presentation
             }
         }
 
-        private void ExportBundleToExcel(List<Profile> profiles)
+        private void ExportBundleToExcel(List<Profile> profiles, List<Bundle> selectedBundles, List<bool> selectedSheets)
         {
             List<iConverted_Wire> wiresToExport = converted_wires.Cast<iConverted_Wire>().ToList();
             List<iConverted_Component> componentsToExport = converted_components.Cast<iConverted_Component>().ToList();
 
-            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList);
+            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList, selectedBundles, selectedSheets);
         }
 
         private void ExportProjectToExcel(List<Profile> profile)
@@ -92,11 +109,56 @@ namespace Presentation
             Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
 
+            List<Bundle> selectedBundles = GetSelectedBundles();
+            List<bool> selectedSheets = GetSelectedSheets();
+
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
 
             // Call the method to export to Excel with the selected profiles
-            ExportBundleToExcel(selectedProfiles);
+            ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
+        }
+
+        private List<Bundle> GetSelectedBundles()
+        {
+            List<Bundle> selectedBundles = new List<Bundle>();
+
+            foreach (int selectedIndex in bundlesListBox.SelectedIndices)
+            {
+                // Get the VariantNumber from the ListBox
+                string variantNumber = bundlesListBox.Items[selectedIndex].ToString();
+
+                // Find the corresponding Bundle object with the matching VariantNumber
+                Bundle bundle = FindBundleByVariantNumber(variantNumber);
+
+                // Add the found Bundle to the list
+                if (bundle != null)
+                {
+                    selectedBundles.Add(bundle);
+                }
+            }
+
+            return selectedBundles;
+        }
+
+        // Helper method to find a Bundle by its VariantNumber
+        private Bundle FindBundleByVariantNumber(string variantNumber)
+        {
+            // Assuming bundlesList is a List<Bundle> containing all Bundle objects
+            return bundlesList.FirstOrDefault(bundle => bundle.VariantNumber == variantNumber);
+        }
+
+        private List<bool> GetSelectedSheets()
+        {
+            List<bool> selectedSheets = new List<bool>
+            {
+                //Get the selected sheets
+                createPECheckBox.Checked,
+                createRCCheckBox.Checked,
+                createOCCheckBox.Checked
+            };
+
+            return selectedSheets;
         }
 
         private void exportProjectButton_Click(object sender, EventArgs e)
@@ -114,6 +176,19 @@ namespace Presentation
 
             // Call the method to export to Excel with the selected profiles
             ExportProjectToExcel(selectedProfiles);
+        }
+
+        private void selectAllBundlesButton_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < bundlesListBox.Items.Count; i++)
+            {
+                bundlesListBox.SetSelected(i, true);
+            }
+        }
+
+        private void selectNoneBundlesButton_Click(object sender, EventArgs e)
+        {
+            bundlesListBox.ClearSelected();
         }
     }
 }
