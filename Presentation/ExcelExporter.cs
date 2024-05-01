@@ -19,6 +19,7 @@ namespace Presentation
             HighlyConfidential
         }
         private string directory;
+        private ExcelPackage excelPackage;
         public ExcelExporter(Logger logger)
         {
             _logger = logger;
@@ -145,9 +146,11 @@ namespace Presentation
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
 
-                    CreateALL_PE_sheet(wires, package);
-                    CreateRC_Sheet(wires, package);
-                    CreateOC_Sheet(wires, package);
+                    excelPackage = package;
+
+                    CreateALL_PE_sheet(wires);
+                    CreateRC_Sheet(wires);
+                    CreateOC_Sheet(wires);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -325,7 +328,7 @@ namespace Presentation
             return null;
         }
 
-        public void CreateALL_PE_sheet(List<iConverted_Wire> wires, ExcelPackage excelPackege)
+        public void CreateALL_PE_sheet(List<iConverted_Wire> wires)
         {
             //Prepare ALL_PE profile
             List<string> ALL_PE_Strings = new List<string>();
@@ -377,7 +380,7 @@ namespace Presentation
                 wires.Add(newWire);
             }
 
-            var wireWorksheet = excelPackege.Workbook.Worksheets.Add("ALL_PE");
+            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("ALL_PE");
 
             var sortedWires = wires.OrderBy(wire => wire.Connector_1)
                                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
@@ -394,7 +397,7 @@ namespace Presentation
             AddAutoFilterButtons(wireWorksheet);
         }
 
-        private void CreateRC_Sheet(List<iConverted_Wire> wires, ExcelPackage excelPackage)
+        public void CreateRC_Sheet(List<iConverted_Wire> wires)
         {
             //Prepare RC profile
             List<string> RC_Profile_List = new List<string>();
@@ -463,7 +466,7 @@ namespace Presentation
             AddAutoFilterButtons(wireWorksheet);
         }
 
-        private void CreateOC_Sheet(List<iConverted_Wire> wires, ExcelPackage excelPackage)
+        public void CreateOC_Sheet(List<iConverted_Wire> wires)
         {
             //Prepare RC profile
             List<string> OC_Profile_List = new List<string>();
@@ -528,7 +531,6 @@ namespace Presentation
 
             // Write wire data
             WriteDataToSheet(wireWorksheet, sortedWires, OC_Profile);
-
 
             AddAutoFilterButtons(wireWorksheet);
         }
