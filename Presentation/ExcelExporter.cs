@@ -330,6 +330,7 @@ namespace Presentation
 
         public void CreateALL_PE_sheet(List<iConverted_Wire> wires)
         {
+            List<iConverted_Wire> wiresToUse = wires;
             //Prepare ALL_PE profile
             List<string> ALL_PE_Strings = new List<string>();
             string[] stringsToAdd = { "Connector_1", "Port_1", "Wire" , "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
@@ -337,52 +338,52 @@ namespace Presentation
 
             Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
 
-            int originalCount = wires.Count;
+            int originalCount = wiresToUse.Count;
             for (int i = 0; i < originalCount; i++)
             {
                 Converted_Wire newWire = new Converted_Wire(
-                    wires[i].Wire,
-                    wires[i].Diameter,
-                    wires[i].Color,
-                    wires[i].Type,
-                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wires[i].Length,
-                    wires[i].Connector_2,
-                    wires[i].Port_2,
-                    wires[i].Term_2,
-                    wires[i].Seal_2,
-                    wires[i].Wire_connection,
-                    wires[i].Term_1,
-                    wires[i].Seal_1,
-                    wires[i].Connector_1,
-                    wires[i].Port_1,
-                    wires[i].Variant,
-                    wires[i].Bundle,
-                    wires[i].Loc_1,
-                    wires[i].Loc_2
+                    wiresToUse[i].Wire,
+                    wiresToUse[i].Diameter,
+                    wiresToUse[i].Color,
+                    wiresToUse[i].Type,
+                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wiresToUse[i].Length,
+                    wiresToUse[i].Connector_2,
+                    wiresToUse[i].Port_2,
+                    wiresToUse[i].Term_2,
+                    wiresToUse[i].Seal_2,
+                    wiresToUse[i].Wire_connection,
+                    wiresToUse[i].Term_1,
+                    wiresToUse[i].Seal_1,
+                    wiresToUse[i].Connector_1,
+                    wiresToUse[i].Port_1,
+                    wiresToUse[i].Variant,
+                    wiresToUse[i].Bundle,
+                    wiresToUse[i].Loc_1,
+                    wiresToUse[i].Loc_2
                     );
 
-                string tempConnector = wires[i].Connector_1;
-                string tempTerm = wires[i].Term_1;
-                string tempSeal = wires[i].Seal_1;
-                string tempPort = wires[i].Port_1;
+                string tempConnector = wiresToUse[i].Connector_1;
+                string tempTerm = wiresToUse[i].Term_1;
+                string tempSeal = wiresToUse[i].Seal_1;
+                string tempPort = wiresToUse[i].Port_1;
 
-                newWire.Connector_1 = wires[i].Connector_2;
-                newWire.Term_1 = wires[i].Term_2;
-                newWire.Seal_1 = wires[i].Seal_2;
-                newWire.Port_1 = wires[i].Port_2;
+                newWire.Connector_1 = wiresToUse[i].Connector_2;
+                newWire.Term_1 = wiresToUse[i].Term_2;
+                newWire.Seal_1 = wiresToUse[i].Seal_2;
+                newWire.Port_1 = wiresToUse[i].Port_2;
 
                 newWire.Connector_2 = tempConnector;
                 newWire.Term_2 = tempTerm;
                 newWire.Seal_2 = tempSeal;
                 newWire.Port_2 = tempPort;
 
-                wires.Add(newWire);
+                wiresToUse.Add(newWire);
             }
 
             var wireWorksheet = excelPackage.Workbook.Worksheets.Add("ALL_PE");
 
-            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+            var sortedWires = wiresToUse.OrderBy(wire => wire.Connector_1)
                                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                                .ToList();
 
@@ -399,59 +400,61 @@ namespace Presentation
 
         public void CreateRC_Sheet(List<iConverted_Wire> wires)
         {
+            List<iConverted_Wire> wiresToUse = wires;
+
             //Prepare RC profile
             List<string> RC_Profile_List = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Type", "Code_no" }; //TODO: add CC_t and CC_s
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Cc_T", "Cc_S", "", "Type", "Code_no", "", "", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
             RC_Profile_List.AddRange(stringsToAdd);
 
             Profile RC_Profile = new Profile("RC sheet", RC_Profile_List, Data_Interfaces.ProfileType.User);
 
-            int originalCount = wires.Count;
+            int originalCount = wiresToUse.Count;
             for (int i = 0; i < originalCount; i++)
             {
                 Converted_Wire newWire = new Converted_Wire(
-                    wires[i].Wire,
-                    wires[i].Diameter,
-                    wires[i].Color,
-                    wires[i].Type,
-                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wires[i].Length,
-                    wires[i].Connector_2,
-                    wires[i].Port_2,
-                    wires[i].Term_2,
-                    wires[i].Seal_2,
-                    wires[i].Wire_connection,
-                    wires[i].Term_1,
-                    wires[i].Seal_1,
-                    wires[i].Connector_1,
-                    wires[i].Port_1,
-                    wires[i].Variant,
-                    wires[i].Bundle,
-                    wires[i].Loc_1,
-                    wires[i].Loc_2
+                    wiresToUse[i].Wire,
+                    wiresToUse[i].Diameter,
+                    wiresToUse[i].Color,
+                    wiresToUse[i].Type,
+                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wiresToUse[i].Length,
+                    wiresToUse[i].Connector_2,
+                    wiresToUse[i].Port_2,
+                    wiresToUse[i].Term_2,
+                    wiresToUse[i].Seal_2,
+                    wiresToUse[i].Wire_connection,
+                    wiresToUse[i].Term_1,
+                    wiresToUse[i].Seal_1,
+                    wiresToUse[i].Connector_1,
+                    wiresToUse[i].Port_1,
+                    wiresToUse[i].Variant,
+                    wiresToUse[i].Bundle,
+                    wiresToUse[i].Loc_1,
+                    wiresToUse[i].Loc_2
                     );
 
-                string tempConnector = wires[i].Connector_1;
-                string tempTerm = wires[i].Term_1;
-                string tempSeal = wires[i].Seal_1;
-                string tempPort = wires[i].Port_1;
+                string tempConnector = wiresToUse[i].Connector_1;
+                string tempTerm = wiresToUse[i].Term_1;
+                string tempSeal = wiresToUse[i].Seal_1;
+                string tempPort = wiresToUse[i].Port_1;
 
-                newWire.Connector_1 = wires[i].Connector_2;
-                newWire.Term_1 = wires[i].Term_2;
-                newWire.Seal_1 = wires[i].Seal_2;
-                newWire.Port_1 = wires[i].Port_2;
+                newWire.Connector_1 = wiresToUse[i].Connector_2;
+                newWire.Term_1 = wiresToUse[i].Term_2;
+                newWire.Seal_1 = wiresToUse[i].Seal_2;
+                newWire.Port_1 = wiresToUse[i].Port_2;
 
                 newWire.Connector_2 = tempConnector;
                 newWire.Term_2 = tempTerm;
                 newWire.Seal_2 = tempSeal;
                 newWire.Port_2 = tempPort;
 
-                wires.Add(newWire);
+                wiresToUse.Add(newWire);
             }
 
             var wireWorksheet = excelPackage.Workbook.Worksheets.Add("RC");
 
-            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+            var sortedWires = wiresToUse.OrderBy(wire => wire.Connector_1)
                                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                                .ToList();
 
@@ -468,6 +471,7 @@ namespace Presentation
 
         public void CreateOC_Sheet(List<iConverted_Wire> wires)
         {
+            List<iConverted_Wire> wiresToUse = wires;
             //Prepare RC profile
             List<string> OC_Profile_List = new List<string>();
             string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
@@ -476,52 +480,52 @@ namespace Presentation
 
             Profile OC_Profile = new Profile("OC sheet", OC_Profile_List, Data_Interfaces.ProfileType.User);
 
-            int originalCount = wires.Count;
+            int originalCount = wiresToUse.Count;
             for (int i = 0; i < originalCount; i++)
             {
                 Converted_Wire newWire = new Converted_Wire(
-                    wires[i].Wire,
-                    wires[i].Diameter,
-                    wires[i].Color,
-                    wires[i].Type,
-                    wires[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wires[i].Length,
-                    wires[i].Connector_2,
-                    wires[i].Port_2,
-                    wires[i].Term_2,
-                    wires[i].Seal_2,
-                    wires[i].Wire_connection,
-                    wires[i].Term_1,
-                    wires[i].Seal_1,
-                    wires[i].Connector_1,
-                    wires[i].Port_1,
-                    wires[i].Variant,
-                    wires[i].Bundle,
-                    wires[i].Loc_1,
-                    wires[i].Loc_2
+                    wiresToUse[i].Wire,
+                    wiresToUse[i].Diameter,
+                    wiresToUse[i].Color,
+                    wiresToUse[i].Type,
+                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wiresToUse[i].Length,
+                    wiresToUse[i].Connector_2,
+                    wiresToUse[i].Port_2,
+                    wiresToUse[i].Term_2,
+                    wiresToUse[i].Seal_2,
+                    wiresToUse[i].Wire_connection,
+                    wiresToUse[i].Term_1,
+                    wiresToUse[i].Seal_1,
+                    wiresToUse[i].Connector_1,
+                    wiresToUse[i].Port_1,
+                    wiresToUse[i].Variant,
+                    wiresToUse[i].Bundle,
+                    wiresToUse[i].Loc_1,
+                    wiresToUse[i].Loc_2
                     );
 
-                string tempConnector = wires[i].Connector_1;
-                string tempTerm = wires[i].Term_1;
-                string tempSeal = wires[i].Seal_1;
-                string tempPort = wires[i].Port_1;
+                string tempConnector = wiresToUse[i].Connector_1;
+                string tempTerm = wiresToUse[i].Term_1;
+                string tempSeal = wiresToUse[i].Seal_1;
+                string tempPort = wiresToUse[i].Port_1;
 
-                newWire.Connector_1 = wires[i].Connector_2;
-                newWire.Term_1 = wires[i].Term_2;
-                newWire.Seal_1 = wires[i].Seal_2;
-                newWire.Port_1 = wires[i].Port_2;
+                newWire.Connector_1 = wiresToUse[i].Connector_2;
+                newWire.Term_1 = wiresToUse[i].Term_2;
+                newWire.Seal_1 = wiresToUse[i].Seal_2;
+                newWire.Port_1 = wiresToUse[i].Port_2;
 
                 newWire.Connector_2 = tempConnector;
                 newWire.Term_2 = tempTerm;
                 newWire.Seal_2 = tempSeal;
                 newWire.Port_2 = tempPort;
 
-                wires.Add(newWire);
+                wiresToUse.Add(newWire);
             }
 
             var wireWorksheet = excelPackage.Workbook.Worksheets.Add("OC"); //TODO: add number? although what is the number based off
 
-            var sortedWires = wires.OrderBy(wire => wire.Connector_1)
+            var sortedWires = wiresToUse.OrderBy(wire => wire.Connector_1)
                                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                                .ToList();
 
