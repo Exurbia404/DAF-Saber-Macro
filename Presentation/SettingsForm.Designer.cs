@@ -35,7 +35,7 @@
             // 
             // goToProfilesButton
             // 
-            goToProfilesButton.Location = new Point(16, 41);
+            goToProfilesButton.Location = new Point(12, 12);
             goToProfilesButton.Name = "goToProfilesButton";
             goToProfilesButton.Size = new Size(75, 23);
             goToProfilesButton.TabIndex = 0;
@@ -45,7 +45,7 @@
             // 
             // goToRefsetsButton
             // 
-            goToRefsetsButton.Location = new Point(16, 70);
+            goToRefsetsButton.Location = new Point(93, 12);
             goToRefsetsButton.Name = "goToRefsetsButton";
             goToRefsetsButton.Size = new Size(75, 23);
             goToRefsetsButton.TabIndex = 1;
@@ -55,11 +55,11 @@
             // 
             // clearTempDataButton
             // 
-            clearTempDataButton.Location = new Point(16, 12);
+            clearTempDataButton.Location = new Point(12, 41);
             clearTempDataButton.Name = "clearTempDataButton";
-            clearTempDataButton.Size = new Size(104, 23);
+            clearTempDataButton.Size = new Size(96, 23);
             clearTempDataButton.TabIndex = 2;
-            clearTempDataButton.Text = "Clear TempData";
+            clearTempDataButton.Text = "Clear cache";
             clearTempDataButton.UseVisualStyleBackColor = true;
             clearTempDataButton.Click += clearTempDataButton_Click;
             // 

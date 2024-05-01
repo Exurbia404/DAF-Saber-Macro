@@ -72,16 +72,22 @@ namespace Presentation
 
         private void clearTempDataButton_Click(object sender, EventArgs e)
         {
+            _logger.Log("Attempting to clear cache");
             // Get the path to the TempData directory
-            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+            string TempData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+            string LogsData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "Logs");
 
             // Check if the directory exists
-            if (Directory.Exists(directoryPath))
+            if (Directory.Exists(TempData))
             {
                 try
                 {
-                    // Get all files in the directory
-                    string[] files = Directory.GetFiles(directoryPath);
+                    // Get all files each directory
+                    string[] tempDataFiles = Directory.GetFiles(TempData);
+                    string[] tempLogsFiles = Directory.GetFiles(LogsData);
+
+                    string[] files = Directory.GetFiles(TempData).Concat(Directory.GetFiles(LogsData)).ToArray();
+                    _logger.Log("Number of files found: " + files.Count().ToString());
 
                     // Delete each file
                     foreach (string file in files)
@@ -90,6 +96,7 @@ namespace Presentation
                     }
 
                     MessageBox.Show("Temp data cleared successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _logger.Log("Cache cleared succesfully");
                 }
                 catch (Exception ex)
                 {
