@@ -35,14 +35,15 @@
             deleteProfileButton = new Button();
             addHeaderButton = new Button();
             removeHeaderButton = new Button();
+            button1 = new Button();
             SuspendLayout();
             // 
             // saveProfileButton
             // 
-            saveProfileButton.Location = new Point(112, 45);
+            saveProfileButton.Location = new Point(79, 45);
             saveProfileButton.Margin = new Padding(4, 3, 4, 3);
             saveProfileButton.Name = "saveProfileButton";
-            saveProfileButton.Size = new Size(88, 27);
+            saveProfileButton.Size = new Size(42, 27);
             saveProfileButton.TabIndex = 50;
             saveProfileButton.Text = "Save";
             saveProfileButton.UseVisualStyleBackColor = true;
@@ -52,7 +53,7 @@
             // 
             profilesListBox.FormattingEnabled = true;
             profilesListBox.ItemHeight = 15;
-            profilesListBox.Location = new Point(18, 100);
+            profilesListBox.Location = new Point(18, 108);
             profilesListBox.Margin = new Padding(4, 3, 4, 3);
             profilesListBox.Name = "profilesListBox";
             profilesListBox.Size = new Size(180, 274);
@@ -61,7 +62,7 @@
             // 
             // profileNameTextBox
             // 
-            profileNameTextBox.Location = new Point(18, 70);
+            profileNameTextBox.Location = new Point(18, 78);
             profileNameTextBox.Margin = new Padding(4, 3, 4, 3);
             profileNameTextBox.Name = "profileNameTextBox";
             profileNameTextBox.Size = new Size(180, 23);
@@ -82,7 +83,7 @@
             deleteProfileButton.Location = new Point(18, 45);
             deleteProfileButton.Margin = new Padding(4, 3, 4, 3);
             deleteProfileButton.Name = "deleteProfileButton";
-            deleteProfileButton.Size = new Size(88, 27);
+            deleteProfileButton.Size = new Size(53, 27);
             deleteProfileButton.TabIndex = 54;
             deleteProfileButton.Text = "Delete";
             deleteProfileButton.UseVisualStyleBackColor = true;
@@ -90,10 +91,10 @@
             // 
             // addHeaderButton
             // 
-            addHeaderButton.Location = new Point(531, 52);
+            addHeaderButton.Location = new Point(237, 14);
             addHeaderButton.Margin = new Padding(4, 3, 4, 3);
             addHeaderButton.Name = "addHeaderButton";
-            addHeaderButton.Size = new Size(30, 30);
+            addHeaderButton.Size = new Size(23, 23);
             addHeaderButton.TabIndex = 55;
             addHeaderButton.Text = "+";
             addHeaderButton.UseVisualStyleBackColor = true;
@@ -101,20 +102,32 @@
             // 
             // removeHeaderButton
             // 
-            removeHeaderButton.Location = new Point(484, 52);
+            removeHeaderButton.Enabled = false;
+            removeHeaderButton.Location = new Point(206, 14);
             removeHeaderButton.Margin = new Padding(4, 3, 4, 3);
             removeHeaderButton.Name = "removeHeaderButton";
-            removeHeaderButton.Size = new Size(30, 30);
+            removeHeaderButton.Size = new Size(23, 23);
             removeHeaderButton.TabIndex = 56;
             removeHeaderButton.Text = "-";
             removeHeaderButton.UseVisualStyleBackColor = true;
             removeHeaderButton.Click += removeHeaderButton_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(123, 45);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 27);
+            button1.TabIndex = 57;
+            button1.Text = "New";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // ProfileCreator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1018, 493);
+            Controls.Add(button1);
             Controls.Add(removeHeaderButton);
             Controls.Add(addHeaderButton);
             Controls.Add(deleteProfileButton);
@@ -138,5 +151,6 @@
         private System.Windows.Forms.Button deleteProfileButton;
         private System.Windows.Forms.Button addHeaderButton;
         private System.Windows.Forms.Button removeHeaderButton;
+        private Button button1;
     }
 }

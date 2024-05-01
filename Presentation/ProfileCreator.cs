@@ -21,6 +21,8 @@ namespace Presentation
         //Used by buttons, labels and comboBoxes
         private int initalXOffset = 210;
         private ProfileController profileController;
+        private Profile loadedProfile;
+
         public ProfileCreator(Logger logger)
         {
             InitializeComponent();
@@ -38,14 +40,14 @@ namespace Presentation
 
         private void AddUserProfilesToListBox()
         {
-            foreach(Profile profile in profileController.userProfiles)
+            foreach (Profile profile in profileController.userProfiles)
             {
                 profilesListBox.Items.Add(profile.Name);
             }
         }
 
         private void SetDefaultComboBox()
-        { 
+        {
             foreach (Profile profile in profileController.defaultProfiles)
             {
                 profileTypeComboBox.Items.Add(profile.Name);
@@ -54,52 +56,127 @@ namespace Presentation
 
         private void GenerateComboBoxes(int headerCount)
         {
-            RemoveOldHeadersAndButtons(headerCount);
-
-            int x = initalXOffset; // Initial x-coordinate
-            int y = 60;  // Initial y-coordinate
-            
-            int initialOffset = horizontalOffset * comboBoxes.Count;
-
-            // Iterate through each header
-            for (int i = comboBoxes.Count(); i < headerCount; i++)
+            int oldCount = comboBoxes.Count;
+            // If there are less comboBoxes required
+            while (headerCount < oldCount)
             {
+                int index = oldCount - 1;
+                comboBoxes[index].Dispose();
+                comboBoxes.RemoveAt(index);
+                oldCount--;
+            }
 
-                // Create a new ComboBox
-                ComboBox comboBox = new ComboBox();
+            int verticalOffset = 80;
 
-                // Set ComboBox location
-                comboBox.Location = new Point((initalXOffset + (horizontalOffset * i)), y);
-                comboBox.Size = new Size(horizontalOffset, 25);
+            if (headerCount > oldCount)
+            {
+                int rows = 0; // Counter for rows
+                int columns = 8; // Number of ComboBoxes in each row
 
-                // Set ComboBox DropDownStyle to DropDownList
-                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                for (int i = comboBoxes.Count; i < headerCount; i++)
+                {
+                    // Calculate row and column indices
+                    int row = i / columns;
+                    int column = i % columns;
 
-                // Add ComboBox to the list
-                comboBoxes.Add(comboBox);
+                    // Calculate x and y coordinates based on row and column
+                    int x = initalXOffset + (horizontalOffset * column);
+                    int y = 60 + (row * verticalOffset);
 
-                // Increment x-coordinate for the next ComboBox
-                x += horizontalOffset; // horizontalOffset is assumed to be set elsewhere
+                    // Check if the ComboBox would be placed outside the form
+                    if (x + horizontalOffset > this.ClientSize.Width)
+                    {
+                        // Reset x-coordinate to initalXOffset
+                        x = initalXOffset;
 
-                // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
-                this.Controls.Add(comboBox);
-                comboBox.Show();
+                        // Increment row counter
+                        rows++;
+
+                        // Adjust y-coordinate based on the new row
+                        y = 60 + (rows * verticalOffset);
+                    }
+
+                    // Create a new ComboBox
+                    ComboBox comboBox = new ComboBox();
+
+                    // Set ComboBox location
+                    comboBox.Location = new Point(x, y);
+
+                    // Set ComboBox size
+                    comboBox.Size = new Size(horizontalOffset, 25);
+
+                    // Set ComboBox DropDownStyle to DropDownList
+                    comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                    // Add ComboBox to the list if headerCount < comboBox.Count
+                    comboBoxes.Add(comboBox);
+
+                    // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
+                    this.Controls.Add(comboBox);
+                    comboBox.Show();
+                }
             }
 
             GenerateLabels(headerCount);
             AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
-            MoveHeaderButtons(headerCount);
+            LoadInProfile(loadedProfile);
         }
 
+        private void LoadInProfile(Profile profile)
+        {
+            if (profile != null)
+            {
+                for (int i = 0; i < profile.Parameters.Count; i++)
+                {
+                    comboBoxes[i].SelectedItem = profile.Parameters[i];
+                }
+            }
+
+        }
 
         private void GenerateLabels(int headerCount)
         {
             int labelX = initalXOffset; // Initial x-coordinate
             int labelY = 40; // Initial y-coordinate for Labels
+            int verticalOffset = 80;
+            int oldCount = comboBox_Labels.Count;
+
+            // If there are less labels required
+            while (headerCount < oldCount)
+            {
+                int index = oldCount - 1;
+                comboBox_Labels[index].Dispose();
+                comboBox_Labels.RemoveAt(index);
+                oldCount--;
+            }
+
+            int rows = 0; // Counter for rows
+            int columns = 8; // Number of labels in each row
 
             // Iterate through each header
-            for (int i = 0; i < headerCount; i++)
+            for (int i = comboBox_Labels.Count; i < headerCount; i++)
             {
+                // Calculate row and column indices
+                int row = i / columns;
+                int column = i % columns;
+
+                // Calculate x and y coordinates based on row and column
+                int x = initalXOffset + (horizontalOffset * column);
+                int y = labelY + (row * verticalOffset);
+
+                // Check if the label would be placed outside the form
+                if (x + horizontalOffset > this.ClientSize.Width)
+                {
+                    // Reset x-coordinate to initalXOffset
+                    x = initalXOffset;
+
+                    // Increment row counter
+                    rows++;
+
+                    // Adjust y-coordinate based on the new row
+                    y = labelY + (rows * verticalOffset);
+                }
+
                 // Create a new Label
                 Label label = new Label();
 
@@ -108,32 +185,18 @@ namespace Presentation
                 label.Size = new Size(25, 25);
 
                 // Set Label location
-                label.Location = new Point(labelX, labelY);
+                label.Location = new Point(x, y);
 
                 // Add Label to the appropriate container in your UI (e.g., a panel or form)
                 comboBox_Labels.Add(label);
                 this.Controls.Add(label);
                 label.Show();
 
-                labelX += horizontalOffset;
+                // Update labelX for the next label
+                labelX = x + horizontalOffset;
             }
         }
 
-        private void MoveHeaderButtons(int headerCount)
-        {
-
-            int x = initalXOffset + ((headerCount * horizontalOffset) + 10); // Initial x-coordinate for header buttons (added 10 for extra offset)
-            int y = 45; // y-coordinate for header buttons
-
-            // Set the location for the Add Header Button
-            removeHeaderButton.Location = new Point(x, y);
-
-            // Increment x-coordinate for the Delete Header Button
-            x += removeHeaderButton.Width + 10; // Assuming a gap of 10 pixels between buttons
-
-            // Set the location for the Delete Header Button
-            addHeaderButton.Location = new Point(x, y);
-        }
 
 
         private void RemoveOldHeadersAndButtons(int headerCount)
@@ -181,6 +244,14 @@ namespace Presentation
                 {
                     count++;
                 }
+                if (comboBox.SelectedItem == null)
+                {
+                    int currentIndex = comboBoxes.IndexOf(comboBox);
+                    if (comboBoxes[currentIndex + 1] != null)
+                    {
+                        count++;
+                    }
+                }
             }
             return count;
         }
@@ -189,10 +260,8 @@ namespace Presentation
         {
             //Update headerCounter as other methods also rely on this
             headerCounter = AmountOfSelectedComboBoxes();
-            
-            RemoveOldHeadersAndButtons(headerCounter);
-            MoveHeaderButtons(headerCounter);
 
+            RemoveOldHeadersAndButtons(headerCounter);
 
             List<string> retrievedValues = new List<string>();
 
@@ -203,10 +272,9 @@ namespace Presentation
                 {
                     retrievedValues.Add(comboBox.SelectedItem.ToString());
                 }
-                else
+                if(comboBox.SelectedItem == null)
                 {
-                    // If nothing is selected, return null
-                    return null;
+                    retrievedValues.Add("");
                 }
             }
 
@@ -218,12 +286,18 @@ namespace Presentation
         private void removeHeaderButton_Click(object sender, EventArgs e)
         {
             //headerCounter cannot go into the negative
-            if(headerCounter > 0)
+            if (headerCounter > 0)
             {
                 headerCounter--;
+                if (loadedProfile != null)
+                {
+                    //loadedProfile.Parameters.RemoveAt(headerCounter);
+                    comboBoxes.RemoveAt(comboBoxes.Count - 1);
+                }
                 GenerateComboBoxes(headerCounter);
+
             }
-            
+
         }
 
         private void addHeaderButton_Click(object sender, EventArgs e)
@@ -338,7 +412,7 @@ namespace Presentation
 
         private void profilesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(profilesListBox.SelectedItem != null)
+            if (profilesListBox.SelectedItem != null)
             {
                 LoadProfileToComboBoxes(profilesListBox.SelectedItem.ToString());
             }
@@ -350,7 +424,9 @@ namespace Presentation
             profileNameTextBox.Text = loadedProfileName;
 
             // Check if the loaded profile exists in defaultProfiles
-            Profile loadedProfile = profileController.allProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+            loadedProfile = profileController.allProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+
+            headerCounter = loadedProfile.Parameters.Count;
 
             if (loadedProfile != null)
             {
@@ -374,6 +450,13 @@ namespace Presentation
                     MessageBox.Show("The number of values in the loaded profile does not match the number of ComboBoxes.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            loadedProfile = new Profile("empty", new List<string>(), ProfileType.User);
+            headerCounter = 0;
+            GenerateComboBoxes(headerCounter);
         }
     }
 }
