@@ -77,12 +77,12 @@ namespace Presentation
             }
         }
 
-        private void ExportBundleToExcel(List<Profile> profiles)
+        private void ExportBundleToExcel(List<Profile> profiles, List<Bundle> selectedBundles)
         {
             List<iConverted_Wire> wiresToExport = converted_wires.Cast<iConverted_Wire>().ToList();
             List<iConverted_Component> componentsToExport = converted_components.Cast<iConverted_Component>().ToList();
 
-            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList);
+            exporter.CreateExcelSheet(wiresToExport, componentsToExport, fileName, profiles, tubesList, selectedBundles);
         }
 
         private void ExportProjectToExcel(List<Profile> profile)
@@ -103,11 +103,25 @@ namespace Presentation
             Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
 
+            List<Bundle> selectedBundles = GetSelectedBundles();
+
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
 
             // Call the method to export to Excel with the selected profiles
-            ExportBundleToExcel(selectedProfiles);
+            ExportBundleToExcel(selectedProfiles, selectedBundles);
+        }
+
+        private List<Bundle> GetSelectedBundles()
+        {
+            List<Bundle> selectedBundles = new List<Bundle>();
+
+            foreach (int selectedIndex in bundlesListBox.SelectedIndices)
+            {
+                selectedBundles.Add((Bundle)bundlesListBox.Items[selectedIndex]);
+            }
+
+            return selectedBundles;
         }
 
         private void exportProjectButton_Click(object sender, EventArgs e)
