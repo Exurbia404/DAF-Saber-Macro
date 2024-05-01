@@ -32,6 +32,7 @@ namespace Presentation
         private List<Project_Wire> project_wires;
 
         private List<DSI_Tube> tubesList;
+        private List<Bundle> bundlesList;
 
         public ProfileChoiceForm(Logger logger, string filename)
         {
@@ -44,11 +45,21 @@ namespace Presentation
             SetProfilesToComboBoxes();
         }
 
-        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes)
+        public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes, List<Bundle> bundles)
         {
             converted_components = components;
             converted_wires = wires;
             tubesList = tubes;
+            bundlesList = bundles;
+            SetBundleListBoxData(bundlesList);
+        }
+
+        private void SetBundleListBoxData(List<Bundle> bundles)
+        {
+            foreach (Bundle bundle in bundles)
+            {
+                bundlesListBox.Items.Add(bundle.VariantNumber);
+            }
         }
 
         public void SetProjectData(List<Project_Wire> wires, List<Project_Component> components)
@@ -114,6 +125,19 @@ namespace Presentation
 
             // Call the method to export to Excel with the selected profiles
             ExportProjectToExcel(selectedProfiles);
+        }
+
+        private void selectAllBundlesButton_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < bundlesListBox.Items.Count; i++)
+            {
+                bundlesListBox.SetSelected(i, true);
+            }
+        }
+
+        private void selectNoneBundlesButton_Click(object sender, EventArgs e)
+        {
+            bundlesListBox.ClearSelected();
         }
     }
 }

@@ -34,6 +34,9 @@
             componentProfilesComboBox = new ComboBox();
             exportToExcelButton = new Button();
             exportProjectButton = new Button();
+            bundlesListBox = new ListBox();
+            selectAllBundlesButton = new Button();
+            selectNoneBundlesButton = new Button();
             SuspendLayout();
             // 
             // label1
@@ -92,11 +95,44 @@
             exportProjectButton.UseVisualStyleBackColor = true;
             exportProjectButton.Click += exportProjectButton_Click;
             // 
+            // bundlesListBox
+            // 
+            bundlesListBox.FormattingEnabled = true;
+            bundlesListBox.ItemHeight = 15;
+            bundlesListBox.Location = new Point(13, 210);
+            bundlesListBox.Name = "bundlesListBox";
+            bundlesListBox.SelectionMode = SelectionMode.MultiSimple;
+            bundlesListBox.Size = new Size(120, 199);
+            bundlesListBox.TabIndex = 6;
+            // 
+            // selectAllBundlesButton
+            // 
+            selectAllBundlesButton.Location = new Point(12, 181);
+            selectAllBundlesButton.Name = "selectAllBundlesButton";
+            selectAllBundlesButton.Size = new Size(121, 23);
+            selectAllBundlesButton.TabIndex = 7;
+            selectAllBundlesButton.Text = "Select all";
+            selectAllBundlesButton.UseVisualStyleBackColor = true;
+            selectAllBundlesButton.Click += selectAllBundlesButton_Click;
+            // 
+            // selectNoneBundlesButton
+            // 
+            selectNoneBundlesButton.Location = new Point(12, 415);
+            selectNoneBundlesButton.Name = "selectNoneBundlesButton";
+            selectNoneBundlesButton.Size = new Size(121, 23);
+            selectNoneBundlesButton.TabIndex = 8;
+            selectNoneBundlesButton.Text = "Select none";
+            selectNoneBundlesButton.UseVisualStyleBackColor = true;
+            selectNoneBundlesButton.Click += selectNoneBundlesButton_Click;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(selectNoneBundlesButton);
+            Controls.Add(selectAllBundlesButton);
+            Controls.Add(bundlesListBox);
             Controls.Add(exportProjectButton);
             Controls.Add(exportToExcelButton);
             Controls.Add(componentProfilesComboBox);
@@ -118,5 +154,8 @@
         private ComboBox componentProfilesComboBox;
         private Button exportToExcelButton;
         private Button exportProjectButton;
+        private ListBox bundlesListBox;
+        private Button selectAllBundlesButton;
+        private Button selectNoneBundlesButton;
     }
 }

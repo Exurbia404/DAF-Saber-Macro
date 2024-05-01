@@ -294,7 +294,7 @@ namespace Presentation
 
                 pcForm.Dock = DockStyle.Fill;
 
-                pcForm.SetBundleData(convertedWires, convertedComponents, extractedTubes);
+                pcForm.SetBundleData(convertedWires, convertedComponents, extractedTubes, extractedBundles);
 
                 pcForm.Show();
 
