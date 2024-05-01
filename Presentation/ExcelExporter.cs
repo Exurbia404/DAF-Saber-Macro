@@ -427,7 +427,7 @@ namespace Presentation
 
 
             //Create the master sheet
-            CreateIndividualSheet(excelPackage, wires, selectedBundles, RC_Profile);
+            CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
 
             //Create the separate sheets as in the original tool
             foreach(Bundle bundle in selectedBundles)
@@ -448,12 +448,32 @@ namespace Presentation
             List<iConverted_Wire> wiresToUse = wires;
             string bundleNumber = bundles[0].VariantNumber;
 
-            //Check if there is more than 1 bundle given, in that case the master sheet is being created
-            if(bundles.Count != 1)
-            {
-                bundleNumber = "All selected";
-            }
             var wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetProfile.Name + "_" + bundleNumber);
+
+            // Filter the wiresToUse collection to include only those wires 
+            // where the Variant matches the given bundleNumber.
+            // Then, order the filtered wires by Connector_1 and Port_1 (parsed as integers if possible).
+            var sortedWires = wiresToUse
+                .Where(wire => bundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
+                .OrderBy(wire => wire.Connector_1)
+                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
+                .ToList();
+
+
+            // Write column headers for wires
+            WriteHeaders(wireWorksheet, sheetProfile);
+
+            // Write wire data
+            WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
+            AddAutoFilterButtons(wireWorksheet);
+        }
+
+        private void CreateMasterSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
+        {
+            List<iConverted_Wire> wiresToUse = wires;
+            string bundleNumber = bundles[0].VariantNumber;
+
+            var wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetProfile.Name + "_ALL");
 
             // Filter the wiresToUse collection to include only those wires 
             // where the Variant matches the given bundleNumber.
@@ -484,7 +504,7 @@ namespace Presentation
             Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
 
             //Create the master sheet
-            CreateIndividualSheet(excelPackage, wires, selectedBundles, OC_Profile);
+            CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
 
             //Create the separate sheets as in the original tool
             foreach (Bundle bundle in selectedBundles)
