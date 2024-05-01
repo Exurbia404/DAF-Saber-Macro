@@ -110,7 +110,10 @@ namespace Presentation
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
 
             List<Bundle> selectedBundles = GetSelectedBundles();
+            _logger.Log(bundlesList.ToString());
+
             List<bool> selectedSheets = GetSelectedSheets();
+            _logger.Log(selectedSheets.ToString());
 
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };

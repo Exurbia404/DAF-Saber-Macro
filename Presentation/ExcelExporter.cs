@@ -177,16 +177,19 @@ namespace Presentation
             //PE sheet
             if (selectedSheets[0])
             {
+                _logger.Log("Creating PE sheet");
                 CreateALL_PE_sheet(excelPackage, wires);
             }
             //RC sheet
             if (selectedSheets[1])
             {
+                _logger.Log("Creating RC sheet");
                 CreateRC_Sheets(excelPackage, wires, bundles);
             }
             //OC sheet
             if (selectedSheets[2])
             {
+                _logger.Log("Creating OC sheet");
                 CreateOC_Sheets(excelPackage, wires, bundles);
             }
         }
