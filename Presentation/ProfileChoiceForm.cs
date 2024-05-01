@@ -130,9 +130,9 @@ namespace Presentation
             List<bool> selectedSheets = new List<bool>();
             
             //Get the selected sheets
+            selectedSheets.Add(createPECheckBox.Checked);
             selectedSheets.Add(createRCCheckBox.Checked);
             selectedSheets.Add(createOCCheckBox.Checked);
-            selectedSheets.Add(createRCCheckBox.Checked);
 
             return selectedSheets;
         }

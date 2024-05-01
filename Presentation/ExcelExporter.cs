@@ -177,7 +177,21 @@ namespace Presentation
 
         private void CreateExtraSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets)
         {
-
+            //PE sheet
+            if (selectedSheets[0])
+            {
+                CreateALL_PE_sheet(wires);
+            }
+            //RC sheet
+            else if (selectedSheets[1])
+            {
+                CreateRC_Sheet(wires);
+            }
+            //OC sheet
+            else if (selectedSheets[2])
+            {
+                CreateOC_Sheet(wires);
+            }
         }
 
         private static void AddAutoFilterButtons(ExcelWorksheet worksheet)
