@@ -60,6 +60,12 @@ namespace Presentation
             {
                 bundlesListBox.Items.Add(bundle.VariantNumber);
             }
+
+            //Auto set if there is only 1 bundle variant present i.e. non modularized
+            if (bundlesListBox.Items.Count == 1)
+            {
+                bundlesListBox.SetSelected(0, true);
+            }
         }
 
         public void SetProjectData(List<Project_Wire> wires, List<Project_Component> components)

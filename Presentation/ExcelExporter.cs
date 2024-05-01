@@ -20,7 +20,6 @@ namespace Presentation
             HighlyConfidential
         }
         private string directory;
-        private ExcelPackage excelPackage;
         public ExcelExporter(Logger logger)
         {
             _logger = logger;
@@ -147,9 +146,7 @@ namespace Presentation
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
 
-                    excelPackage = package;
-
-                    CreateExtraSheets(excelPackage, wires, bundles, selectedSheets);
+                    CreateExtraSheets(package, wires, bundles, selectedSheets);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -180,17 +177,17 @@ namespace Presentation
             //PE sheet
             if (selectedSheets[0])
             {
-                CreateALL_PE_sheet(wires);
+                CreateALL_PE_sheet(excelPackage, wires);
             }
             //RC sheet
             if (selectedSheets[1])
             {
-                CreateRC_Sheet(wires, bundles);
+                CreateRC_Sheets(excelPackage, wires, bundles);
             }
             //OC sheet
             if (selectedSheets[2])
             {
-                CreateOC_Sheet(wires, bundles);
+                CreateOC_Sheets(excelPackage, wires, bundles);
             }
         }
 
@@ -346,7 +343,7 @@ namespace Presentation
             return null;
         }
 
-        public void CreateALL_PE_sheet(List<iConverted_Wire> wires)
+        public void CreateALL_PE_sheet(ExcelPackage excelPackage, List<iConverted_Wire> wires)
         {
             List<iConverted_Wire> wiresToUse = wires;
             //Prepare ALL_PE profile
@@ -416,69 +413,87 @@ namespace Presentation
             AddAutoFilterButtons(wireWorksheet);
         }
 
-        public void CreateRC_Sheet(List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        public void CreateRC_Sheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
         {
-            List<iConverted_Wire> wiresToUse = wires;
-
             //Prepare RC profile
             List<string> RC_Profile_List = new List<string>();
             string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Cc_T", "Cc_S", "", "Type", "Code_no", "", "", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
             RC_Profile_List.AddRange(stringsToAdd);
 
-            Profile RC_Profile = new Profile("RC sheet", RC_Profile_List, Data_Interfaces.ProfileType.User);
+            Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
 
-            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("RC");
+
+            //Create the master sheet
+            CreateIndividualSheet(excelPackage, wires, selectedBundles, RC_Profile);
+
+            //Create the separate sheets as in the original tool
+            foreach(Bundle bundle in selectedBundles)
+            {
+                //Create templist to give to CreateIndividualSheet
+                List<Bundle> tempList = new List<Bundle>
+                {
+                    bundle
+                };
+                
+                CreateIndividualSheet(excelPackage, wires, tempList, RC_Profile);
+            }
+            
+        }
+
+        private void CreateIndividualSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
+        {
+            List<iConverted_Wire> wiresToUse = wires;
+            string bundleNumber = bundles[0].VariantNumber;
+
+            //Check if there is more than 1 bundle given, in that case the master sheet is being created
+            if(bundles.Count != 1)
+            {
+                bundleNumber = "All selected";
+            }
+            var wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetProfile.Name + "_" + bundleNumber);
 
             // Filter the wiresToUse collection to include only those wires 
-            // where the Variant matches any of the VariantNumbers from the selectedBundles list.
+            // where the Variant matches the given bundleNumber.
             // Then, order the filtered wires by Connector_1 and Port_1 (parsed as integers if possible).
             var sortedWires = wiresToUse
-                .Where(wire => selectedBundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
+                .Where(wire => bundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
                 .OrderBy(wire => wire.Connector_1)
                 .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                 .ToList();
 
 
             // Write column headers for wires
-            WriteHeaders(wireWorksheet, RC_Profile);
+            WriteHeaders(wireWorksheet, sheetProfile);
 
             // Write wire data
-            WriteDataToSheet(wireWorksheet, sortedWires, RC_Profile);
-
-
+            WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
             AddAutoFilterButtons(wireWorksheet);
         }
 
-        public void CreateOC_Sheet(List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        public void CreateOC_Sheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
         {
-            List<iConverted_Wire> wiresToUse = wires;
             //Prepare RC profile
             List<string> OC_Profile_List = new List<string>();
             string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
                 "", "Length table", "", "", "Weight (Kg)", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
             OC_Profile_List.AddRange(stringsToAdd);
 
-            Profile OC_Profile = new Profile("OC sheet", OC_Profile_List, Data_Interfaces.ProfileType.User);
+            Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
 
-            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("OC"); //TODO: add number? although what is the number based off
+            //Create the master sheet
+            CreateIndividualSheet(excelPackage, wires, selectedBundles, OC_Profile);
 
-            // Filter the wiresToUse collection to include only those wires 
-            // where the Variant matches any of the VariantNumbers from the selectedBundles list.
-            // Then, order the filtered wires by Connector_1 and Port_1 (parsed as integers if possible).
-            var sortedWires = wiresToUse
-                .Where(wire => selectedBundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
-                .OrderBy(wire => wire.Connector_1)
-                .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
-                .ToList();
+            //Create the separate sheets as in the original tool
+            foreach (Bundle bundle in selectedBundles)
+            {
+                //Create templist to give to CreateIndividualSheet
+                List<Bundle> tempList = new List<Bundle>
+                {
+                    bundle
+                };
 
-
-            // Write column headers for wires
-            WriteHeaders(wireWorksheet, OC_Profile);
-
-            // Write wire data
-            WriteDataToSheet(wireWorksheet, sortedWires, OC_Profile);
-
-            AddAutoFilterButtons(wireWorksheet);
+                CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile);
+            }
         }
     }
 }
