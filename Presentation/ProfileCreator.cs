@@ -21,6 +21,8 @@ namespace Presentation
         //Used by buttons, labels and comboBoxes
         private int initalXOffset = 210;
         private ProfileController profileController;
+        private Profile loadedProfile;
+
         public ProfileCreator(Logger logger)
         {
             InitializeComponent();
@@ -33,7 +35,7 @@ namespace Presentation
             AddUserProfilesToListBox();
 
             SetDefaultComboBox();
-            GenerateComboBoxes(headerCounter);
+            Alt_GenerateComboBoxes(headerCounter);
         }
 
         private void AddUserProfilesToListBox()
@@ -87,15 +89,84 @@ namespace Presentation
             }
 
             GenerateLabels(headerCount);
-            AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
-            MoveHeaderButtons(headerCount);
+            AddOptionsToComboBoxes(loadedProfile);
         }
 
+        private void Alt_GenerateComboBoxes(int headerCount)
+        {
+            int oldCount = comboBoxes.Count;
+
+            //If there are less comboBoxes required
+            while(headerCount < oldCount)
+            {
+                int index = oldCount - 1;
+                comboBoxes[index].Dispose();
+                comboBoxes.RemoveAt(index);
+                oldCount--;
+            }
+
+            int x = initalXOffset; // Initial x-coordinate
+            int y = 60;  // Initial y-coordinate
+
+            if (headerCount > oldCount)
+            {
+                for (int i = comboBoxes.Count(); i < headerCount; i++)
+                {
+
+                    // Create a new ComboBox
+                    ComboBox comboBox = new ComboBox();
+
+                    // Set ComboBox location
+                    comboBox.Location = new Point((initalXOffset + (horizontalOffset * i)), y);
+                    comboBox.Size = new Size(horizontalOffset, 25);
+
+                    // Set ComboBox DropDownStyle to DropDownList
+                    comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                    // Add ComboBox to the list
+                    comboBoxes.Add(comboBox);
+
+                    // Increment x-coordinate for the next ComboBox
+                    x += horizontalOffset; // horizontalOffset is assumed to be set elsewhere
+
+                    // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
+                    this.Controls.Add(comboBox);
+                    comboBox.Show();
+                }
+            }
+
+            GenerateLabels(headerCount);
+            AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
+            LoadInProfile(loadedProfile);
+        }
+
+        private void LoadInProfile(Profile profile)
+        {
+            if(profile != null)
+            {
+                for (int i = 0; i < profile.Parameters.Count; i++)
+                {
+                    comboBoxes[i].SelectedItem = profile.Parameters[i];
+                }
+            }
+            
+        }
 
         private void GenerateLabels(int headerCount)
         {
             int labelX = initalXOffset; // Initial x-coordinate
             int labelY = 40; // Initial y-coordinate for Labels
+
+            int oldCount = comboBox_Labels.Count;
+
+            //If there are less comboBoxes required
+            while (headerCount < oldCount)
+            {
+                int index = oldCount - 1;
+                comboBox_Labels[index].Dispose();
+                comboBox_Labels.RemoveAt(index);
+                oldCount--;
+            }
 
             // Iterate through each header
             for (int i = 0; i < headerCount; i++)
@@ -117,22 +188,6 @@ namespace Presentation
 
                 labelX += horizontalOffset;
             }
-        }
-
-        private void MoveHeaderButtons(int headerCount)
-        {
-
-            int x = initalXOffset + ((headerCount * horizontalOffset) + 10); // Initial x-coordinate for header buttons (added 10 for extra offset)
-            int y = 45; // y-coordinate for header buttons
-
-            // Set the location for the Add Header Button
-            removeHeaderButton.Location = new Point(x, y);
-
-            // Increment x-coordinate for the Delete Header Button
-            x += removeHeaderButton.Width + 10; // Assuming a gap of 10 pixels between buttons
-
-            // Set the location for the Delete Header Button
-            addHeaderButton.Location = new Point(x, y);
         }
 
 
@@ -191,8 +246,6 @@ namespace Presentation
             headerCounter = AmountOfSelectedComboBoxes();
             
             RemoveOldHeadersAndButtons(headerCounter);
-            MoveHeaderButtons(headerCounter);
-
 
             List<string> retrievedValues = new List<string>();
 
@@ -221,7 +274,12 @@ namespace Presentation
             if(headerCounter > 0)
             {
                 headerCounter--;
-                GenerateComboBoxes(headerCounter);
+                if(loadedProfile != null)
+                {
+                    loadedProfile.Parameters.RemoveAt(headerCounter);
+                }
+                Alt_GenerateComboBoxes(headerCounter);
+                
             }
             
         }
@@ -232,7 +290,7 @@ namespace Presentation
             if (headerCounter < 26)
             {
                 headerCounter++;
-                GenerateComboBoxes(headerCounter);
+                Alt_GenerateComboBoxes(headerCounter);
             }
         }
 
@@ -350,14 +408,16 @@ namespace Presentation
             profileNameTextBox.Text = loadedProfileName;
 
             // Check if the loaded profile exists in defaultProfiles
-            Profile loadedProfile = profileController.allProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+            loadedProfile = profileController.allProfiles.FirstOrDefault(profile => profile.Name == loadedProfileName);
+            
+            headerCounter = loadedProfile.Parameters.Count;
 
             if (loadedProfile != null)
             {
                 // Get the parameters of the loaded profile
                 List<string> loadedProfileParameters = loadedProfile.Parameters;
 
-                GenerateComboBoxes(loadedProfileParameters.Count);
+                Alt_GenerateComboBoxes(loadedProfileParameters.Count);
 
                 // Ensure that the loadedProfileParameters count matches the number of comboBoxes
                 if (loadedProfileParameters.Count == comboBoxes.Count)

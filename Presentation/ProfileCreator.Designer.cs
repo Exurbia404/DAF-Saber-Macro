@@ -52,7 +52,7 @@
             // 
             profilesListBox.FormattingEnabled = true;
             profilesListBox.ItemHeight = 15;
-            profilesListBox.Location = new Point(18, 100);
+            profilesListBox.Location = new Point(18, 108);
             profilesListBox.Margin = new Padding(4, 3, 4, 3);
             profilesListBox.Name = "profilesListBox";
             profilesListBox.Size = new Size(180, 274);
@@ -61,7 +61,7 @@
             // 
             // profileNameTextBox
             // 
-            profileNameTextBox.Location = new Point(18, 70);
+            profileNameTextBox.Location = new Point(18, 78);
             profileNameTextBox.Margin = new Padding(4, 3, 4, 3);
             profileNameTextBox.Name = "profileNameTextBox";
             profileNameTextBox.Size = new Size(180, 23);
@@ -90,10 +90,10 @@
             // 
             // addHeaderButton
             // 
-            addHeaderButton.Location = new Point(531, 52);
+            addHeaderButton.Location = new Point(237, 14);
             addHeaderButton.Margin = new Padding(4, 3, 4, 3);
             addHeaderButton.Name = "addHeaderButton";
-            addHeaderButton.Size = new Size(30, 30);
+            addHeaderButton.Size = new Size(23, 23);
             addHeaderButton.TabIndex = 55;
             addHeaderButton.Text = "+";
             addHeaderButton.UseVisualStyleBackColor = true;
@@ -101,10 +101,10 @@
             // 
             // removeHeaderButton
             // 
-            removeHeaderButton.Location = new Point(484, 52);
+            removeHeaderButton.Location = new Point(206, 14);
             removeHeaderButton.Margin = new Padding(4, 3, 4, 3);
             removeHeaderButton.Name = "removeHeaderButton";
-            removeHeaderButton.Size = new Size(30, 30);
+            removeHeaderButton.Size = new Size(23, 23);
             removeHeaderButton.TabIndex = 56;
             removeHeaderButton.Text = "-";
             removeHeaderButton.UseVisualStyleBackColor = true;
