@@ -119,20 +119,38 @@ namespace Presentation
 
             foreach (int selectedIndex in bundlesListBox.SelectedIndices)
             {
-                selectedBundles.Add((Bundle)bundlesListBox.Items[selectedIndex]);
+                // Get the VariantNumber from the ListBox
+                string variantNumber = bundlesListBox.Items[selectedIndex].ToString();
+
+                // Find the corresponding Bundle object with the matching VariantNumber
+                Bundle bundle = FindBundleByVariantNumber(variantNumber);
+
+                // Add the found Bundle to the list
+                if (bundle != null)
+                {
+                    selectedBundles.Add(bundle);
+                }
             }
 
             return selectedBundles;
         }
 
+        // Helper method to find a Bundle by its VariantNumber
+        private Bundle FindBundleByVariantNumber(string variantNumber)
+        {
+            // Assuming bundlesList is a List<Bundle> containing all Bundle objects
+            return bundlesList.FirstOrDefault(bundle => bundle.VariantNumber == variantNumber);
+        }
+
         private List<bool> GetSelectedSheets()
         {
-            List<bool> selectedSheets = new List<bool>();
-            
-            //Get the selected sheets
-            selectedSheets.Add(createPECheckBox.Checked);
-            selectedSheets.Add(createRCCheckBox.Checked);
-            selectedSheets.Add(createOCCheckBox.Checked);
+            List<bool> selectedSheets = new List<bool>
+            {
+                //Get the selected sheets
+                createPECheckBox.Checked,
+                createRCCheckBox.Checked,
+                createOCCheckBox.Checked
+            };
 
             return selectedSheets;
         }
