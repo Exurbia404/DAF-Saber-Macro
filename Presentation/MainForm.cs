@@ -280,7 +280,11 @@ namespace Presentation
                 string bundleNumber = GetFileName(textFilePath);
                 string filePath = GetFolderPath(textFilePath);
 
-                fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
+                //Only WriteToFile when in WiP folder
+                if(designerButton.BackColor == Color.White) //TODO: crude fix, find something more elegant
+                {
+                    fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
+                }
 
                 ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
 
