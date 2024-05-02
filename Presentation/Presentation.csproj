@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>tumblr_4c14cd75738a13f4ce4ed445db9c40ce_f452ff12_1280.ico</ApplicationIcon>
+    <ApplicationIcon>SaberTool+.ico</ApplicationIcon>
     <AssemblyName>Saber Tool+</AssemblyName>
     <Company>Fontys Hogescholen</Company>
     <Authors>Tom van Heek</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="tumblr_4c14cd75738a13f4ce4ed445db9c40ce_f452ff12_1280.ico" />
+    <Content Include="SaberTool+.ico" />
   </ItemGroup>
 
   <ItemGroup>
