@@ -41,7 +41,7 @@ namespace Presentation
             exporter = new ExcelExporter(logger);
             profileController = new ProfileController(new FileHandler(logger));
 
-            profileList = profileController.allProfiles;
+            profileList = profileController.userProfiles;
             SetProfilesToComboBoxes();
         }
 
@@ -109,6 +109,19 @@ namespace Presentation
             Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
 
+
+            //If no user profiles have been selected use the defaults for bundles
+            if(selectedWireProfile == null)
+            {
+                selectedWireProfile = profileController.defaultProfiles[0];
+            }
+
+            if(selectedComponentProfile == null)
+            {
+                selectedComponentProfile = profileController.defaultProfiles[3];
+            }
+
+            
             List<Bundle> selectedBundles = GetSelectedBundles();
             //_logger.Log(bundlesList.ToString());
 
@@ -173,6 +186,17 @@ namespace Presentation
             // Find selected profiles from the profile list
             Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
+
+            //If no user profiles have been selected use the defaults for projects
+            if (selectedWireProfile == null)
+            {
+                selectedWireProfile = profileController.defaultProfiles[2];
+            }
+
+            if (selectedComponentProfile == null)
+            {
+                selectedComponentProfile = profileController.defaultProfiles[5];
+            }
 
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
