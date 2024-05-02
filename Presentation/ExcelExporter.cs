@@ -454,7 +454,7 @@ namespace Presentation
             // where the Variant matches the given bundleNumber.
             // Then, order the filtered wires by Connector_1 and Port_1 (parsed as integers if possible).
             var sortedWires = wiresToUse
-                .Where(wire => bundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
+                .Where(wire => wire.Bundle.Split(' ').Any(bundleNumber => bundles.Any(bundle => bundle.VariantNumber == bundleNumber)))
                 .OrderBy(wire => wire.Connector_1)
                 .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                 .ToList();
@@ -479,7 +479,7 @@ namespace Presentation
             // where the Variant matches the given bundleNumber.
             // Then, order the filtered wires by Connector_1 and Port_1 (parsed as integers if possible).
             var sortedWires = wiresToUse
-                .Where(wire => bundles.Any(bundle => bundle.VariantNumber == wire.Bundle))
+                .Where(wire => wire.Bundle.Split(' ').Any(bundleNumber => bundles.Any(bundle => bundle.VariantNumber == bundleNumber)))
                 .OrderBy(wire => wire.Connector_1)
                 .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                 .ToList();
