@@ -37,11 +37,15 @@ namespace Presentation
 
             panel.Controls.Add(choiceForm);
             choiceForm.Show();
+
+            AutoSizeControls();
             //MainForm mainForm = new MainForm(_logger, this);
             //mainForm.TopLevel = false;
 
             //panel.Controls.Add(mainForm);
             //mainForm.Show();
+            _logger.Log(this.Size.ToString());
+            _logger.Log(panel.Size.ToString());
         }
 
         private void Logger_LogEvent(object sender, string message)
@@ -106,15 +110,25 @@ namespace Presentation
             if (e.Control is ProfileCreator profileCreatorForm)
             {
                 // Adjust the size of the panelForm and the panel when ProfileCreator is present
-                this.Size = new Size(900, 651); // Adjust as needed
-                panel.Size = new Size(860, 540); // Adjust as needed
+                this.Size = new Size(980, 691); // Adjust as needed
+                panel.Size = new Size(940, 540); // Adjust as needed
             }
             else
             {
                 //Set default sizes
-                this.Size = new Size(420, 651);
-                panel.Size = new Size(380, 540);
+                this.Size = new Size(480, 691);
+                panel.Size = new Size(440, 540);
             }
+        }
+
+        private void AutoSizeControls()
+        {
+            int FixedControlTop = 605;
+
+            // Adjust the position of controls
+            label2.Top = FixedControlTop;
+            lastMessageTextBox.Top = FixedControlTop;
+            versionLabel.Top = FixedControlTop;
         }
     }
 }

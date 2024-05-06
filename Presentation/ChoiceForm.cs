@@ -1,4 +1,5 @@
 ﻿using Logging;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace Presentation
 
         public ChoiceForm(Logger logger, PanelForm panelform)
         {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // or LicenseContext.Commercial
+
             InitializeComponent();
             _logger = logger;
             panelForm = panelform;

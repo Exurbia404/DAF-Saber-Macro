@@ -50,7 +50,7 @@
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(283, 588);
+            versionLabel.Location = new Point(282, 585);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(109, 15);
             versionLabel.TabIndex = 22;
@@ -77,7 +77,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 588);
+            label2.Location = new Point(12, 585);
             label2.Name = "label2";
             label2.Size = new Size(42, 15);
             label2.TabIndex = 26;
@@ -124,7 +124,6 @@
             Controls.Add(programStatusButton);
             Controls.Add(versionLabel);
             Controls.Add(panel);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "PanelForm";
             Text = "PanelForm";
             ResumeLayout(false);

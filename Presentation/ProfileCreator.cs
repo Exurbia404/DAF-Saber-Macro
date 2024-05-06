@@ -19,7 +19,7 @@ namespace Presentation
         private int headerCounter = 3;
 
         //Used by buttons, labels and comboBoxes
-        private int initalXOffset = 210;
+        private int initalXOffset = 260;
         private ProfileController profileController;
         private Profile loadedProfile;
         private PanelForm panelForm;

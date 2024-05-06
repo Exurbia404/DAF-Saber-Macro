@@ -81,7 +81,7 @@
             // 
             // exportToExcelButton
             // 
-            exportToExcelButton.Location = new Point(379, 84);
+            exportToExcelButton.Location = new Point(12, 113);
             exportToExcelButton.Name = "exportToExcelButton";
             exportToExcelButton.Size = new Size(75, 23);
             exportToExcelButton.TabIndex = 4;
@@ -91,7 +91,7 @@
             // 
             // exportProjectButton
             // 
-            exportProjectButton.Location = new Point(460, 84);
+            exportProjectButton.Location = new Point(93, 113);
             exportProjectButton.Name = "exportProjectButton";
             exportProjectButton.Size = new Size(101, 23);
             exportProjectButton.TabIndex = 5;
@@ -103,7 +103,7 @@
             // 
             bundlesListBox.FormattingEnabled = true;
             bundlesListBox.ItemHeight = 15;
-            bundlesListBox.Location = new Point(13, 210);
+            bundlesListBox.Location = new Point(13, 171);
             bundlesListBox.Name = "bundlesListBox";
             bundlesListBox.SelectionMode = SelectionMode.MultiSimple;
             bundlesListBox.Size = new Size(120, 199);
@@ -111,7 +111,7 @@
             // 
             // selectAllBundlesButton
             // 
-            selectAllBundlesButton.Location = new Point(12, 181);
+            selectAllBundlesButton.Location = new Point(12, 142);
             selectAllBundlesButton.Name = "selectAllBundlesButton";
             selectAllBundlesButton.Size = new Size(121, 23);
             selectAllBundlesButton.TabIndex = 7;
@@ -121,7 +121,7 @@
             // 
             // selectNoneBundlesButton
             // 
-            selectNoneBundlesButton.Location = new Point(12, 415);
+            selectNoneBundlesButton.Location = new Point(12, 376);
             selectNoneBundlesButton.Name = "selectNoneBundlesButton";
             selectNoneBundlesButton.Size = new Size(121, 23);
             selectNoneBundlesButton.TabIndex = 8;
@@ -132,7 +132,7 @@
             // createPECheckBox
             // 
             createPECheckBox.AutoSize = true;
-            createPECheckBox.Location = new Point(139, 185);
+            createPECheckBox.Location = new Point(139, 146);
             createPECheckBox.Name = "createPECheckBox";
             createPECheckBox.Size = new Size(39, 19);
             createPECheckBox.TabIndex = 9;
@@ -142,7 +142,7 @@
             // createRCCheckBox
             // 
             createRCCheckBox.AutoSize = true;
-            createRCCheckBox.Location = new Point(139, 210);
+            createRCCheckBox.Location = new Point(139, 171);
             createRCCheckBox.Name = "createRCCheckBox";
             createRCCheckBox.Size = new Size(41, 19);
             createRCCheckBox.TabIndex = 10;
@@ -152,7 +152,7 @@
             // createOCCheckBox
             // 
             createOCCheckBox.AutoSize = true;
-            createOCCheckBox.Location = new Point(139, 235);
+            createOCCheckBox.Location = new Point(139, 196);
             createOCCheckBox.Name = "createOCCheckBox";
             createOCCheckBox.Size = new Size(43, 19);
             createOCCheckBox.TabIndex = 11;
@@ -174,7 +174,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(380, 540);
             Controls.Add(currentlyOpenedLabel);
             Controls.Add(createOCCheckBox);
             Controls.Add(createRCCheckBox);

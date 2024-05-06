@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Data_Interfaces
 {
-    public class iProfile
+    public interface iProfile
     {
-        public string Name;
-        public List<string> Parameters;
-        public ProfileType Type;
+        public string Name { get; set; }
+        public List<string> Parameters { get; set; }
+        public ProfileType Type { get; set; }
     }
 }

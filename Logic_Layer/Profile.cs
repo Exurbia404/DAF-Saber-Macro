@@ -9,9 +9,9 @@ namespace Logic
 {
     public class Profile : iProfile
     {
-        public string Name;
-        public List<string> Parameters;
-        public ProfileType Type;
+        public string Name { get; set; }
+        public List<string> Parameters { get; set; }
+        public ProfileType Type { get; set; }
 
         public Profile(string profileName, List<string> parameters, ProfileType type)
         {
