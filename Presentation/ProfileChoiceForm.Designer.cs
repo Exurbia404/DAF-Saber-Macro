@@ -40,12 +40,13 @@
             createPECheckBox = new CheckBox();
             createRCCheckBox = new CheckBox();
             createOCCheckBox = new CheckBox();
+            currentlyOpenedLabel = new Label();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
+            label1.Location = new Point(12, 66);
             label1.Name = "label1";
             label1.Size = new Size(39, 15);
             label1.TabIndex = 0;
@@ -54,7 +55,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(165, 9);
+            label2.Location = new Point(165, 66);
             label2.Name = "label2";
             label2.Size = new Size(79, 15);
             label2.TabIndex = 1;
@@ -64,7 +65,7 @@
             // 
             wireProfilesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             wireProfilesComboBox.FormattingEnabled = true;
-            wireProfilesComboBox.Location = new Point(12, 27);
+            wireProfilesComboBox.Location = new Point(12, 84);
             wireProfilesComboBox.Name = "wireProfilesComboBox";
             wireProfilesComboBox.Size = new Size(121, 23);
             wireProfilesComboBox.TabIndex = 2;
@@ -73,14 +74,14 @@
             // 
             componentProfilesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             componentProfilesComboBox.FormattingEnabled = true;
-            componentProfilesComboBox.Location = new Point(165, 27);
+            componentProfilesComboBox.Location = new Point(165, 84);
             componentProfilesComboBox.Name = "componentProfilesComboBox";
             componentProfilesComboBox.Size = new Size(121, 23);
             componentProfilesComboBox.TabIndex = 3;
             // 
             // exportToExcelButton
             // 
-            exportToExcelButton.Location = new Point(379, 27);
+            exportToExcelButton.Location = new Point(379, 84);
             exportToExcelButton.Name = "exportToExcelButton";
             exportToExcelButton.Size = new Size(75, 23);
             exportToExcelButton.TabIndex = 4;
@@ -90,7 +91,7 @@
             // 
             // exportProjectButton
             // 
-            exportProjectButton.Location = new Point(460, 27);
+            exportProjectButton.Location = new Point(460, 84);
             exportProjectButton.Name = "exportProjectButton";
             exportProjectButton.Size = new Size(101, 23);
             exportProjectButton.TabIndex = 5;
@@ -158,11 +159,23 @@
             createOCCheckBox.Text = "OC";
             createOCCheckBox.UseVisualStyleBackColor = true;
             // 
+            // currentlyOpenedLabel
+            // 
+            currentlyOpenedLabel.AutoSize = true;
+            currentlyOpenedLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
+            currentlyOpenedLabel.Location = new Point(12, 9);
+            currentlyOpenedLabel.Margin = new Padding(4, 0, 4, 0);
+            currentlyOpenedLabel.Name = "currentlyOpenedLabel";
+            currentlyOpenedLabel.Size = new Size(91, 24);
+            currentlyOpenedLabel.TabIndex = 15;
+            currentlyOpenedLabel.Text = "Opened:";
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(currentlyOpenedLabel);
             Controls.Add(createOCCheckBox);
             Controls.Add(createRCCheckBox);
             Controls.Add(createPECheckBox);
@@ -196,5 +209,6 @@
         private CheckBox createPECheckBox;
         private CheckBox createRCCheckBox;
         private CheckBox createOCCheckBox;
+        private Label currentlyOpenedLabel;
     }
 }

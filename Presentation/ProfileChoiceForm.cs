@@ -42,6 +42,7 @@ namespace Presentation
             profileController = new ProfileController(new FileHandler(logger));
 
             profileList = profileController.userProfiles;
+            currentlyOpenedLabel.Text = "Opened: " + fileName;
             SetProfilesToComboBoxes();
         }
 

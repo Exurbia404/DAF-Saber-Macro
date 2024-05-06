@@ -43,13 +43,14 @@
             panel.BorderStyle = BorderStyle.FixedSingle;
             panel.Location = new Point(12, 33);
             panel.Name = "panel";
-            panel.Size = new Size(960, 540);
+            panel.Size = new Size(380, 540);
             panel.TabIndex = 0;
+            panel.ControlAdded += panel_ControlAdded;
             // 
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(863, 588);
+            versionLabel.Location = new Point(283, 588);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(109, 15);
             versionLabel.TabIndex = 22;
@@ -58,7 +59,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(866, 8);
+            label1.Location = new Point(282, 8);
             label1.Name = "label1";
             label1.Size = new Size(61, 15);
             label1.TabIndex = 24;
@@ -66,7 +67,7 @@
             // 
             // programStatusButton
             // 
-            programStatusButton.Location = new Point(933, 3);
+            programStatusButton.Location = new Point(349, 3);
             programStatusButton.Name = "programStatusButton";
             programStatusButton.Size = new Size(43, 24);
             programStatusButton.TabIndex = 23;
@@ -87,7 +88,7 @@
             lastMessageTextBox.Location = new Point(54, 585);
             lastMessageTextBox.Name = "lastMessageTextBox";
             lastMessageTextBox.ReadOnly = true;
-            lastMessageTextBox.Size = new Size(250, 23);
+            lastMessageTextBox.Size = new Size(223, 23);
             lastMessageTextBox.TabIndex = 25;
             // 
             // settingsButton
@@ -114,7 +115,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(988, 612);
+            ClientSize = new Size(404, 612);
             Controls.Add(homeButton);
             Controls.Add(settingsButton);
             Controls.Add(label2);

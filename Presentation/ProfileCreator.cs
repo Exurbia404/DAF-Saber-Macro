@@ -22,6 +22,7 @@ namespace Presentation
         private int initalXOffset = 210;
         private ProfileController profileController;
         private Profile loadedProfile;
+        private PanelForm panelForm;
 
         public ProfileCreator(Logger logger)
         {
@@ -272,7 +273,7 @@ namespace Presentation
                 {
                     retrievedValues.Add(comboBox.SelectedItem.ToString());
                 }
-                if(comboBox.SelectedItem == null)
+                if (comboBox.SelectedItem == null)
                 {
                     retrievedValues.Add("");
                 }
@@ -452,7 +453,7 @@ namespace Presentation
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void newProfileButton_Click(object sender, EventArgs e)
         {
             loadedProfile = new Profile("empty", new List<string>(), ProfileType.User);
             headerCounter = 0;

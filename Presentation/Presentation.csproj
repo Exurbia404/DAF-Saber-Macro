@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MainForm.cs">
+    <Compile Update="OldMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="MySettings.Designer.cs">

@@ -11,7 +11,7 @@ using Microsoft.Graph.Models.TermStore;
 
 namespace Presentation
 {
-    public partial class MainForm : Form
+    public partial class OldMainForm : Form
     {
         private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
         private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer\Boms";
@@ -40,7 +40,7 @@ namespace Presentation
         private string computerName = Environment.MachineName;
         private PanelForm panelForm;
 
-        public MainForm(Logger logger, PanelForm panelform)
+        public OldMainForm(Logger logger, PanelForm panelform)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
 
@@ -281,7 +281,7 @@ namespace Presentation
                 string filePath = GetFolderPath(textFilePath);
 
                 //Only WriteToFile when in WiP folder
-                if(designerButton.BackColor == Color.White) //TODO: crude fix, find something more elegant
+                if (designerButton.BackColor == Color.White) //TODO: crude fix, find something more elegant
                 {
                     fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
                 }
@@ -537,7 +537,7 @@ namespace Presentation
             {
 
             }
-           }
+        }
 
 
         //Buttons to choose directory:
@@ -680,6 +680,11 @@ namespace Presentation
         }
 
         private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void schematicsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
