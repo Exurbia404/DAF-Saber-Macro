@@ -98,6 +98,95 @@ namespace Logic
             return "";
         }
 
+        public List<DSI_Tube> ExtractDSITubes(string filePath)
+        {
+            string sectionStart = "%Section 4";
+            string sectionEnd = "%Section 5";
+            bool isInSection4 = false;
+
+            List<DSI_Tube> foundTubes = new List<DSI_Tube>();
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection4)
+                {
+                    DSI_Tube tube = ExtractDSITubeFromString(line, filePath);
+                    // Process lines between Section 3 and Section 4
+                    if (tube != null)
+                    {
+                        foundTubes.Add(tube);
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection4 = true;
+                }
+            }
+            return foundTubes;
+        }
+
+        private DSI_Tube ExtractDSITubeFromString(string line, string filePath)
+        {
+            string[] parts = line.Split(':');
+            string startNode = parts[0];
+            string endNode = parts[3];
+            string length = parts[6];
+            string insulations = GetInsulationForBranch(startNode, endNode, filePath);
+
+            return new DSI_Tube(length, insulations, startNode, endNode);
+        }
+
+        private string GetInsulationForBranch(string startNode, string endNode, string filePath)
+        {
+            string sectionStart = "%Section 7";
+            string sectionEnd = "%Section 8";
+            bool isInSection7 = false;
+
+            string foundInsulations = "";
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                if (line.StartsWith(sectionEnd))
+                {
+                    // Exit the loop when reaching the end of Section 3
+                    break;
+                }
+
+                if (isInSection7)
+                {
+                    // Split the line by '::' to get individual parts
+                    string[] parts = line.Split(':');
+
+                    if ((parts[0] == startNode) && (parts[2] == endNode))
+                    {
+                        if (foundInsulations != "")
+                        {
+                            foundInsulations += " and ";
+                        }
+
+                        //Insulation is found in the fifth location
+                        foundInsulations += parts[5];
+                    }
+                }
+
+                if (line.StartsWith(sectionStart))
+                {
+                    // Start processing lines when entering Section 3
+                    isInSection7 = true;
+                }
+            }
+            return foundInsulations;
+        }
+
+
         private string GetVariantForModularizedComponent(string bundleNumber)
         {
             foreach (string[] line in sections[2])
@@ -579,6 +668,99 @@ namespace Logic
                 }
             }
             return section;
+        }
+
+        public List<Project_Wire> Project_ExtractWiresFromWireFile(string filePath)
+        {
+            List<Project_Wire> foundWires = new List<Project_Wire>();
+
+            // Read lines from the file and skip the first line
+            foreach (string line in File.ReadLines(filePath).Skip(1))
+            {
+                Project_Wire wire = Project_ExtractWireFromString(line);
+                // Process lines between Section 3 and Section 4
+                if (wire != null)
+                {
+                    foundWires.Add(wire);
+                }
+            }
+            return foundWires;
+        }
+
+        private Project_Wire Project_ExtractWireFromString(string inputString)
+        {
+            string[] fields = inputString.Split(',');
+
+            // Create a new Project_Wire object and set its properties based on the fields
+            Project_Wire wireObject = new Project_Wire
+            {
+                Wire = GetStringAtIndex(fields, 0),
+                Diameter = GetStringAtIndex(fields, 1),
+                Color = GetStringAtIndex(fields, 2),
+                Type = GetStringAtIndex(fields, 3),
+                Connector_1 = GetStringAtIndex(fields, 4),
+                Port_1 = GetStringAtIndex(fields, 5),
+                Term_1 = GetStringAtIndex(fields, 6),
+                Seal_1 = GetStringAtIndex(fields, 7),
+                Location_1 = GetStringAtIndex(fields, 8),
+                Wire_connection = GetStringAtIndex(fields, 9),
+                Term_2 = GetStringAtIndex(fields, 10),
+                Seal_2 = GetStringAtIndex(fields, 11),
+                Connector_2 = GetStringAtIndex(fields, 12),
+                Port_2 = GetStringAtIndex(fields, 13),
+                Location_2 = GetStringAtIndex(fields, 14),
+                Harness = GetStringAtIndex(fields, 15),
+                Variant = GetStringAtIndex(fields, 16),
+                Bundle = GetStringAtIndex(fields, 17),
+                CodeNumber_Wire = GetStringAtIndex(fields, 18),
+                Tag = GetStringAtIndex(fields, 19),
+            };
+
+            return wireObject;
+
+        }
+
+        public List<Project_Component> Project_ExtractComponentFromComponentFile(string filePath)
+        {
+            List<Project_Component> foundComponents = new List<Project_Component>();
+
+            // Read lines from the file and skip the first line
+            foreach (string line in File.ReadLines(filePath).Skip(1))
+            {
+                Project_Component component = Project_ExtractComponentFromString(line);
+                // Process lines between Section 3 and Section 4
+                if (component != null)
+                {
+                    foundComponents.Add(component);
+                }
+            }
+            return foundComponents;
+        }
+
+        private Project_Component Project_ExtractComponentFromString(string inputString)
+        {
+            string[] fields = inputString.Split(',');
+
+            // Create a new Project_Component object and set its properties based on the fields
+            Project_Component componentObject = new Project_Component
+            {
+                Type = GetStringAtIndex(fields, 0),
+                Ref = GetStringAtIndex(fields, 1),
+                Description = GetStringAtIndex(fields, 2),
+                Location = GetStringAtIndex(fields, 3),
+                Connector = GetStringAtIndex(fields, 4),
+                SecLock = GetStringAtIndex(fields, 5),
+                Harness = GetStringAtIndex(fields, 6),
+                Variant = GetStringAtIndex(fields, 7),
+                Bundle = GetStringAtIndex(fields, 8),
+                Tag = GetStringAtIndex(fields, 9),
+                System = GetStringAtIndex(fields, 10),
+                Fuse_value = GetStringAtIndex(fields, 11),
+                Color = GetStringAtIndex(fields, 12),
+                N_pins = GetStringAtIndex(fields, 13),
+            };
+
+            return componentObject;
         }
     }
 }

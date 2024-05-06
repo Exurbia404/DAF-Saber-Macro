@@ -225,12 +225,11 @@ namespace Presentation
             try
             {
                 Extractor_Copy copyExtractor = new Extractor_Copy(_logger);
-                Extractor extractor = new Extractor(_logger);
 
                 copyExtractor.ExtractBundleFromFilePath(textFilePath);
 
                 extractedBundles = copyExtractor.Bundles;
-                extractedTubes = extractor.ExtractDSITubes(textFilePath);
+                extractedTubes = copyExtractor.ExtractDSITubes(textFilePath);
                 FileHandler fileHandler = new FileHandler(_logger);
 
                 WCSPP_Convertor convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
