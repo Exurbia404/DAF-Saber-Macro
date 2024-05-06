@@ -32,11 +32,16 @@ namespace Presentation
             messageCounter = 0;
             versionLabel.Text = "Version: " + version;
 
-            MainForm mainForm = new MainForm(_logger, this);
-            mainForm.TopLevel = false;
+            BundleForm bundleForm = new BundleForm(_logger, this);
+            bundleForm.TopLevel = false;
 
-            panel.Controls.Add(mainForm);
-            mainForm.Show();
+            panel.Controls.Add(bundleForm);
+            bundleForm.Show();
+            //MainForm mainForm = new MainForm(_logger, this);
+            //mainForm.TopLevel = false;
+
+            //panel.Controls.Add(mainForm);
+            //mainForm.Show();
         }
 
         private void Logger_LogEvent(object sender, string message)

@@ -35,7 +35,7 @@
             deleteProfileButton = new Button();
             addHeaderButton = new Button();
             removeHeaderButton = new Button();
-            button1 = new Button();
+            newProfileButton = new Button();
             SuspendLayout();
             // 
             // saveProfileButton
@@ -112,22 +112,22 @@
             removeHeaderButton.UseVisualStyleBackColor = true;
             removeHeaderButton.Click += removeHeaderButton_Click;
             // 
-            // button1
+            // newProfileButton
             // 
-            button1.Location = new Point(123, 45);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 27);
-            button1.TabIndex = 57;
-            button1.Text = "New";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            newProfileButton.Location = new Point(123, 45);
+            newProfileButton.Name = "newProfileButton";
+            newProfileButton.Size = new Size(75, 27);
+            newProfileButton.TabIndex = 57;
+            newProfileButton.Text = "New";
+            newProfileButton.UseVisualStyleBackColor = true;
+            newProfileButton.Click += newProfileButton_Click;
             // 
             // ProfileCreator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1018, 493);
-            Controls.Add(button1);
+            Controls.Add(newProfileButton);
             Controls.Add(removeHeaderButton);
             Controls.Add(addHeaderButton);
             Controls.Add(deleteProfileButton);
@@ -151,6 +151,6 @@
         private System.Windows.Forms.Button deleteProfileButton;
         private System.Windows.Forms.Button addHeaderButton;
         private System.Windows.Forms.Button removeHeaderButton;
-        private Button button1;
+        private Button newProfileButton;
     }
 }
