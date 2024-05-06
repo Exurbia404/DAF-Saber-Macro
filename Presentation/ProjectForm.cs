@@ -196,9 +196,10 @@ namespace Presentation
         {
             try
             {
-                Extractor extractor = new Extractor(_logger);
+                Extractor_Copy extractor = new Extractor_Copy(_logger);
 
                 _logger.Log("Opening project in Excel");
+
                 List<Project_Wire> projectWire = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
                 List<Project_Component> projectComponent = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
 
