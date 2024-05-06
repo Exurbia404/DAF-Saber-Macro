@@ -1,6 +1,6 @@
 ﻿namespace Presentation
 {
-    partial class MainForm
+    partial class OldMainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OldMainForm));
             bundlesListLabel = new Label();
             bundlesListBox = new ListBox();
             searchBundlesTextBox = new TextBox();
@@ -102,6 +102,7 @@
             schematicsListBox.Name = "schematicsListBox";
             schematicsListBox.Size = new Size(292, 340);
             schematicsListBox.TabIndex = 6;
+            schematicsListBox.SelectedIndexChanged += schematicsListBox_SelectedIndexChanged;
             schematicsListBox.DoubleClick += schematicsListBox_DoubleClick;
             // 
             // schematicsListLabel

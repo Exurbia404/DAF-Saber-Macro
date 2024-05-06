@@ -1,6 +1,6 @@
 ﻿namespace Presentation
 {
-    partial class BundleForm
+    partial class BundlesForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,12 +32,13 @@
             designerButton = new Button();
             reldasButton = new Button();
             productProtoButton = new Button();
+            bundlesListLabel = new Label();
             SuspendLayout();
             // 
             // searchBundlesTextBox
             // 
             searchBundlesTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            searchBundlesTextBox.Location = new Point(13, 69);
+            searchBundlesTextBox.Location = new Point(13, 103);
             searchBundlesTextBox.Margin = new Padding(4, 3, 4, 3);
             searchBundlesTextBox.Name = "searchBundlesTextBox";
             searchBundlesTextBox.Size = new Size(292, 23);
@@ -50,7 +51,7 @@
             // designerButton
             // 
             designerButton.BackColor = Color.White;
-            designerButton.Location = new Point(206, 41);
+            designerButton.Location = new Point(206, 75);
             designerButton.Margin = new Padding(2);
             designerButton.Name = "designerButton";
             designerButton.Size = new Size(97, 23);
@@ -62,7 +63,7 @@
             // reldasButton
             // 
             reldasButton.BackColor = Color.Gray;
-            reldasButton.Location = new Point(108, 41);
+            reldasButton.Location = new Point(108, 75);
             reldasButton.Margin = new Padding(2);
             reldasButton.Name = "reldasButton";
             reldasButton.Size = new Size(97, 23);
@@ -74,7 +75,7 @@
             // productProtoButton
             // 
             productProtoButton.BackColor = Color.Gray;
-            productProtoButton.Location = new Point(11, 41);
+            productProtoButton.Location = new Point(11, 75);
             productProtoButton.Margin = new Padding(2);
             productProtoButton.Name = "productProtoButton";
             productProtoButton.Size = new Size(97, 23);
@@ -83,11 +84,23 @@
             productProtoButton.UseVisualStyleBackColor = false;
             productProtoButton.Click += productProtoButton_Click;
             // 
+            // bundlesListLabel
+            // 
+            bundlesListLabel.AutoSize = true;
+            bundlesListLabel.Font = new Font("Arial", 15F, FontStyle.Bold, GraphicsUnit.Point);
+            bundlesListLabel.Location = new Point(11, 9);
+            bundlesListLabel.Margin = new Padding(4, 0, 4, 0);
+            bundlesListLabel.Name = "bundlesListLabel";
+            bundlesListLabel.Size = new Size(94, 24);
+            bundlesListLabel.TabIndex = 14;
+            bundlesListLabel.Text = "Bundles:";
+            // 
             // BundleForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(380, 540);
+            Controls.Add(bundlesListLabel);
             Controls.Add(designerButton);
             Controls.Add(reldasButton);
             Controls.Add(productProtoButton);
@@ -105,5 +118,6 @@
         private Button designerButton;
         private Button reldasButton;
         private Button productProtoButton;
+        private Label bundlesListLabel;
     }
 }

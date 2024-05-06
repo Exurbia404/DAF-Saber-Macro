@@ -16,7 +16,7 @@ using static System.Resources.ResXFileRef;
 
 namespace Presentation
 {
-    public partial class BundleForm : Form
+    public partial class BundlesForm : Form
     {
         private Logger _logger;
 
@@ -37,7 +37,7 @@ namespace Presentation
 
         private List<string> folderPaths;
 
-        public BundleForm(Logger logger, PanelForm panelform)
+        public BundlesForm(Logger logger, PanelForm panelform)
         {
             InitializeComponent();
 

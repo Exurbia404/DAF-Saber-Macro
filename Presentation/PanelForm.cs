@@ -19,7 +19,7 @@ namespace Presentation
         private MessageViewer messageViewerForm;
 
 
-        private string version = "Beta 1.0";
+        private string version = "Beta 1.3";
 
         public PanelForm(Logger logger)
         {
@@ -32,11 +32,11 @@ namespace Presentation
             messageCounter = 0;
             versionLabel.Text = "Version: " + version;
 
-            BundleForm bundleForm = new BundleForm(_logger, this);
-            bundleForm.TopLevel = false;
+            ChoiceForm choiceForm = new ChoiceForm(_logger, this);
+            choiceForm.TopLevel = false;
 
-            panel.Controls.Add(bundleForm);
-            bundleForm.Show();
+            panel.Controls.Add(choiceForm);
+            choiceForm.Show();
             //MainForm mainForm = new MainForm(_logger, this);
             //mainForm.TopLevel = false;
 
@@ -92,12 +92,29 @@ namespace Presentation
 
         private void homeButton_Click(object sender, EventArgs e)
         {
-            MainForm mainForm = new MainForm(_logger, this);
-            mainForm.TopLevel = false;
+            ChoiceForm choiceForm = new ChoiceForm(_logger, this);
+            choiceForm.TopLevel = false;
 
             panel.Controls.Clear();
-            panel.Controls.Add(mainForm);
-            mainForm.Show();
+            panel.Controls.Add(choiceForm);
+            choiceForm.Show();
+        }
+
+        private void panel_ControlAdded(object sender, ControlEventArgs e)
+        {
+            // Check if the added control is a ProfileCreator form
+            if (e.Control is ProfileCreator profileCreatorForm)
+            {
+                // Adjust the size of the panelForm and the panel when ProfileCreator is present
+                this.Size = new Size(900, 651); // Adjust as needed
+                panel.Size = new Size(860, 540); // Adjust as needed
+            }
+            else
+            {
+                //Set default sizes
+                this.Size = new Size(420, 651);
+                panel.Size = new Size(380, 540);
+            }
         }
     }
 }

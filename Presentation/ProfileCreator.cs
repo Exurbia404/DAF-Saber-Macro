@@ -22,6 +22,7 @@ namespace Presentation
         private int initalXOffset = 210;
         private ProfileController profileController;
         private Profile loadedProfile;
+        private PanelForm panelForm;
 
         public ProfileCreator(Logger logger)
         {
