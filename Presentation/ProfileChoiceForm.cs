@@ -112,17 +112,17 @@ namespace Presentation
 
 
             //If no user profiles have been selected use the defaults for bundles
-            if(selectedWireProfile == null)
+            if (selectedWireProfile == null)
             {
                 selectedWireProfile = profileController.defaultProfiles[0];
             }
 
-            if(selectedComponentProfile == null)
+            if (selectedComponentProfile == null)
             {
                 selectedComponentProfile = profileController.defaultProfiles[3];
             }
 
-            
+
             List<Bundle> selectedBundles = GetSelectedBundles();
             //_logger.Log(bundlesList.ToString());
 
@@ -217,6 +217,11 @@ namespace Presentation
         private void selectNoneBundlesButton_Click(object sender, EventArgs e)
         {
             bundlesListBox.ClearSelected();
+        }
+
+        private void saberCheckerButton_Click(object sender, EventArgs e)
+        {
+            SaberChecker saberChecker = new SaberChecker(_logger, converted_components, converted_wires);
         }
     }
 }

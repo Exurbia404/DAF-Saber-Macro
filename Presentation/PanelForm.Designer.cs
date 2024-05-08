@@ -124,6 +124,7 @@
             Controls.Add(programStatusButton);
             Controls.Add(versionLabel);
             Controls.Add(panel);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "PanelForm";
             Text = "PanelForm";
             ResumeLayout(false);
