@@ -15,16 +15,18 @@ public class SaberChecker
 {
     private Logger _logger;
 
-    private List<Converted_Component> convertedComponents;
-    private List<Converted_Wire> convertedWires;
+    private List<DSI_Component> components;
+    private List<DSI_Wire> wires;
 
     public List<bool> TestResults { get; private set; }
+    public Dictionary<DSI_Component, string> FailedComponents { get; private set; }
+    public Dictionary<DSI_Wire, string> FailedWires { get; private set; }
 
-    public SaberChecker(Logger logger, List<Converted_Component> conv_components, List<Converted_Wire> conv_wires)
+    public SaberChecker(Logger logger, List<DSI_Component> dsiComponents, List<DSI_Wire> dsiWires)
     {
         _logger = logger;
-        convertedComponents = conv_components;
-        convertedWires = conv_wires;
+        components = dsiComponents;
+        wires = dsiWires;
 
         TestResults = new List<bool>();
 
@@ -37,18 +39,18 @@ public class SaberChecker
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start(); // Start the stopwatch
 
-        TestResults.Add(DSI_01(convertedWires));
-        TestResults.Add(DSI_02(convertedComponents));
-        TestResults.Add(DSI_03(convertedComponents));
-        TestResults.Add(DSI_04(convertedComponents));
-        TestResults.Add(DSI_06(null));
-        TestResults.Add(DSI_07(null));
-        TestResults.Add(DSI_08(convertedComponents));
-        TestResults.Add(DSI_12(convertedWires));
-        TestResults.Add(DSI_14(convertedWires));
-        TestResults.Add(DSI_15(convertedWires));
-        TestResults.Add(DSI_16(convertedWires));
-        TestResults.Add(DSI_19(null));
+        TestResults.Add(DSI_01(wires));
+        TestResults.Add(DSI_02(components));
+        TestResults.Add(DSI_03(components));
+        TestResults.Add(DSI_04(components));
+        TestResults.Add(DSI_06(components));
+        TestResults.Add(DSI_07(components));
+        TestResults.Add(DSI_08(components));
+        TestResults.Add(DSI_12(wires));
+        TestResults.Add(DSI_14(wires));
+        TestResults.Add(DSI_15(wires));
+        TestResults.Add(DSI_16(wires));
+        TestResults.Add(DSI_19(components));
 
         stopwatch.Stop(); // Stop the stopwatch
         TimeSpan elapsed = stopwatch.Elapsed; // Get the elapsed time
@@ -59,18 +61,19 @@ public class SaberChecker
     }
 
     //DSI_01 Battery PLUS cable must have a sleeve
-    public bool DSI_01(List<Converted_Wire> wiresToCheck)
+    public bool DSI_01(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Wire wire in wiresToCheck)
+        foreach (DSI_Wire wire in wiresToCheck)
         {
             double diameter;
-            if (double.TryParse(wire.Diameter, out diameter)) // Parsing as double
+            if (double.TryParse(wire.CrossSectionalArea, out diameter)) // Parsing as double
             {
                 if (diameter < 35.0)
                 {
                     testResult = false;
+                    FailedWires.Add(wire, "DSI_01");
                 }
             }
         }
@@ -79,16 +82,17 @@ public class SaberChecker
 
 
     //DSI_02 Flagnote or instruction assigned to bundle component must have a connector variant
-    public bool DSI_02(List<Converted_Component> componentsToCheck)
+    public bool DSI_02(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Component component in componentsToCheck)
+        foreach (DSI_Component component in componentsToCheck)
         {
-            if (component.Variant == "")
+            if (component.CircuitOption == "")
             {
                 //TODO: DSI-02 write warning message to log
                 testResult = false;
+                FailedComponents.Add(component, "DSI_02");
             }
         }
 
@@ -96,17 +100,17 @@ public class SaberChecker
     }
 
     //DSI_03 Flagnote or instruction must have passive on last row
-    //TODO: see if this is fixable
-    public bool DSI_03(List<Converted_Component> componentsToCheck)
+    public bool DSI_03(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach(Converted_Component component in componentsToCheck)
+        foreach(DSI_Component component in componentsToCheck)
         {
-            //if(component.ComponentTypeCode == "PASSIVE")
-            //{
+            if(component.ComponentTypeCode == "PASSIVE")
+            {
                 //passives must not be empty?
-            //}
+
+            }
         }
 
         return testResult;
@@ -114,20 +118,19 @@ public class SaberChecker
 
 
     //DSI_04 Connector must have terminals
-    public bool DSI_04(List<Converted_Component> componentsToCheck)
+    public bool DSI_04(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Component component in componentsToCheck)
+        foreach (DSI_Component component in componentsToCheck)
         {
-            //TODO: DSI - 04 write warning message to log
+            
         }
 
         return testResult;
     }
 
     //DSI_06 Section 7 of DSI may only contain covers
-    //TODO: see if DSI_06 is fixable
     public bool DSI_06(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
@@ -143,6 +146,7 @@ public class SaberChecker
                     {
                         //Should give warning in testReport
                         testResult = false;
+                        FailedComponents.Add(component, "DSI_06");
                     }
                 }
 
@@ -154,7 +158,6 @@ public class SaberChecker
         return testResult;
     }
     //DSI_07 Insulation class code must be correct
-    //TODO: see if DSI_07 is fixable
     public bool DSI_07(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
@@ -169,6 +172,7 @@ public class SaberChecker
                     if (component.PartNumber1 == "Class" && component.ComponentTypeCode2 == "sleeve_*")
                     {
                         testResult = true;
+                        FailedComponents.Add(component, "DSI_07");
                     }
                 }
             }
@@ -178,16 +182,17 @@ public class SaberChecker
     }
 
     //DSI_08 Bundle component must be assigned to a variant
-    public bool DSI_08(List<Converted_Component> componentsToCheck)
+    public bool DSI_08(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Component component in componentsToCheck)
+        foreach (DSI_Component component in componentsToCheck)
         {
-            if(component.Variant == "")
+            if(component.CircuitOption == "")
             {
                 //TODO: DSI-08 write warning message to log
                 testResult = false;
+                FailedComponents.Add(component, "DSI_08");
             }
         }
 
@@ -195,17 +200,20 @@ public class SaberChecker
     }
     //DSI_12 Wire length must be 0 (loopback) or larger than 0 (all others)
 
-    public bool DSI_12(List<Converted_Wire> wiresToCheck)
+    public bool DSI_12(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;
 
-        foreach(Converted_Wire wire in wiresToCheck)
+        foreach(DSI_Wire wire in wiresToCheck)
         {
+            //TODO: need to find actual wire Length
             //If length is smaller than 0 false
-            if (int.Parse(wire.Length) < 0)
+            if (int.Parse(wire.WireTag) < 0)
             {
                 //TODO: DSI-12 write warning message to log
-                return false;
+
+                testResult = false;
+                FailedWires.Add(wire, "DSI_12");                
             }
         }
 
@@ -214,37 +222,40 @@ public class SaberChecker
 
     //DSI_14 wire length must be more than minimum (?)
 
-    public bool DSI_14(List<Converted_Wire> wiresToCheck)
+    public bool DSI_14(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Wire wire in wiresToCheck)
+        foreach (DSI_Wire wire in wiresToCheck)
         {
             //If length is smaller than 100 false
-            if (int.Parse(wire.Length) < 100)
+            if (int.Parse(wire.WireTag) < 100)
             {
                 //TODO: DSI-14 write warning message to log
-                return false;
+                testResult = false;
+                FailedWires.Add(wire, "DSI_14");
             }
         }
 
         return testResult;
     }
 
+    //These checks are killing me!
+
     //DSI_15 Wire terminal must be present and have correct part number
 
-    public bool DSI_15(List<Converted_Wire> wiresToCheck)
+    public bool DSI_15(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Wire wire in wiresToCheck)
+        foreach (DSI_Wire wire in wiresToCheck)
         {
             //If length is smaller than 100 false
-            if (wire.Term_1 == "" || wire.Term_2 == "")
-            {
+            //if (wire. == "" || wire.Term_2 == "")
+            //{
                 //TODO: DSI-15 write warning message to log
-                return false;
-            }
+            //    return false;
+            //}
         }
 
         return testResult;
@@ -252,17 +263,17 @@ public class SaberChecker
 
     //DSI_16 Connector must have valid part number
 
-    public bool DSI_16(List<Converted_Wire> wiresToCheck)
+    public bool DSI_16(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;
 
-        foreach (Converted_Wire wire in wiresToCheck)
+        foreach (DSI_Wire wire in wiresToCheck)
         {
-            if (wire.Code_no == "")
-            {
+            //if (wire.Code_no == "")
+            //{
                 //TODO: DSI-14 write warning message to log
-                return false;
-            }
+              //  return false;
+            //}
         }
 
         return testResult;
