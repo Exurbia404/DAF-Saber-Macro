@@ -3,6 +3,7 @@ using Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,18 +17,42 @@ public class SaberChecker
     private List<Converted_Component> convertedComponents;
     private List<Converted_Wire> convertedWires;
 
-    private List<bool> testResults;
+    public List<bool> TestResults { get; private set; }
 
     public SaberChecker(Logger logger, List<Converted_Component> conv_components, List<Converted_Wire> conv_wires)
     {
         _logger = logger;
         convertedComponents = conv_components;
         convertedWires = conv_wires;
+
+        TestResults = new List<bool>();
+
+        PerformChecks();
     }
+
 
     private void PerformChecks()
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start(); // Start the stopwatch
 
+        TestResults.Add(DSI_01(convertedWires));
+        TestResults.Add(DSI_02(convertedComponents));
+        TestResults.Add(DSI_03(convertedComponents));
+        TestResults.Add(DSI_04(convertedComponents));
+        TestResults.Add(DSI_06(null));
+        TestResults.Add(DSI_07(null));
+        TestResults.Add(DSI_08(convertedComponents));
+        TestResults.Add(DSI_12(convertedWires));
+        TestResults.Add(DSI_14(convertedWires));
+        TestResults.Add(DSI_15(convertedWires));
+        TestResults.Add(DSI_16(convertedWires));
+        TestResults.Add(DSI_19(null));
+
+        stopwatch.Stop(); // Stop the stopwatch
+        TimeSpan elapsed = stopwatch.Elapsed; // Get the elapsed time
+
+        _logger.Log($"Performed checks in {elapsed.TotalMilliseconds} milliseconds");
     }
 
     //DSI_01 Battery PLUS cable must have a sleeve
@@ -35,15 +60,17 @@ public class SaberChecker
     {
         bool testResult = true;
 
-        foreach(Converted_Wire wire in wiresToCheck)
+        foreach (Converted_Wire wire in wiresToCheck)
         {
-            if(int.Parse(wire.Diameter) >= 35) //add wire.property.marking(first digit) = 1
+            double diameter;
+            if (double.TryParse(wire.Diameter, out diameter)) // Parsing as double
             {
-                testResult = false; //it should just give a warning!
-                //generate testReport
+                if (diameter < 35.0)
+                {
+                    testResult = false;
+                }
             }
         }
-
         return testResult;
     }
 
@@ -66,16 +93,17 @@ public class SaberChecker
     }
 
     //DSI_03 Flagnote or instruction must have passive on last row
-    public bool DSI_03(List<DSI_Component> componentsToCheck)
+    //TODO: see if this is fixable
+    public bool DSI_03(List<Converted_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach(DSI_Component component in componentsToCheck)
+        foreach(Converted_Component component in componentsToCheck)
         {
-            if(component.ComponentTypeCode == "PASSIVE")
-            {
+            //if(component.ComponentTypeCode == "PASSIVE")
+            //{
                 //passives must not be empty?
-            }
+            //}
         }
 
         return testResult;
@@ -96,33 +124,50 @@ public class SaberChecker
     }
 
     //DSI_06 Section 7 of DSI may only contain covers
+    //TODO: see if DSI_06 is fixable
     public bool DSI_06(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach(DSI_Component component in componentsToCheck)
+        if(componentsToCheck != null)
         {
-            //TODO: check this statement against actual data
-            if(component.ComponentTypeCode == "PASSIVE" && component.ComponentTypeCode2 == "*sleeve")
+            foreach (DSI_Component component in componentsToCheck)
             {
-                //Should give warning in testReport
-                testResult = false;
+                if (component != null)
+                {
+                    //TODO: check this statement against actual data
+                    if (component.ComponentTypeCode == "PASSIVE" && component.ComponentTypeCode2 == "*sleeve")
+                    {
+                        //Should give warning in testReport
+                        testResult = false;
+                    }
+                }
+
             }
         }
+
+        
 
         return testResult;
     }
     //DSI_07 Insulation class code must be correct
+    //TODO: see if DSI_07 is fixable
     public bool DSI_07(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach(DSI_Component component in componentsToCheck)
+        if(componentsToCheck != null)
         {
-            //TODO: check this against actual data and UAT_SOW2_DSI.xlsx
-            if(component.PartNumber1 == "Class" && component.ComponentTypeCode2 == "sleeve_*")
+            foreach (DSI_Component component in componentsToCheck)
             {
-                testResult = true;
+                if (component != null)
+                {
+                    //TODO: check this against actual data and UAT_SOW2_DSI.xlsx
+                    if (component.PartNumber1 == "Class" && component.ComponentTypeCode2 == "sleeve_*")
+                    {
+                        testResult = true;
+                    }
+                }
             }
         }
 
@@ -221,18 +266,25 @@ public class SaberChecker
     }
 
     //DSI_19 Bundle must have identificiation label
+    //TODO: see if DSI_19 is fixable
     public bool DSI_19(List<DSI_Component> componentsToCheck)
     {
         bool testResult = false;
-
-        foreach(DSI_Component component in componentsToCheck)
+        if (componentsToCheck != null)
         {
-            //Should probably check this for each individual component and generate a report which do and do not pass this test
-            if((component.ComponentTypeCode == "PASSIVE") && (component.PartNumber1 == "LABEL"))
+            foreach (DSI_Component component in componentsToCheck)
             {
-                testResult = true;
+                if (component != null)
+                {
+                    //Should probably check this for each individual component and generate a report which do and do not pass this test
+                    if ((component.ComponentTypeCode == "PASSIVE") && (component.PartNumber1 == "LABEL") && component != null)
+                    {
+                        testResult = true;
+                    }
+                }
             }
         }
+        
 
         return testResult;
     }

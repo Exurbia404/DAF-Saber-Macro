@@ -36,6 +36,7 @@ namespace Presentation
 
         public ProfileChoiceForm(Logger logger, string filename)
         {
+            _logger = logger;
             InitializeComponent();
             fileName = filename;
             exporter = new ExcelExporter(logger);
@@ -222,6 +223,21 @@ namespace Presentation
         private void saberCheckerButton_Click(object sender, EventArgs e)
         {
             SaberChecker saberChecker = new SaberChecker(_logger, converted_components, converted_wires);
+
+            int totalTests = saberChecker.TestResults.Count;
+
+            if (saberChecker.TestResults == null || totalTests == 0)
+            {
+                // No tests or results available
+                testResultsTextBox.Text = "No test results available";
+            }
+
+            
+            int succeededTests = saberChecker.TestResults.Count(result => result); // Counting true values
+
+            double successPercentage = (double)succeededTests / totalTests * 100;
+            double roundedPercentage = Math.Round(successPercentage, MidpointRounding.AwayFromZero);
+            testResultsTextBox.Text = "Results: " + roundedPercentage + "% succeeded"; // Displaying rounded percentage
         }
     }
 }
