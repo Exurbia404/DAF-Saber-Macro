@@ -28,9 +28,9 @@ namespace Presentation
         private List<DSI_Wire> extractedWires;
         private List<DSI_Component> extractedComponents;
 
-        private string ProductionBuildOfMaterialsFolder = FolderPaths.DAF_Production;
-        private string ReldasBuildOfMaterialsFolder = FolderPaths.DAF_Reldas;
-        private string DesignerBuildOfMaterialsFolder = FolderPaths.DAF_Designer;
+        private string ProductionBuildOfMaterialsFolder;
+        private string ReldasBuildOfMaterialsFolder;
+        private string DesignerBuildOfMaterialsFolder;
 
         private List<string> folderPaths;
 

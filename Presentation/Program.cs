@@ -17,6 +17,7 @@ namespace Presentation
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new PanelForm(mainLogger));
+            Settings settings = new Settings();
         }
     }
 }
