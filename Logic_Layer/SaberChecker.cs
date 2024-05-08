@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,6 +54,8 @@ public class SaberChecker
         TimeSpan elapsed = stopwatch.Elapsed; // Get the elapsed time
 
         _logger.Log($"Performed checks in {elapsed.TotalMilliseconds} milliseconds");
+        
+        //TODO: find an elegant way to show which tests have failed
     }
 
     //DSI_01 Battery PLUS cable must have a sleeve
