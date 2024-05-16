@@ -27,6 +27,7 @@ namespace Data_Access
         public void WriteToFile(List<iConverted_Wire> wires, List<iConverted_Component> components, List<iBundle> extractedBundles, string fileName, string filePath)
         {
             filePath = filePath.Replace("_DSI", "");
+            fileName = fileName.Replace("_DSI", "");
 
             //Construct the new filePath
             string newFileName = $"{fileName}_generated_WCSPP.txt";

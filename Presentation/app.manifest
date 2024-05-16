@@ -20,16 +20,14 @@
       </requestedPrivileges>
     </security>
   </trustInfo>
-	
+
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
-		    <dpiAware>true/pm</dpiAware>
-
       <!-- A list of the Windows versions that this application has been tested on
            and is designed to work with. Uncomment the appropriate elements
            and Windows will automatically select the most compatible environment. -->
 
-		<!-- Windows Vista -->
+      <!-- Windows Vista -->
       <!--<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />-->
 
       <!-- Windows 7 -->
