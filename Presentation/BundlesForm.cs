@@ -28,12 +28,9 @@ namespace Presentation
         private List<DSI_Wire> extractedWires;
         private List<DSI_Component> extractedComponents;
 
-        private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
-        private string ReldasBuildOfMaterialsFolder = @"J:\SaberRelease\Designer\Boms";
-        private string DesignerBuildOfMaterialsFolder = @"J:\SaberWiP\2_Users\designs\BSA\Boms";
-
-        private string LocalBuildOfMaterialsFolder = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
-        private string computerName = Environment.MachineName;
+        private string ProductionBuildOfMaterialsFolder;
+        private string ReldasBuildOfMaterialsFolder;
+        private string DesignerBuildOfMaterialsFolder;
 
         private List<string> folderPaths;
 
@@ -46,9 +43,9 @@ namespace Presentation
 
             try
             {
-                if (computerName == "EXURBIA")
+                if (Environment.MachineName == "EXURBIA")
                 {
-                    DesignerBuildOfMaterialsFolder = LocalBuildOfMaterialsFolder;
+                    DesignerBuildOfMaterialsFolder = FolderPaths.ExurbiaLocal;
                 }
                 folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
             }
