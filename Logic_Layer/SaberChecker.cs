@@ -56,8 +56,6 @@ public class SaberChecker
         TimeSpan elapsed = stopwatch.Elapsed; // Get the elapsed time
 
         _logger.Log($"Performed checks in {elapsed.TotalMilliseconds} milliseconds");
-        
-        //TODO: find an elegant way to show which tests have failed
     }
 
     //DSI_01 Battery PLUS cable must have a sleeve

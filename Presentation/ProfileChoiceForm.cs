@@ -222,7 +222,8 @@ namespace Presentation
 
         private void saberCheckerButton_Click(object sender, EventArgs e)
         {
-            SaberChecker saberChecker = new SaberChecker(_logger, converted_components, converted_wires);
+            //TODO: get the DSI wires and components and send them over
+            SaberChecker saberChecker = new SaberChecker(_logger,null, null);
 
             int totalTests = saberChecker.TestResults.Count;
 
