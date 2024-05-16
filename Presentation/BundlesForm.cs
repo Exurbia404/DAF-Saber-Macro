@@ -272,16 +272,13 @@ namespace Presentation
         {
             try
             {
-                // Get the directory name containing the file
-                string directoryName = Path.GetDirectoryName(filePath);
+                // Get the file name without the extension
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
 
-                // Get the directory name from the full path
-                string folderName = new DirectoryInfo(directoryName).Name;
+                // Remove the substring "_DSI" from the file name
+                string cleanedFileName = fileNameWithoutExtension.Replace("_DSI", "");
 
-                // Extract the number from the folder name
-                string number = new String(folderName.Where(Char.IsDigit).ToArray());
-
-                return number;
+                return fileNameWithoutExtension;
             }
             catch (Exception ex)
             {

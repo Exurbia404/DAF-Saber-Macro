@@ -38,7 +38,7 @@ namespace Presentation
         {
             _logger = logger;
             InitializeComponent();
-            fileName = filename;
+            fileName = filename.Replace("_DSI", "");
             exporter = new ExcelExporter(logger);
             profileController = new ProfileController(new FileHandler(logger));
 

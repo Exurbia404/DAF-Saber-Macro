@@ -10,7 +10,7 @@
     <AssemblyName>Saber Tool+</AssemblyName>
     <Company>Fontys Hogescholen</Company>
     <Authors>Tom van Heek</Authors>
-    <ApplicationManifest>FolderPaths.cs</ApplicationManifest>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
