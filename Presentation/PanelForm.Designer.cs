@@ -126,7 +126,7 @@
             Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "PanelForm";
-            Text = "PanelForm";
+            Text = "Saber Tool Plus";
             ResumeLayout(false);
             PerformLayout();
         }

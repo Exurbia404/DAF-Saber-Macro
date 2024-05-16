@@ -19,7 +19,7 @@ namespace Presentation
         private MessageViewer messageViewerForm;
 
 
-        private string version = "Beta 1.3";
+        private string version = "Beta 1.4";
 
         public PanelForm(Logger logger)
         {

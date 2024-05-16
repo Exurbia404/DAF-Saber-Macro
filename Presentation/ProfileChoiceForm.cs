@@ -125,10 +125,13 @@ namespace Presentation
 
 
             List<Bundle> selectedBundles = GetSelectedBundles();
-            //_logger.Log(bundlesList.ToString());
+            _logger.Log("The following assemblies have been selected");
+            foreach(Bundle bundle in selectedBundles)
+            {
+                _logger.Log(bundle.VariantNumber);
+            }
 
             List<bool> selectedSheets = GetSelectedSheets();
-            //_logger.Log(selectedSheets.ToString());
 
             // Create a list containing wires at index 0 and components at index 1
             List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };

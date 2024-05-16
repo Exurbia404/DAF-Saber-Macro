@@ -1,6 +1,7 @@
 ﻿using Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -75,7 +76,8 @@ namespace Logic
 
                     if(wCSPP_Component.Variant == "" || wCSPP_Component.Bundle == "")
                     {
-                        wCSPP_Component.Bundle = GetModuleNumberForComponent(component.BlockNumber);
+                        //TODO: fix this
+                        wCSPP_Component.Bundle = GetModuleNumbersForComponent(component.BlockNumber)[0];
                         wCSPP_Component.Variant = GetVariantForModularizedComponent(wCSPP_Component.Bundle);
                     }
 
@@ -86,16 +88,20 @@ namespace Logic
             return convertedList.OrderBy(component => component.Name).ToList(); ;
         }
 
-        private string GetModuleNumberForComponent(string blockNumber)
+        private List<string> GetModuleNumbersForComponent(string blockNumber)
         {
+            var blockNumbers = blockNumber.Split('/');
+            List<string> matchingModuleNumbers = new List<string>();
+
             foreach (string[] line in sections[9])
             {
-                if (line[0] == blockNumber)
+                if (blockNumbers.Contains(line[0]))
                 {
-                    return line[2];
+                    matchingModuleNumbers.Add(line[2]);
                 }
             }
-            return "";
+
+            return matchingModuleNumbers;
         }
 
         public List<DSI_Tube> ExtractDSITubes(string filePath)
@@ -422,8 +428,8 @@ namespace Logic
 
                 if (line[6] != "") //Check if modularized
                 {
-                    newWire.Term_1 = Modularized_FindTerminalCode(newWire.Connector_1, newWire.Port_1);
-                    newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2);
+                    newWire.Term_1 = Modularized_FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire);
+                    newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire);
                     newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1);
                     newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2);
                 }
@@ -437,7 +443,7 @@ namespace Logic
             return foundWires;
         }
 
-        private string Modularized_FindTerminalCode(string connector, string port_1)
+        private string Modularized_FindTerminalCode(string connector, string port_1, Converted_Wire wire)
         {
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = dsi_Components
@@ -451,8 +457,25 @@ namespace Logic
             {
                 return "";
             }
+            //Sometimes in modularized bundles there are multiple options
             else if (filteredComponents.Count > 1)
             {
+                foreach (DSI_Component component in filteredComponents)
+                {
+                    //Get the list of blocknumbers for each component
+                    List<string> blockNumbers = GetModuleNumbersForComponent(component.BlockNumber);
+                    foreach (string blockNumber in blockNumbers)
+                    {
+                        _logger.Log(blockNumber);
+                        //See if the wire contains the component variant
+                        if (wire.Bundle.Contains(blockNumber))
+                        {
+                            _logger.Log("");
+                            return component.PartNumber2;
+                        }
+                    }
+                    
+                }
                 throw new InvalidOperationException("Multiple matching components found. Expected only one.");
             }
 
@@ -492,6 +515,10 @@ namespace Logic
             }
             else if (filteredComponents.Count > 1)
             {
+                foreach (DSI_Component component in filteredComponents)
+                {
+                    _logger.Log(component.ToString());
+                }
                 throw new InvalidOperationException("Multiple matching components found. Expected only one.");
             }
 
@@ -516,6 +543,10 @@ namespace Logic
             }
             else if (filteredComponents.Count > 1)
             {
+                foreach (DSI_Component component in filteredComponents)
+                {
+                    _logger.Log(component.ToString());
+                }
                 throw new InvalidOperationException("Multiple matching components found. Expected only one.");
             }
 
@@ -539,6 +570,10 @@ namespace Logic
             }
             else if (filteredComponents.Count > 1)
             {
+                foreach (DSI_Component component in filteredComponents)
+                {
+                    _logger.Log(component.ToString());
+                }
                 throw new InvalidOperationException("Multiple matching components found. Expected only one.");
             }
 

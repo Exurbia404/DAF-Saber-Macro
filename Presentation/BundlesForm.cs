@@ -221,6 +221,7 @@ namespace Presentation
         {
             try
             {
+                _logger.Log("Trying to open file");
                 Extractor copyExtractor = new Extractor(_logger);
 
                 copyExtractor.ExtractBundleFromFilePath(textFilePath);
