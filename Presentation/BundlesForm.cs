@@ -229,8 +229,6 @@ namespace Presentation
                 extractedTubes = copyExtractor.ExtractDSITubes(textFilePath);
                 FileHandler fileHandler = new FileHandler(_logger);
 
-                WCSPP_Convertor convertor = new WCSPP_Convertor(extractedWires, extractedComponents, fileHandler);
-
                 List<Converted_Component> convertedComponents = copyExtractor.Components;
                 List<Converted_Wire> convertedWires = copyExtractor.Wires;
 

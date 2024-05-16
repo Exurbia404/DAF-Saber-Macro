@@ -178,7 +178,7 @@ namespace Logic
         {
             List<Profile> foundProfiles = new List<Profile>();
 
-            foreach (iProfile loadedProfile in fileHandler.LoadProfiles()) 
+            foreach (Profile loadedProfile in fileHandler.LoadProfiles()) 
             {
                 if(loadedProfile.Type == ProfileType.User)
                 {

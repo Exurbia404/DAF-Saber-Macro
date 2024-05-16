@@ -113,9 +113,12 @@ namespace Data_Access
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    List<iProfile> profiles = JsonConvert.DeserializeObject<List<iProfile>>(json);
+                    List<Profile> profiles = JsonConvert.DeserializeObject<List<Profile>>(json);
                     _logger.Log("Profiles loaded successfully.");
-                    return profiles;
+
+                    // Convert the list of Profile to a list of iProfile
+                    List<iProfile> iProfiles = profiles.Cast<iProfile>().ToList();
+                    return iProfiles;
                 }
                 else
                 {
