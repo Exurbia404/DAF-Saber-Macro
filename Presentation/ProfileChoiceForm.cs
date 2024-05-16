@@ -36,6 +36,7 @@ namespace Presentation
 
         public ProfileChoiceForm(Logger logger, string filename)
         {
+            _logger = logger;
             InitializeComponent();
             fileName = filename;
             exporter = new ExcelExporter(logger);
@@ -112,17 +113,17 @@ namespace Presentation
 
 
             //If no user profiles have been selected use the defaults for bundles
-            if(selectedWireProfile == null)
+            if (selectedWireProfile == null)
             {
                 selectedWireProfile = profileController.defaultProfiles[0];
             }
 
-            if(selectedComponentProfile == null)
+            if (selectedComponentProfile == null)
             {
                 selectedComponentProfile = profileController.defaultProfiles[3];
             }
 
-            
+
             List<Bundle> selectedBundles = GetSelectedBundles();
             //_logger.Log(bundlesList.ToString());
 
@@ -217,6 +218,27 @@ namespace Presentation
         private void selectNoneBundlesButton_Click(object sender, EventArgs e)
         {
             bundlesListBox.ClearSelected();
+        }
+
+        private void saberCheckerButton_Click(object sender, EventArgs e)
+        {
+            //TODO: get the DSI wires and components and send them over
+            SaberChecker saberChecker = new SaberChecker(_logger,null, null);
+
+            int totalTests = saberChecker.TestResults.Count;
+
+            if (saberChecker.TestResults == null || totalTests == 0)
+            {
+                // No tests or results available
+                testResultsTextBox.Text = "No test results available";
+            }
+
+            
+            int succeededTests = saberChecker.TestResults.Count(result => result); // Counting true values
+
+            double successPercentage = (double)succeededTests / totalTests * 100;
+            double roundedPercentage = Math.Round(successPercentage, MidpointRounding.AwayFromZero);
+            testResultsTextBox.Text = "Results: " + roundedPercentage + "% succeeded"; // Displaying rounded percentage
         }
     }
 }

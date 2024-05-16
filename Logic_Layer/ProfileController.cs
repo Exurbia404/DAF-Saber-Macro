@@ -140,9 +140,6 @@ namespace Logic
             "N_pins"
         };
 
-        //TODO: not yet implemented
-        //private ProfileController profileController;
-
         public List<Profile> defaultProfiles;
         public List<Profile> userProfiles;
 

@@ -196,7 +196,7 @@ namespace Presentation
         {
             try
             {
-                Extractor_Copy extractor = new Extractor_Copy(_logger);
+                Extractor extractor = new Extractor(_logger);
 
                 _logger.Log("Opening project in Excel");
 

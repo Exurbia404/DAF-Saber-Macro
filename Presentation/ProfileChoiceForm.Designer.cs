@@ -41,6 +41,8 @@
             createRCCheckBox = new CheckBox();
             createOCCheckBox = new CheckBox();
             currentlyOpenedLabel = new Label();
+            saberCheckerButton = new Button();
+            testResultsTextBox = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -170,11 +172,31 @@
             currentlyOpenedLabel.TabIndex = 15;
             currentlyOpenedLabel.Text = "Opened:";
             // 
+            // saberCheckerButton
+            // 
+            saberCheckerButton.Location = new Point(165, 347);
+            saberCheckerButton.Name = "saberCheckerButton";
+            saberCheckerButton.Size = new Size(110, 23);
+            saberCheckerButton.TabIndex = 16;
+            saberCheckerButton.Text = "Perform checks";
+            saberCheckerButton.UseVisualStyleBackColor = true;
+            saberCheckerButton.Click += saberCheckerButton_Click;
+            // 
+            // testResultsTextBox
+            // 
+            testResultsTextBox.Location = new Point(165, 377);
+            testResultsTextBox.Name = "testResultsTextBox";
+            testResultsTextBox.ReadOnly = true;
+            testResultsTextBox.Size = new Size(110, 23);
+            testResultsTextBox.TabIndex = 17;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(testResultsTextBox);
+            Controls.Add(saberCheckerButton);
             Controls.Add(currentlyOpenedLabel);
             Controls.Add(createOCCheckBox);
             Controls.Add(createRCCheckBox);
@@ -210,5 +232,7 @@
         private CheckBox createRCCheckBox;
         private CheckBox createOCCheckBox;
         private Label currentlyOpenedLabel;
+        private Button saberCheckerButton;
+        private TextBox testResultsTextBox;
     }
 }

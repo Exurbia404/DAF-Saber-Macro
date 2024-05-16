@@ -224,7 +224,7 @@ namespace Presentation
         {
             try
             {
-                Extractor_Copy copyExtractor = new Extractor_Copy(_logger);
+                Extractor copyExtractor = new Extractor(_logger);
 
                 copyExtractor.ExtractBundleFromFilePath(textFilePath);
 

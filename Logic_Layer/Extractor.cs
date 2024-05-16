@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class Extractor_Copy
+    public class Extractor
     {
         public List<Converted_Component> Components { get; private set; }
         public List<Project_Component> Project_Components { get; private set; }
@@ -25,7 +25,7 @@ namespace Logic
         private string filePath;
         private List<DSI_Component> dsi_Components;
         
-        public Extractor_Copy(Logger logger)
+        public Extractor(Logger logger)
         {
             _logger = logger;
         }
