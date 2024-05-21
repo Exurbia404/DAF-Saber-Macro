@@ -76,7 +76,6 @@ namespace Logic
 
                     if(wCSPP_Component.Variant == "" || wCSPP_Component.Bundle == "")
                     {
-                        //TODO: fix this
                         wCSPP_Component.Bundle = GetModuleNumbersForComponent(component.BlockNumber)[0];
                         wCSPP_Component.Variant = GetVariantForModularizedComponent(wCSPP_Component.Bundle);
                     }

@@ -151,6 +151,7 @@ namespace Presentation
                 // If there's only one option, open the latest bundle file
                 if (filteredFolderPaths.Count() == 1)
                 {
+                    _logger.Log("Opening file");
                     OpenLatestBundleFile(filteredFolderPaths.First());
                 }
                 else
@@ -222,16 +223,16 @@ namespace Presentation
             try
             {
                 _logger.Log("Trying to open file");
-                Extractor copyExtractor = new Extractor(_logger);
+                Extractor extractor = new Extractor(_logger);
 
-                copyExtractor.ExtractBundleFromFilePath(textFilePath);
+                extractor.ExtractBundleFromFilePath(textFilePath);
 
-                extractedBundles = copyExtractor.Bundles;
-                extractedTubes = copyExtractor.ExtractDSITubes(textFilePath);
+                extractedBundles = extractor.Bundles;
+                extractedTubes = extractor.ExtractDSITubes(textFilePath);
                 FileHandler fileHandler = new FileHandler(_logger);
 
-                List<Converted_Component> convertedComponents = copyExtractor.Components;
-                List<Converted_Wire> convertedWires = copyExtractor.Wires;
+                List<Converted_Component> convertedComponents = extractor.Components;
+                List<Converted_Wire> convertedWires = extractor.Wires;
 
 
                 string bundleNumber = GetFileName(textFilePath);

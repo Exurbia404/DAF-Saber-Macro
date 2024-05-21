@@ -1,5 +1,4 @@
 ﻿using Logging;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Management;
 public class FolderPaths
@@ -35,16 +34,16 @@ public class FolderPaths
         string leylandNetworkPath = @"\\eu.paccar.com\LEYLEY\Saber";
         string leylandDriveLetter = GetDriveLetter(leylandNetworkPath);
 
-        HasFoundDAF = !dafDriveLetter.IsNullOrEmpty();
-        HasFoundLEY = !leylandNetworkPath.IsNullOrEmpty();
+        //HasFoundDAF = !dafDriveLetter.IsNullOrEmpty();
+        //HasFoundLEY = !leylandNetworkPath.IsNullOrEmpty();
 
-        if (!dafDriveLetter.IsNullOrEmpty())
+        if (dafDriveLetter != "")
         {
             DAF_Designer = ConcatenateStrings(dafDriveLetter, DAF_Designer);
             DAF_Production = ConcatenateStrings(dafDriveLetter, DAF_Production);
             DAF_Reldas = ConcatenateStrings(dafDriveLetter, DAF_Reldas);
         }
-        else if (!leylandDriveLetter.IsNullOrEmpty())
+        else if (leylandDriveLetter != "")
         {
             LEY_Designer = ConcatenateStrings(leylandDriveLetter, LEY_Designer);
             LEY_Production = ConcatenateStrings(leylandDriveLetter, LEY_Production);
