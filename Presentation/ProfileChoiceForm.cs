@@ -82,6 +82,7 @@ namespace Presentation
             {
                 wireProfilesComboBox.Items.Add(profile.Name);
                 componentProfilesComboBox.Items.Add(profile.Name);
+                customSheetComboBox.Items.Add(profile.Name);
             }
         }
 
@@ -106,11 +107,12 @@ namespace Presentation
             // Get selected profile names from combo boxes
             string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
             string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
+            string selectedCustomSheetProfileName = customSheetComboBox.SelectedItem?.ToString();
 
             // Find selected profiles from the profile list
             Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
             Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
-
+            Profile selectedCustomSheetProfile = profileList.FirstOrDefault(p => p.Name == selectedCustomSheetProfileName);
 
             //If no user profiles have been selected use the defaults for bundles
             if (selectedWireProfile == null)
@@ -123,18 +125,17 @@ namespace Presentation
                 selectedComponentProfile = profileController.defaultProfiles[3];
             }
 
-
             List<Bundle> selectedBundles = GetSelectedBundles();
             _logger.Log("The following assemblies have been selected");
-            foreach(Bundle bundle in selectedBundles)
+            foreach (Bundle bundle in selectedBundles)
             {
                 _logger.Log(bundle.VariantNumber);
             }
 
             List<bool> selectedSheets = GetSelectedSheets();
 
-            // Create a list containing wires at index 0 and components at index 1
-            List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
+            // Create a list containing wires at index 0 and components at index 1, custom at 2
+            List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile, selectedCustomSheetProfile};
 
             // Call the method to export to Excel with the selected profiles
             ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
@@ -176,7 +177,8 @@ namespace Presentation
                 //Get the selected sheets
                 createPECheckBox.Checked,
                 createRCCheckBox.Checked,
-                createOCCheckBox.Checked
+                createOCCheckBox.Checked,
+                createCustomCheckBox.Checked
             };
 
             return selectedSheets;
@@ -226,7 +228,7 @@ namespace Presentation
         private void saberCheckerButton_Click(object sender, EventArgs e)
         {
             //TODO: get the DSI wires and components and send them over
-            SaberChecker saberChecker = new SaberChecker(_logger,null, null);
+            SaberChecker saberChecker = new SaberChecker(_logger, null, null);
 
             int totalTests = saberChecker.TestResults.Count;
 
@@ -236,12 +238,17 @@ namespace Presentation
                 testResultsTextBox.Text = "No test results available";
             }
 
-            
+
             int succeededTests = saberChecker.TestResults.Count(result => result); // Counting true values
 
             double successPercentage = (double)succeededTests / totalTests * 100;
             double roundedPercentage = Math.Round(successPercentage, MidpointRounding.AwayFromZero);
             testResultsTextBox.Text = "Results: " + roundedPercentage + "% succeeded"; // Displaying rounded percentage
+        }
+
+        private void createCustomCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            customSheetComboBox.Enabled = createCustomCheckBox.Checked;
         }
     }
 }

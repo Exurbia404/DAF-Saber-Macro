@@ -146,7 +146,7 @@ namespace Presentation
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
 
-                    CreateExtraSheets(package, wires, bundles, selectedSheets);
+                    CreateExtraSheets(package, wires, bundles, selectedSheets, profiles);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
@@ -172,7 +172,7 @@ namespace Presentation
             }
         }
 
-        private void CreateExtraSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets)
+        private void CreateExtraSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets, List<Profile> profiles)
         {
             //PE sheet
             if (selectedSheets[0])
@@ -191,6 +191,31 @@ namespace Presentation
             {
                 _logger.Log("Creating OC sheet");
                 CreateOC_Sheets(excelPackage, wires, bundles);
+            }
+            //Custom sheet
+            if (selectedSheets[3])
+            {
+                _logger.Log("Creating Custom sheet");
+                CreateCustomSheets(excelPackage, wires, bundles, profiles);
+            }
+        }
+
+        private void CreateCustomSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<Profile> profiles)
+        {
+            
+            //Create the master sheet
+            CreateMasterSheet(excelPackage, wires, bundles, profiles[2]);
+
+            //Create the separate sheets as in the original tool
+            foreach (Bundle bundle in bundles)
+            {
+                //Create templist to give to CreateIndividualSheet
+                List<Bundle> tempList = new List<Bundle>
+                {
+                    bundle
+                };
+
+                CreateIndividualSheet(excelPackage, wires, tempList, profiles[2]);
             }
         }
 

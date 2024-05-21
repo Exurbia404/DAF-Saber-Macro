@@ -43,6 +43,8 @@
             currentlyOpenedLabel = new Label();
             saberCheckerButton = new Button();
             testResultsTextBox = new TextBox();
+            customSheetComboBox = new ComboBox();
+            createCustomCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -190,11 +192,34 @@
             testResultsTextBox.Size = new Size(110, 23);
             testResultsTextBox.TabIndex = 17;
             // 
+            // customSheetComboBox
+            // 
+            customSheetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            customSheetComboBox.Enabled = false;
+            customSheetComboBox.FormattingEnabled = true;
+            customSheetComboBox.Location = new Point(213, 221);
+            customSheetComboBox.Name = "customSheetComboBox";
+            customSheetComboBox.Size = new Size(121, 23);
+            customSheetComboBox.TabIndex = 18;
+            // 
+            // createCustomCheckBox
+            // 
+            createCustomCheckBox.AutoSize = true;
+            createCustomCheckBox.Location = new Point(139, 221);
+            createCustomCheckBox.Name = "createCustomCheckBox";
+            createCustomCheckBox.Size = new Size(68, 19);
+            createCustomCheckBox.TabIndex = 19;
+            createCustomCheckBox.Text = "Custom";
+            createCustomCheckBox.UseVisualStyleBackColor = true;
+            createCustomCheckBox.CheckedChanged += createCustomCheckBox_CheckedChanged;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(createCustomCheckBox);
+            Controls.Add(customSheetComboBox);
             Controls.Add(testResultsTextBox);
             Controls.Add(saberCheckerButton);
             Controls.Add(currentlyOpenedLabel);
@@ -234,5 +259,7 @@
         private Label currentlyOpenedLabel;
         private Button saberCheckerButton;
         private TextBox testResultsTextBox;
+        private ComboBox customSheetComboBox;
+        private CheckBox createCustomCheckBox;
     }
 }

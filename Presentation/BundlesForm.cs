@@ -305,18 +305,30 @@ namespace Presentation
 
         private void productProtoButton_Click(object sender, EventArgs e)
         {
+            productProtoButton.BackColor = Color.White;
+            reldasButton.BackColor = Color.Gray;
+            designerButton.BackColor = Color.Gray;
+
             _logger.Log("current directory is: Production/Proto");
             folderPaths = GetImmediateSubfolders(ProductionBuildOfMaterialsFolder);
         }
 
         private void reldasButton_Click(object sender, EventArgs e)
         {
+            productProtoButton.BackColor = Color.Gray;
+            reldasButton.BackColor = Color.White;
+            designerButton.BackColor = Color.Gray;
+
             _logger.Log("current directory is: Release");
             folderPaths = GetImmediateSubfolders(ReldasBuildOfMaterialsFolder);
         }
 
         private void designerButton_Click(object sender, EventArgs e)
         {
+            productProtoButton.BackColor = Color.Gray;
+            reldasButton.BackColor = Color.Gray;
+            designerButton.BackColor = Color.White;
+
             _logger.Log("current directory is: WiP");
             folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
         }

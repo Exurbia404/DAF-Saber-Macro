@@ -162,10 +162,10 @@ namespace Logic
         private void InitializeDefaultProfiles()
         { 
             defaultProfiles.Add(new Profile("Wire WCSPP Profile", Wire_WCSPP_Profile_Options_List, ProfileType.Wire));
-            defaultProfiles.Add(new Profile("Wire Profile", Wire_Profile_Options_List, ProfileType.Wire));
+            //defaultProfiles.Add(new Profile("Wire Profile", Wire_Profile_Options_List, ProfileType.Wire));
             defaultProfiles.Add(new Profile("Wire Project Profile", Wire_Project_Profile_Options_List, ProfileType.Project_Wire));
             defaultProfiles.Add(new Profile("Component WCSPP Profile", Component_WCSPP_Profile_Options_List, ProfileType.Component));
-            defaultProfiles.Add(new Profile("Component Profile", Component_Profile_Options_List, ProfileType.Component));
+            //defaultProfiles.Add(new Profile("Component Profile", Component_Profile_Options_List, ProfileType.Component));
             defaultProfiles.Add(new Profile("Component Project Profile", Component_Project_Profile_Options_List, ProfileType.Project_Component));
         }
 
