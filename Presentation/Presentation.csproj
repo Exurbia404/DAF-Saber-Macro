@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.Graph" Version="5.44.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.59.0" />
     <PackageReference Include="Newtonsoft.JSON" Version="13.0.3" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

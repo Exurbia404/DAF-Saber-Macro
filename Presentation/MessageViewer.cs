@@ -38,7 +38,10 @@ namespace Presentation
             }
             else
             {
-                messagesListBox.Items.Add(message);
+                if(message != null)
+                {
+                    messagesListBox.Items.Add(message);
+                }
             }
         }
 

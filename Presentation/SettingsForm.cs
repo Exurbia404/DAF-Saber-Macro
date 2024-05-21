@@ -18,7 +18,7 @@ namespace Presentation
         public SettingsForm(Logger logger, PanelForm panelform)
         {
             InitializeComponent();
-
+            new FolderPaths(logger);
             panelForm = panelform;
             _logger = logger;
             _logger.Log("Settings opened");
