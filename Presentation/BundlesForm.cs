@@ -45,7 +45,7 @@ namespace Presentation
             {
                 if (Environment.MachineName == "EXURBIA")
                 {
-                    DesignerBuildOfMaterialsFolder = FolderPaths.ExurbiaLocal;
+                    DesignerBuildOfMaterialsFolder = new FolderPaths(logger).ExurbiaLocal;
                 }
                 folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
             }
