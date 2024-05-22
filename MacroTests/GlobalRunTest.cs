@@ -2,6 +2,7 @@ using Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
+using Xunit.Abstractions;
 
 namespace MacroTests
 {
@@ -10,6 +11,11 @@ namespace MacroTests
         private Extractor extractor;
         private Logger _logger;
         private List<string> folderPaths;
+        private readonly ITestOutputHelper _output;
+        public GlobalRunTest(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void TestIfAllBomsRun()
@@ -27,14 +33,16 @@ namespace MacroTests
                 OpenLatestBundleFile(path);
             }
 
+            _output.WriteLine("Amount of runs: " + folderPaths.Count);
+
             List<string> failingSubdirectories = AreGeneratedTxtFilesPresent();
 
             if (failingSubdirectories.Any())
             {
-                Console.WriteLine("The following subdirectories are missing 'generated' .txt files:");
+                _output.WriteLine("The following subdirectories are missing 'generated' .txt files:");
                 foreach (var subdirectory in failingSubdirectories)
                 {
-                    Console.WriteLine(subdirectory);
+                    _output.WriteLine(subdirectory);
                 }
             }
 
@@ -71,7 +79,7 @@ namespace MacroTests
                 // If no "generated" file is found in the current subdirectory, add to failing list
                 if (!hasGeneratedFile && !dsiPresent)
                 {
-                    Console.WriteLine(subdirectory.ToString());
+                    _output.WriteLine(subdirectory.ToString());
                     failingSubdirectories.Add(subdirectory);
                 }
             }

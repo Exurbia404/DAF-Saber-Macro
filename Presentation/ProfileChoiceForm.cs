@@ -117,12 +117,14 @@ namespace Presentation
             //If no user profiles have been selected use the defaults for bundles
             if (selectedWireProfile == null)
             {
+                //TODO: set these to names instead of index
                 selectedWireProfile = profileController.defaultProfiles[0];
             }
 
             if (selectedComponentProfile == null)
             {
-                selectedComponentProfile = profileController.defaultProfiles[3];
+                //TODO: set these to names instead of index
+                selectedComponentProfile = profileController.defaultProfiles[2];
             }
 
             List<Bundle> selectedBundles = GetSelectedBundles();

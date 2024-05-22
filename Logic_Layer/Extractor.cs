@@ -414,7 +414,7 @@ namespace Logic
                     Variant = GetWireVariants(line[1]),
                     Bundle = GetBundlesForVariant(Bundles, line[1]), 
                     Loc_1 = "?",
-                    Loc_2 = "?"
+                    Loc_2 = "?",
                 };
 
                 //Set Connector 1 info
@@ -431,6 +431,13 @@ namespace Logic
                     newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire);
                     newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1);
                     newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2);
+                }
+
+                if (newWire.Variant == "" || newWire.Bundle == "")
+                {
+                    string blockNumber = line[6];
+                    newWire.Bundle = GetModuleNumbersForComponent(blockNumber)[0];
+                    newWire.Variant = GetVariantForModularizedComponent(newWire.Bundle);
                 }
 
                 newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);

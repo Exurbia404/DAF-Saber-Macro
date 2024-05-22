@@ -404,7 +404,7 @@ namespace Presentation
                     wiresToUse[i].Bundle,
                     wiresToUse[i].Loc_1,
                     wiresToUse[i].Loc_2
-                    );
+                    );;
 
                 string tempConnector = wiresToUse[i].Connector_1;
                 string tempTerm = wiresToUse[i].Term_1;
@@ -443,9 +443,10 @@ namespace Presentation
 
         public void CreateRC_Sheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
         {
+
             //Prepare RC profile
             List<string> RC_Profile_List = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Cc_T", "Cc_S", "", "Type", "Code_no", "", "", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
+            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Temp_Class", "Type", "Code_no", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
             RC_Profile_List.AddRange(stringsToAdd);
 
             Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
@@ -454,8 +455,54 @@ namespace Presentation
             //Create the master sheet
             CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
 
+
+            List<iConverted_Wire> wiresToUse = wires;
+
+            int originalCount = wiresToUse.Count;
+            for (int i = 0; i < originalCount; i++)
+            {
+                Converted_Wire newWire = new Converted_Wire(
+                    wiresToUse[i].Wire,
+                    wiresToUse[i].Diameter,
+                    wiresToUse[i].Color,
+                    wiresToUse[i].Type,
+                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wiresToUse[i].Length,
+                    wiresToUse[i].Connector_2,
+                    wiresToUse[i].Port_2,
+                    wiresToUse[i].Term_2,
+                    wiresToUse[i].Seal_2,
+                    wiresToUse[i].Wire_connection,
+                    wiresToUse[i].Term_1,
+                    wiresToUse[i].Seal_1,
+                    wiresToUse[i].Connector_1,
+                    wiresToUse[i].Port_1,
+                    wiresToUse[i].Variant,
+                    wiresToUse[i].Bundle,
+                    wiresToUse[i].Loc_1,
+                    wiresToUse[i].Loc_2
+                    );
+
+                string tempConnector = wiresToUse[i].Connector_1;
+                string tempTerm = wiresToUse[i].Term_1;
+                string tempSeal = wiresToUse[i].Seal_1;
+                string tempPort = wiresToUse[i].Port_1;
+
+                newWire.Connector_1 = wiresToUse[i].Connector_2;
+                newWire.Term_1 = wiresToUse[i].Term_2;
+                newWire.Seal_1 = wiresToUse[i].Seal_2;
+                newWire.Port_1 = wiresToUse[i].Port_2;
+
+                newWire.Connector_2 = tempConnector;
+                newWire.Term_2 = tempTerm;
+                newWire.Seal_2 = tempSeal;
+                newWire.Port_2 = tempPort;
+
+                wiresToUse.Add(newWire);
+            }
+
             //Create the separate sheets as in the original tool
-            foreach(Bundle bundle in selectedBundles)
+            foreach (Bundle bundle in selectedBundles)
             {
                 //Create templist to give to CreateIndividualSheet
                 List<Bundle> tempList = new List<Bundle>
@@ -530,6 +577,51 @@ namespace Presentation
 
             //Create the master sheet
             CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
+
+            List<iConverted_Wire> wiresToUse = wires;
+
+            int originalCount = wiresToUse.Count;
+            for (int i = 0; i < originalCount; i++)
+            {
+                Converted_Wire newWire = new Converted_Wire(
+                    wiresToUse[i].Wire,
+                    wiresToUse[i].Diameter,
+                    wiresToUse[i].Color,
+                    wiresToUse[i].Type,
+                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                    wiresToUse[i].Length,
+                    wiresToUse[i].Connector_2,
+                    wiresToUse[i].Port_2,
+                    wiresToUse[i].Term_2,
+                    wiresToUse[i].Seal_2,
+                    wiresToUse[i].Wire_connection,
+                    wiresToUse[i].Term_1,
+                    wiresToUse[i].Seal_1,
+                    wiresToUse[i].Connector_1,
+                    wiresToUse[i].Port_1,
+                    wiresToUse[i].Variant,
+                    wiresToUse[i].Bundle,
+                    wiresToUse[i].Loc_1,
+                    wiresToUse[i].Loc_2
+                    );
+
+                string tempConnector = wiresToUse[i].Connector_1;
+                string tempTerm = wiresToUse[i].Term_1;
+                string tempSeal = wiresToUse[i].Seal_1;
+                string tempPort = wiresToUse[i].Port_1;
+
+                newWire.Connector_1 = wiresToUse[i].Connector_2;
+                newWire.Term_1 = wiresToUse[i].Term_2;
+                newWire.Seal_1 = wiresToUse[i].Seal_2;
+                newWire.Port_1 = wiresToUse[i].Port_2;
+
+                newWire.Connector_2 = tempConnector;
+                newWire.Term_2 = tempTerm;
+                newWire.Seal_2 = tempSeal;
+                newWire.Port_2 = tempPort;
+
+                wiresToUse.Add(newWire);
+            }
 
             //Create the separate sheets as in the original tool
             foreach (Bundle bundle in selectedBundles)
