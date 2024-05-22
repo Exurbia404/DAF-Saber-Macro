@@ -6,6 +6,7 @@ using System.Reflection;
 using Logic;
 using UI_Interfaces;
 using Microsoft.Graph.Drives.Item.Bundles;
+using OfficeOpenXml.Table;
 
 
 namespace Presentation
@@ -636,6 +637,49 @@ namespace Presentation
                 };
 
                 CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile);
+            }
+        }
+
+        public void CreateExcelReport(Dictionary<object, string> CombinedFailures, string fileName)
+        {
+            string filePath = Path.Combine(directory, $"{fileName}_testresults.xlsx");
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Test Results");
+
+                // Adding headers
+                worksheet.Cells[1, 1].Value = "Failed Object";
+                worksheet.Cells[1, 2].Value = "Failed Tests";
+
+                // Adding data
+                int row = 2;
+                foreach (var failure in CombinedFailures)
+                {
+                    worksheet.Cells[row, 1].Value = failure.Key.ToString();
+                    worksheet.Cells[row, 2].Value = failure.Value;
+                    row++;
+                }
+
+                // Adding table format for sorting and filtering
+                var dataRange = worksheet.Cells[1, 1, row - 1, 2];
+                var table = worksheet.Tables.Add(dataRange, "FailuresTable");
+                table.TableStyle = TableStyles.Medium9;
+                table.ShowFilter = true;
+
+                // AutoFit columns
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Save the file
+                var fileInfo = new FileInfo(filePath);
+                package.SaveAs(fileInfo);
+
+                // Automatically open the file
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
             }
         }
     }
