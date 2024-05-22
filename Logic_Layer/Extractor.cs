@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Logic
 {
@@ -769,6 +770,84 @@ namespace Logic
             };
 
             return componentObject;
+        }
+
+        public void SetSectionData(string filepath)
+        {
+            filePath = filepath;
+            sections = RetrieveSectionsFromFile();
+        }
+
+        public List<DSI_Component> GetDSIComponents()
+        {
+            List<DSI_Component> foundDSIComponents = new List<DSI_Component>();
+
+            foreach (string[] line in sections[3])
+            {
+                foundDSIComponents.Add(new DSI_Component
+                {
+                    NodeName = line[0],
+                    CavityName = line[1],
+                    WireName = line[2],
+                    SequenceNumber = line[3],
+                    ComponentTypeCode = line[4],
+                    CircuitOption = line[5],
+                    ServiceFunction = line[6],
+                    Route = line[7],
+                    PartNumber1 = line[8],
+                    Quantity = line[9],
+                    CrossSectionalArea = line[10],
+                    PartNumber2 = line[11],
+                    PartNumber3 = line[12],
+                    SelectTerminal = line[13],
+                    Seal = line[14],
+                    Plugged = line[15],
+                    BlockNumber = line[16],
+                    TerminationMethod = line[17],
+                    MaterialCode = line[18],
+                    ComponentTypeCode2 = line[19]
+                });
+            }
+
+            return foundDSIComponents;
+        }
+
+        public List<DSI_Wire> GetDSI_Wires()
+        {
+            List<DSI_Wire> foundDSIWires = new List<DSI_Wire>();
+
+            foreach (string[] line in sections[4])
+            {
+                foundDSIWires.Add(new DSI_Wire
+                {
+                    WireName = line[0],
+                    WireOption = line[1],
+                    WireType = line[2],
+                    Color = line[3],
+                    CrossSectionalArea = line[4],
+                    Material = line[5],
+                    UserModule = line[6],
+                    MulticoreName = line[7],
+                    End1NodeName = line[8],
+                    End1Route = line[9],
+                    End1Cavity = line[10],
+                    End1MaterialCode = line[11],
+                    End2NodeName = line[12],
+                    End2Route = line[13],
+                    End2Cavity = line[14],
+                    End2MaterialCode = line[15],
+                    IncludeOnBOM = (line[16]),
+                    IncludeOnChart = (line[17]),
+                    WireTag = line[18],
+                    WireNote = line[19],
+                    WireLengthChangeType = line[20],
+                    WireLengthChangeValue = line[21],
+                    AssemblyItemNumber = line[22],
+                    MulticoreOption = line[23]
+                });
+            }
+
+            return foundDSIWires;
         }
     }
 }

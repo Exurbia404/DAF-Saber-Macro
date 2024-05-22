@@ -203,7 +203,7 @@ namespace Presentation
                 List<Project_Wire> projectWire = extractor.Project_ExtractWiresFromWireFile(wiresFilePath);
                 List<Project_Component> projectComponent = extractor.Project_ExtractComponentFromComponentFile(compFilePath);
 
-                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber);
+                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber, null);
 
                 // Set the newProfileForm's TopLevel property to false
                 pcForm.TopLevel = false;

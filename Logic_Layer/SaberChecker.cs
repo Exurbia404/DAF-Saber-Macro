@@ -19,10 +19,10 @@ public class SaberChecker
     private List<DSI_Wire> wires;
 
     public List<bool> TestResults { get; private set; }
-    public Dictionary<object, string> CombinedFailures { get; private set; }
+    public Dictionary<string, string> CombinedFailures { get; private set; }
 
-    private Dictionary<DSI_Component, string> FailedComponents;
-    private Dictionary<DSI_Wire, string> FailedWires;
+    private List<(DSI_Component, string)> FailedComponents;
+    private List<(DSI_Wire, string)> FailedWires;
     
 
 
@@ -32,8 +32,9 @@ public class SaberChecker
         components = dsiComponents;
         wires = dsiWires;
 
-        FailedWires = new Dictionary<DSI_Wire, string>();
-        FailedComponents = new Dictionary<DSI_Component, string>();
+        FailedWires = new List<(DSI_Wire, string)>();
+        FailedComponents = new List<(DSI_Component, string)>();
+        CombinedFailures = new Dictionary<string, string>();
 
 
         TestResults = new List<bool>();
@@ -42,29 +43,31 @@ public class SaberChecker
         CombineFailures();
     }
 
-    public void CombineFailures()
+    private void CombineFailures()
     {
-        foreach (var entry in FailedComponents)
+        foreach (var (component, failure) in FailedComponents)
         {
-            if (CombinedFailures.ContainsKey(entry.Key))
+            string nodeName = component.NodeName;
+            if (CombinedFailures.ContainsKey(nodeName))
             {
-                CombinedFailures[entry.Key] += " - " + entry.Value;
+                CombinedFailures[nodeName] += " - " + failure;
             }
             else
             {
-                CombinedFailures[entry.Key] = entry.Value;
+                CombinedFailures[nodeName] = failure;
             }
         }
 
-        foreach (var entry in FailedWires)
+        foreach (var (wire, failure) in FailedWires)
         {
-            if (CombinedFailures.ContainsKey(entry.Key))
+            string wireName = wire.WireName;
+            if (CombinedFailures.ContainsKey(wireName))
             {
-                CombinedFailures[entry.Key] += " - " + entry.Value;
+                CombinedFailures[wireName] += " - " + failure;
             }
             else
             {
-                CombinedFailures[entry.Key] = entry.Value;
+                CombinedFailures[wireName] = failure;
             }
         }
     }
@@ -104,10 +107,10 @@ public class SaberChecker
             double diameter;
             if (double.TryParse(wire.CrossSectionalArea, out diameter)) // Parsing as double
             {
-                if (diameter < 35.0)
+                if (diameter > 35.0)
                 {
                     testResult = false;
-                    FailedWires.Add(wire, "DSI_01");
+                    FailedWires.Add((wire, "DSI_01"));
                 }
             }
         }
@@ -126,7 +129,7 @@ public class SaberChecker
             {
                 //TODO: DSI-02 write warning message to log
                 testResult = false;
-                FailedComponents.Add(component, "DSI_02");
+                FailedComponents.Add((component, "DSI_02"));
             }
         }
 
@@ -180,7 +183,7 @@ public class SaberChecker
                     {
                         //Should give warning in testReport
                         testResult = false;
-                        FailedComponents.Add(component, "DSI_06");
+                        FailedComponents.Add((component, "DSI_06"));
                     }
                 }
 
@@ -206,7 +209,7 @@ public class SaberChecker
                     if (component.PartNumber1 == "Class" && component.ComponentTypeCode2 == "sleeve_*")
                     {
                         testResult = true;
-                        FailedComponents.Add(component, "DSI_07");
+                        FailedComponents.Add((component, "DSI_07"));
                     }
                 }
             }
@@ -226,7 +229,7 @@ public class SaberChecker
             {
                 //TODO: DSI-08 write warning message to log
                 testResult = false;
-                FailedComponents.Add(component, "DSI_08");
+                FailedComponents.Add((component, "DSI_08"));
             }
         }
 
@@ -238,16 +241,23 @@ public class SaberChecker
     {
         bool testResult = true;
 
-        foreach(DSI_Wire wire in wiresToCheck)
+        foreach (DSI_Wire wire in wiresToCheck)
         {
-            //TODO: need to find actual wire Length
-            //If length is smaller than 0 false
-            if (int.Parse(wire.WireTag) < 0)
+            // Find actual wire length (assuming it's stored in a property named WireLength)
+            int wireLength;
+            if (!int.TryParse(wire.WireTag, out wireLength))
             {
-                //TODO: DSI-12 write warning message to log
+                continue; // Skip to the next wire
+            }
 
+            // Check if wire length is smaller than 0
+            if (wireLength < 0)
+            {
+                // Set testResult to false
                 testResult = false;
-                FailedWires.Add(wire, "DSI_12");                
+
+                // Add the wire to FailedWires
+                FailedWires.Add((wire, "DSI_12"));
             }
         }
 
@@ -262,12 +272,26 @@ public class SaberChecker
 
         foreach (DSI_Wire wire in wiresToCheck)
         {
-            //If length is smaller than 100 false
-            if (int.Parse(wire.WireTag) < 100)
+            // Find actual wire length (assuming it's stored in a property named WireLength)
+            int wireLength;
+            if (!int.TryParse(wire.WireTag, out wireLength))
             {
-                //TODO: DSI-14 write warning message to log
+                // Log an error if WireLengthChangeValue cannot be parsed as an integer
+                Console.WriteLine($"Error: Invalid wire length value for wire {wire.WireName}");
+                continue; // Skip to the next wire
+            }
+
+            // Check if wire length is smaller than 100
+            if (wireLength < 100)
+            {
+                // Log a warning message
+                Console.WriteLine($"Warning: Wire length is less than 0 for wire {wire.WireName}");
+
+                // Set testResult to false
                 testResult = false;
-                FailedWires.Add(wire, "DSI_14");
+
+                // Add the wire to FailedWires
+                FailedWires.Add((wire, "DSI_12"));
             }
         }
 
@@ -284,6 +308,7 @@ public class SaberChecker
 
         foreach (DSI_Wire wire in wiresToCheck)
         {
+            FailedWires.Add((wire, "DSI_15"));
             //If length is smaller than 100 false
             //if (wire. == "" || wire.Term_2 == "")
             //{
@@ -303,10 +328,12 @@ public class SaberChecker
 
         foreach (DSI_Wire wire in wiresToCheck)
         {
+            FailedWires.Add((wire, "DSI_16"));
+
             //if (wire.Code_no == "")
             //{
-                //TODO: DSI-14 write warning message to log
-              //  return false;
+            //TODO: DSI-14 write warning message to log
+            //  return false;
             //}
         }
 

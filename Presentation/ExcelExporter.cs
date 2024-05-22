@@ -640,9 +640,15 @@ namespace Presentation
             }
         }
 
-        public void CreateExcelReport(Dictionary<object, string> CombinedFailures, string fileName)
+        public void CreateExcelReport(Dictionary<string, string> CombinedFailures, string fileName)
         {
             string filePath = Path.Combine(directory, $"{fileName}_testresults.xlsx");
+
+            // Delete the file if it exists
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
 
             using (var package = new ExcelPackage())
             {
@@ -665,7 +671,7 @@ namespace Presentation
                 var dataRange = worksheet.Cells[1, 1, row - 1, 2];
                 var table = worksheet.Tables.Add(dataRange, "FailuresTable");
                 table.TableStyle = TableStyles.Medium9;
-                table.ShowFilter = true;
+                //table.ShowFilter = true;
 
                 // AutoFit columns
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();

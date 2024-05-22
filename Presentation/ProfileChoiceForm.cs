@@ -34,11 +34,13 @@ namespace Presentation
         private List<DSI_Tube> tubesList;
         private List<Bundle> bundlesList;
 
-        public ProfileChoiceForm(Logger logger, string filename)
+        private string textFilePath;
+        public ProfileChoiceForm(Logger logger, string filename, string textfilepath)
         {
             _logger = logger;
             InitializeComponent();
             fileName = filename.Replace("_DSI", "");
+            textFilePath = textfilepath;
             exporter = new ExcelExporter(logger);
             profileController = new ProfileController(new FileHandler(logger));
 
@@ -229,8 +231,11 @@ namespace Presentation
 
         private void saberCheckerButton_Click(object sender, EventArgs e)
         {
+            Extractor extractor = new Extractor(_logger);
+            extractor.SetSectionData(textFilePath);
+
             //TODO: get the DSI wires and components and send them over
-            SaberChecker saberChecker = new SaberChecker(_logger, null, null);
+            SaberChecker saberChecker = new SaberChecker(_logger, extractor.GetDSIComponents(), extractor.GetDSI_Wires());
 
             int totalTests = saberChecker.TestResults.Count;
 

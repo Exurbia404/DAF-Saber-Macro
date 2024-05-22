@@ -197,7 +197,7 @@ namespace MacroTests
             extractor.ExtractBundleFromFilePath(textFilePath);
 
             List<Bundle> extractedBundles = extractor.Bundles;
-            List<DSI_Tube> extractedTubes = extractor.ExtractDSITubes(textFilePath);
+            List<DSI_Tube> extractedTubes = extractor.Tubes;
             FileHandler fileHandler = new FileHandler(_logger);
 
             List<Converted_Component> convertedComponents = extractor.Components;
