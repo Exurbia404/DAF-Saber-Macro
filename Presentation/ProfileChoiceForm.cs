@@ -246,6 +246,8 @@ namespace Presentation
             double successPercentage = (double)succeededTests / totalTests * 100;
             double roundedPercentage = Math.Round(successPercentage, MidpointRounding.AwayFromZero);
             testResultsTextBox.Text = "Results: " + roundedPercentage + "% succeeded"; // Displaying rounded percentage
+
+            exporter.CreateExcelReport(saberChecker.CombinedFailures, fileName);
         }
 
         private void createCustomCheckBox_CheckedChanged(object sender, EventArgs e)
