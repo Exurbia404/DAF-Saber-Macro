@@ -19,8 +19,12 @@ public class SaberChecker
     private List<DSI_Wire> wires;
 
     public List<bool> TestResults { get; private set; }
-    public Dictionary<DSI_Component, string> FailedComponents { get; private set; }
-    public Dictionary<DSI_Wire, string> FailedWires { get; private set; }
+    public Dictionary<object, string> CombinedFailures { get; private set; }
+
+    private Dictionary<DSI_Component, string> FailedComponents;
+    private Dictionary<DSI_Wire, string> FailedWires;
+    
+
 
     public SaberChecker(Logger logger, List<DSI_Component> dsiComponents, List<DSI_Wire> dsiWires)
     {
@@ -28,9 +32,41 @@ public class SaberChecker
         components = dsiComponents;
         wires = dsiWires;
 
+        FailedWires = new Dictionary<DSI_Wire, string>();
+        FailedComponents = new Dictionary<DSI_Component, string>();
+
+
         TestResults = new List<bool>();
 
         PerformChecks();
+        CombineFailures();
+    }
+
+    public void CombineFailures()
+    {
+        foreach (var entry in FailedComponents)
+        {
+            if (CombinedFailures.ContainsKey(entry.Key))
+            {
+                CombinedFailures[entry.Key] += " - " + entry.Value;
+            }
+            else
+            {
+                CombinedFailures[entry.Key] = entry.Value;
+            }
+        }
+
+        foreach (var entry in FailedWires)
+        {
+            if (CombinedFailures.ContainsKey(entry.Key))
+            {
+                CombinedFailures[entry.Key] += " - " + entry.Value;
+            }
+            else
+            {
+                CombinedFailures[entry.Key] = entry.Value;
+            }
+        }
     }
 
 
