@@ -403,7 +403,8 @@ namespace Presentation
                     wiresToUse[i].Variant,
                     wiresToUse[i].Bundle,
                     wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2
+                    wiresToUse[i].Loc_2,
+                    wiresToUse[i].Temp_Class
                     );;
 
                 string tempConnector = wiresToUse[i].Connector_1;
@@ -451,11 +452,6 @@ namespace Presentation
 
             Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
 
-
-            //Create the master sheet
-            CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
-
-
             List<iConverted_Wire> wiresToUse = wires;
 
             int originalCount = wiresToUse.Count;
@@ -480,7 +476,8 @@ namespace Presentation
                     wiresToUse[i].Variant,
                     wiresToUse[i].Bundle,
                     wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2
+                    wiresToUse[i].Loc_2,
+                    wiresToUse[i].Temp_Class
                     );
 
                 string tempConnector = wiresToUse[i].Connector_1;
@@ -500,6 +497,9 @@ namespace Presentation
 
                 wiresToUse.Add(newWire);
             }
+
+            //Create the master sheet
+            CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
 
             //Create the separate sheets as in the original tool
             foreach (Bundle bundle in selectedBundles)
@@ -575,8 +575,7 @@ namespace Presentation
 
             Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
 
-            //Create the master sheet
-            CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
+            
 
             List<iConverted_Wire> wiresToUse = wires;
 
@@ -602,7 +601,8 @@ namespace Presentation
                     wiresToUse[i].Variant,
                     wiresToUse[i].Bundle,
                     wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2
+                    wiresToUse[i].Loc_2,
+                    wiresToUse[i].Temp_Class
                     );
 
                 string tempConnector = wiresToUse[i].Connector_1;
@@ -622,6 +622,9 @@ namespace Presentation
 
                 wiresToUse.Add(newWire);
             }
+
+            //Create the master sheet
+            CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
 
             //Create the separate sheets as in the original tool
             foreach (Bundle bundle in selectedBundles)

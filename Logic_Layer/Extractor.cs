@@ -412,9 +412,10 @@ namespace Logic
                     Connector_2 = line[12],
                     Port_2 = line[14],
                     Variant = GetWireVariants(line[1]),
-                    Bundle = GetBundlesForVariant(Bundles, line[1]), 
+                    Bundle = GetBundlesForVariant(Bundles, line[1]),
                     Loc_1 = "?",
                     Loc_2 = "?",
+                    Temp_Class = GetValueFromInputString(line[19], 2)
                 };
 
                 //Set Connector 1 info
