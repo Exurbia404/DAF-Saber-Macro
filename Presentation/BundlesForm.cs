@@ -228,7 +228,7 @@ namespace Presentation
                 extractor.ExtractBundleFromFilePath(textFilePath);
 
                 extractedBundles = extractor.Bundles;
-                extractedTubes = extractor.ExtractDSITubes(textFilePath);
+                extractedTubes = extractor.Tubes;
                 FileHandler fileHandler = new FileHandler(_logger);
 
                 List<Converted_Component> convertedComponents = extractor.Components;

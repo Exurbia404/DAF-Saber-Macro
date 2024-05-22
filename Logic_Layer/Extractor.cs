@@ -19,6 +19,7 @@ namespace Logic
         public List<Converted_Wire> Wires { get; private set; }
         public List<Project_Wire> Project_Wires { get; private set; }
 
+        public List<DSI_Tube> Tubes { get; private set; }
         public List<Bundle> Bundles { get; private set; }
 
         private Logger _logger;
@@ -41,7 +42,12 @@ namespace Logic
             //4 Get the bundles
             Bundles = GetBundlesFromSection(sections[2]);
 
+            //Get the DSI_Tubes
+            Tubes = ExtractDSITubes(sections[3]);
+            
+            //dsi_Components should go in front of wires as wires need certain parts from here
             dsi_Components = GetDSI_ComponentsFromSection(sections[5]);
+
 
             //2 Get the Wires
             Wires = GetWiresFromSection(sections[4], Bundles);
@@ -103,90 +109,50 @@ namespace Logic
             return matchingModuleNumbers;
         }
 
-        public List<DSI_Tube> ExtractDSITubes(string filePath)
+        public List<DSI_Tube> ExtractDSITubes(List<string[]> section4)
         {
-            string sectionStart = "%Section 4";
-            string sectionEnd = "%Section 5";
-            bool isInSection4 = false;
-
             List<DSI_Tube> foundTubes = new List<DSI_Tube>();
 
-            foreach (string line in File.ReadLines(filePath))
+            foreach (string[] line in section4)
             {
-                if (line.StartsWith(sectionEnd))
+                DSI_Tube tube = ExtractDSITubeFromString(line);
+                // Process lines between Section 3 and Section 4
+                if (tube != null)
                 {
-                    // Exit the loop when reaching the end of Section 3
-                    break;
+                    foundTubes.Add(tube);
                 }
-
-                if (isInSection4)
-                {
-                    DSI_Tube tube = ExtractDSITubeFromString(line, filePath);
-                    // Process lines between Section 3 and Section 4
-                    if (tube != null)
-                    {
-                        foundTubes.Add(tube);
-                    }
-                }
-
-                if (line.StartsWith(sectionStart))
-                {
-                    // Start processing lines when entering Section 3
-                    isInSection4 = true;
-                }
+                
             }
             return foundTubes;
         }
 
-        private DSI_Tube ExtractDSITubeFromString(string line, string filePath)
+        private DSI_Tube ExtractDSITubeFromString(string[] line)
         {
-            string[] parts = line.Split(':');
-            string startNode = parts[0];
-            string endNode = parts[3];
-            string length = parts[6];
-            string insulations = GetInsulationForBranch(startNode, endNode, filePath);
+            string startNode = line[0];
+            string endNode = line[3];
+            string length = line[6];
+            string insulations = GetInsulationForBranch(startNode, endNode);
 
             return new DSI_Tube(length, insulations, startNode, endNode);
         }
 
-        private string GetInsulationForBranch(string startNode, string endNode, string filePath)
+        private string GetInsulationForBranch(string startNode, string endNode)
         {
-            string sectionStart = "%Section 7";
-            string sectionEnd = "%Section 8";
-            bool isInSection7 = false;
-
             string foundInsulations = "";
 
-            foreach (string line in File.ReadLines(filePath))
+            foreach (string[] line in sections[6])
             {
-                if (line.StartsWith(sectionEnd))
+                if ((line[0] == startNode) && (line[2] == endNode))
                 {
-                    // Exit the loop when reaching the end of Section 3
-                    break;
-                }
-
-                if (isInSection7)
-                {
-                    // Split the line by '::' to get individual parts
-                    string[] parts = line.Split(':');
-
-                    if ((parts[0] == startNode) && (parts[2] == endNode))
+                    if (foundInsulations != "")
                     {
-                        if (foundInsulations != "")
-                        {
-                            foundInsulations += " and ";
-                        }
-
-                        //Insulation is found in the fifth location
-                        foundInsulations += parts[5];
+                        foundInsulations += " and ";
                     }
-                }
 
-                if (line.StartsWith(sectionStart))
-                {
-                    // Start processing lines when entering Section 3
-                    isInSection7 = true;
+                    //Insulation is found in the fifth location
+                    foundInsulations += line[5];
                 }
+                
             }
             return foundInsulations;
         }
