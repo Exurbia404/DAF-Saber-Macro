@@ -57,6 +57,12 @@ namespace Presentation
 
         private void GenerateComboBoxes(int headerCount)
         {
+            List<string> currentSelection = GetComboBoxesValues();
+            while(currentSelection.Count > headerCount)
+            {
+                currentSelection.RemoveAt(currentSelection.Count);
+            }
+
             // Remove all existing ComboBoxes
             foreach (ComboBox comboBox in comboBoxes)
             {
@@ -76,7 +82,7 @@ namespace Presentation
 
                 // Calculate x and y coordinates based on row and column
                 int x = initalXOffset + (horizontalOffset * column);
-                int y = 60 + (row * verticalOffset);
+                int y = 70 + (row * verticalOffset);
 
                 // Check if the ComboBox would be placed outside the form
                 if (x + horizontalOffset > this.ClientSize.Width)
@@ -115,7 +121,7 @@ namespace Presentation
             // Generate labels and add options to ComboBoxes
             GenerateLabels(headerCount);
             AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
-            LoadInProfile(new List<string>()); // LoadInProfile with an empty list for the current selection
+            LoadInProfile(currentSelection);
         }
 
         private void LoadInProfile(List<string> profile) 
@@ -185,6 +191,7 @@ namespace Presentation
                 // Add Label to the appropriate container in your UI (e.g., a panel or form)
                 comboBox_Labels.Add(label);
                 this.Controls.Add(label);
+
                 label.Show();
 
                 // Update labelX for the next label
