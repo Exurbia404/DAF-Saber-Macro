@@ -102,7 +102,6 @@
             // 
             // removeHeaderButton
             // 
-            removeHeaderButton.Enabled = false;
             removeHeaderButton.Location = new Point(206, 14);
             removeHeaderButton.Margin = new Padding(4, 3, 4, 3);
             removeHeaderButton.Name = "removeHeaderButton";
