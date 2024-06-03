@@ -16,7 +16,7 @@ namespace Presentation
 
         //Distance between buttons
         private int horizontalOffset = 80;
-        private int headerCounter = 3;
+        private int headerCounter;
 
         //Used by buttons, labels and comboBoxes
         private int initalXOffset = 260;
@@ -29,7 +29,7 @@ namespace Presentation
             InitializeComponent();
 
             profileController = new ProfileController(new FileHandler(logger));
-
+            headerCounter = 3;
             comboBoxes = new List<ComboBox>();
             comboBox_Labels = new List<Label>();
 
@@ -58,6 +58,9 @@ namespace Presentation
         private void GenerateComboBoxes(int headerCount)
         {
             int oldCount = comboBoxes.Count;
+
+            List<string> currentSelection = GetComboBoxesValues();
+
             // If there are less comboBoxes required
             while (headerCount < oldCount)
             {
@@ -120,19 +123,18 @@ namespace Presentation
 
             GenerateLabels(headerCount);
             AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
-            LoadInProfile(loadedProfile);
+            LoadInProfile(currentSelection);
         }
 
-        private void LoadInProfile(Profile profile)
-        {
+        private void LoadInProfile(List<string> profile) 
+        { 
             if (profile != null)
             {
-                for (int i = 0; i < profile.Parameters.Count; i++)
+                for (int i = 0; i < profile.Count; i++)
                 {
-                    comboBoxes[i].SelectedItem = profile.Parameters[i];
+                    comboBoxes[i].SelectedItem = profile[i];
                 }
             }
-
         }
 
         private void GenerateLabels(int headerCount)
@@ -245,7 +247,7 @@ namespace Presentation
                 {
                     count++;
                 }
-                if (comboBox.SelectedItem == null)
+                else if (comboBox.SelectedItem == null)
                 {
                     int currentIndex = comboBoxes.IndexOf(comboBox);
                     if (comboBoxes[currentIndex + 1] != null)
@@ -260,7 +262,7 @@ namespace Presentation
         private List<string> GetComboBoxesValues()
         {
             //Update headerCounter as other methods also rely on this
-            headerCounter = AmountOfSelectedComboBoxes();
+            //headerCounter = AmountOfSelectedComboBoxes();
 
             RemoveOldHeadersAndButtons(headerCounter);
 
@@ -303,6 +305,7 @@ namespace Presentation
 
         private void addHeaderButton_Click(object sender, EventArgs e)
         {
+            headerCounter = AmountOfSelectedComboBoxes();
             //Here you can set the maximum amount of headers
             if (headerCounter < 26)
             {
