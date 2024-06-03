@@ -20,15 +20,15 @@ namespace Presentation
             Confidential,
             HighlyConfidential
         }
-        private string directory;
+        private string directoryPath;
         public ExcelExporter(Logger logger)
         {
             _logger = logger;
-            directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
+            directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Saber Tool Plus", "TempData");
 
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(directoryPath);
             }
 
         }
@@ -75,10 +75,10 @@ namespace Presentation
                     AddAutoFilterButtons(componentWorksheet);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
+                    package.SaveAs(new FileInfo(Path.Combine(directoryPath, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
+                    string filePath = Path.Combine(directoryPath, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -147,13 +147,13 @@ namespace Presentation
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
 
-                    CreateExtraSheets(package, wires, bundles, selectedSheets, profiles);
+                    CreateExtraSheets(fileName, wires, bundles, selectedSheets, profiles);
 
                     // Save the Excel package to a file
-                    package.SaveAs(new FileInfo(Path.Combine(directory, $"{fileName}.xlsx")));
+                    package.SaveAs(new FileInfo(Path.Combine(directoryPath, $"{fileName}.xlsx")));
 
                     // Get the full path to the Excel file
-                    string filePath = Path.Combine(directory, $"{fileName}.xlsx");
+                    string filePath = Path.Combine(directoryPath, $"{fileName}.xlsx");
 
                     // Open the Excel file using its default application
                     Process p = new Process();
@@ -173,50 +173,58 @@ namespace Presentation
             }
         }
 
-        private void CreateExtraSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets, List<Profile> profiles)
+        private void CreateExtraSheets(string fileName, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets, List<Profile> profiles)
         {
             //PE sheet
             if (selectedSheets[0])
             {
                 _logger.Log("Creating PE sheet");
-                CreateALL_PE_sheet(excelPackage, wires);
+                CreateALL_PE_sheet(fileName, wires);
             }
             //RC sheet
             if (selectedSheets[1])
             {
                 _logger.Log("Creating RC sheet");
-                CreateRC_Sheets(excelPackage, wires, bundles);
+                CreateRC_Sheets(fileName, wires, bundles);
             }
             //OC sheet
             if (selectedSheets[2])
             {
                 _logger.Log("Creating OC sheet");
-                CreateOC_Sheets(excelPackage, wires, bundles);
+                CreateOC_Sheets(fileName, wires, bundles);
             }
             //Custom sheet
             if (selectedSheets[3])
             {
                 _logger.Log("Creating Custom sheet");
-                CreateCustomSheets(excelPackage, wires, bundles, profiles);
+                CreateCustomSheets(fileName, wires, bundles, profiles);
             }
         }
 
-        private void CreateCustomSheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, List<Profile> profiles)
+        public void CreateCustomSheets(string fileName, List<iConverted_Wire> wires, List<Bundle> bundles, List<Profile> profiles)
         {
-            
-            //Create the master sheet
-            CreateMasterSheet(excelPackage, wires, bundles, profiles[2]);
-
-            //Create the separate sheets as in the original tool
-            foreach (Bundle bundle in bundles)
+            string fullPath = Path.Combine(directoryPath, fileName + "_Custom.xlsx");
+            using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
-                //Create templist to give to CreateIndividualSheet
-                List<Bundle> tempList = new List<Bundle>
-                {
-                    bundle
-                };
+                //Create the master sheet
+                CreateMasterSheet(excelPackage, wires, bundles, profiles[2]);
 
-                CreateIndividualSheet(excelPackage, wires, tempList, profiles[2]);
+                //Create the separate sheets as in the original tool
+                foreach (Bundle bundle in bundles)
+                {
+                    //Create templist to give to CreateIndividualSheet
+                    List<Bundle> tempList = new List<Bundle>
+                    {
+                        bundle
+                    };
+
+                    CreateIndividualSheet(excelPackage, wires, tempList, profiles[2]);
+                }
+
+                // Save the Excel package
+                excelPackage.Save();
+                // Open the Excel file using its default application
+                Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });
             }
         }
 
@@ -372,155 +380,195 @@ namespace Presentation
             return null;
         }
 
-        public void CreateALL_PE_sheet(ExcelPackage excelPackage, List<iConverted_Wire> wires)
+        public void CreateALL_PE_sheet(string fileName, List<iConverted_Wire> wires)
         {
-            List<iConverted_Wire> wiresToUse = wires;
-            //Prepare ALL_PE profile
-            List<string> ALL_PE_Strings = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire" , "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
-            ALL_PE_Strings.AddRange(stringsToAdd);
+            // Ensure unique file name
+            string fullPath = Path.Combine(directoryPath, fileName + "_PE.xlsx");
 
-            Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
-
-            int originalCount = wiresToUse.Count;
-            for (int i = 0; i < originalCount; i++)
+            using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
-                Converted_Wire newWire = new Converted_Wire(
-                    wiresToUse[i].Wire,
-                    wiresToUse[i].Diameter,
-                    wiresToUse[i].Color,
-                    wiresToUse[i].Type,
-                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wiresToUse[i].Length,
-                    wiresToUse[i].Connector_2,
-                    wiresToUse[i].Port_2,
-                    wiresToUse[i].Term_2,
-                    wiresToUse[i].Seal_2,
-                    wiresToUse[i].Wire_connection,
-                    wiresToUse[i].Term_1,
-                    wiresToUse[i].Seal_1,
-                    wiresToUse[i].Connector_1,
-                    wiresToUse[i].Port_1,
-                    wiresToUse[i].Variant,
-                    wiresToUse[i].Bundle,
-                    wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2,
-                    wiresToUse[i].Temp_Class
-                    );;
+                List<iConverted_Wire> wiresToUse = new List<iConverted_Wire>(wires);
 
-                string tempConnector = wiresToUse[i].Connector_1;
-                string tempTerm = wiresToUse[i].Term_1;
-                string tempSeal = wiresToUse[i].Seal_1;
-                string tempPort = wiresToUse[i].Port_1;
+                // Prepare ALL_PE profile
+                List<string> ALL_PE_Strings = new List<string>();
+                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Type", "Code_no", "Length", "Term_1", "Seal_1", "Variant", "Bundle" };
+                ALL_PE_Strings.AddRange(stringsToAdd);
 
-                newWire.Connector_1 = wiresToUse[i].Connector_2;
-                newWire.Term_1 = wiresToUse[i].Term_2;
-                newWire.Seal_1 = wiresToUse[i].Seal_2;
-                newWire.Port_1 = wiresToUse[i].Port_2;
+                Profile ALL_PE_Profile = new Profile("ALL_PE", ALL_PE_Strings, Data_Interfaces.ProfileType.User);
 
-                newWire.Connector_2 = tempConnector;
-                newWire.Term_2 = tempTerm;
-                newWire.Seal_2 = tempSeal;
-                newWire.Port_2 = tempPort;
-
-                wiresToUse.Add(newWire);
-            }
-
-            var wireWorksheet = excelPackage.Workbook.Worksheets.Add("ALL_PE");
-
-            var sortedWires = wiresToUse.OrderBy(wire => wire.Connector_1)
-                               .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
-                               .ToList();
-
-
-            // Write column headers for wires
-            WriteHeaders(wireWorksheet, ALL_PE_Profile);
-
-            // Write wire data
-            WriteDataToSheet(wireWorksheet, sortedWires, ALL_PE_Profile);
-                        
-            AddAutoFilterButtons(wireWorksheet);
-        }
-
-        public void CreateRC_Sheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
-        {
-
-            //Prepare RC profile
-            List<string> RC_Profile_List = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Temp_Class", "Type", "Code_no", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
-            RC_Profile_List.AddRange(stringsToAdd);
-
-            Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
-
-            List<iConverted_Wire> wiresToUse = wires;
-
-            int originalCount = wiresToUse.Count;
-            for (int i = 0; i < originalCount; i++)
-            {
-                Converted_Wire newWire = new Converted_Wire(
-                    wiresToUse[i].Wire,
-                    wiresToUse[i].Diameter,
-                    wiresToUse[i].Color,
-                    wiresToUse[i].Type,
-                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wiresToUse[i].Length,
-                    wiresToUse[i].Connector_2,
-                    wiresToUse[i].Port_2,
-                    wiresToUse[i].Term_2,
-                    wiresToUse[i].Seal_2,
-                    wiresToUse[i].Wire_connection,
-                    wiresToUse[i].Term_1,
-                    wiresToUse[i].Seal_1,
-                    wiresToUse[i].Connector_1,
-                    wiresToUse[i].Port_1,
-                    wiresToUse[i].Variant,
-                    wiresToUse[i].Bundle,
-                    wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2,
-                    wiresToUse[i].Temp_Class
+                int originalCount = wiresToUse.Count;
+                for (int i = 0; i < originalCount; i++)
+                {
+                    Converted_Wire newWire = new Converted_Wire(
+                        wiresToUse[i].Wire,
+                        wiresToUse[i].Diameter,
+                        wiresToUse[i].Color,
+                        wiresToUse[i].Type,
+                        wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                        wiresToUse[i].Length,
+                        wiresToUse[i].Connector_2,
+                        wiresToUse[i].Port_2,
+                        wiresToUse[i].Term_2,
+                        wiresToUse[i].Seal_2,
+                        wiresToUse[i].Wire_connection,
+                        wiresToUse[i].Term_1,
+                        wiresToUse[i].Seal_1,
+                        wiresToUse[i].Connector_1,
+                        wiresToUse[i].Port_1,
+                        wiresToUse[i].Variant,
+                        wiresToUse[i].Bundle,
+                        wiresToUse[i].Loc_1,
+                        wiresToUse[i].Loc_2,
+                        wiresToUse[i].Temp_Class
                     );
 
-                string tempConnector = wiresToUse[i].Connector_1;
-                string tempTerm = wiresToUse[i].Term_1;
-                string tempSeal = wiresToUse[i].Seal_1;
-                string tempPort = wiresToUse[i].Port_1;
+                    string tempConnector = wiresToUse[i].Connector_1;
+                    string tempTerm = wiresToUse[i].Term_1;
+                    string tempSeal = wiresToUse[i].Seal_1;
+                    string tempPort = wiresToUse[i].Port_1;
 
-                newWire.Connector_1 = wiresToUse[i].Connector_2;
-                newWire.Term_1 = wiresToUse[i].Term_2;
-                newWire.Seal_1 = wiresToUse[i].Seal_2;
-                newWire.Port_1 = wiresToUse[i].Port_2;
+                    newWire.Connector_1 = wiresToUse[i].Connector_2;
+                    newWire.Term_1 = wiresToUse[i].Term_2;
+                    newWire.Seal_1 = wiresToUse[i].Seal_2;
+                    newWire.Port_1 = wiresToUse[i].Port_2;
 
-                newWire.Connector_2 = tempConnector;
-                newWire.Term_2 = tempTerm;
-                newWire.Seal_2 = tempSeal;
-                newWire.Port_2 = tempPort;
+                    newWire.Connector_2 = tempConnector;
+                    newWire.Term_2 = tempTerm;
+                    newWire.Seal_2 = tempSeal;
+                    newWire.Port_2 = tempPort;
 
-                wiresToUse.Add(newWire);
-            }
+                    wiresToUse.Add(newWire);
+                }
 
-            //Create the master sheet
-            CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
-
-            //Create the separate sheets as in the original tool
-            foreach (Bundle bundle in selectedBundles)
-            {
-                //Create templist to give to CreateIndividualSheet
-                List<Bundle> tempList = new List<Bundle>
+                var wireWorksheet = excelPackage.Workbook.Worksheets["ALL_PE"];
+                if (wireWorksheet == null)
                 {
-                    bundle
-                };
-                
-                CreateIndividualSheet(excelPackage, wires, tempList, RC_Profile);
+                    wireWorksheet = excelPackage.Workbook.Worksheets.Add("ALL_PE");
+                }
+                else
+                {
+                    wireWorksheet.Cells.Clear(); // Clear existing worksheet content
+                }
+
+                var sortedWires = wiresToUse.OrderBy(wire => wire.Connector_1)
+                                   .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
+                                   .ToList();
+
+                // Write column headers for wires
+                WriteHeaders(wireWorksheet, ALL_PE_Profile);
+
+                // Write wire data
+                WriteDataToSheet(wireWorksheet, sortedWires, ALL_PE_Profile);
+
+                AddAutoFilterButtons(wireWorksheet);
+
+                // Save the Excel package
+                excelPackage.Save();
+
+                // Open the Excel file using its default application
+                Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });
             }
-            
+        }
+
+        public void CreateRC_Sheets(string fileName, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        {
+            string fullPath = Path.Combine(directoryPath, fileName + "_RC.xlsx");
+            using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
+            {
+                //Prepare RC profile
+                List<string> RC_Profile_List = new List<string>();
+                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Temp_Class", "Type", "Code_no", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
+                RC_Profile_List.AddRange(stringsToAdd);
+
+                Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
+
+                List<iConverted_Wire> wiresToUse = new List<iConverted_Wire>(wires);
+
+                int originalCount = wiresToUse.Count;
+                for (int i = 0; i < originalCount; i++)
+                {
+                    Converted_Wire newWire = new Converted_Wire(
+                        wiresToUse[i].Wire,
+                        wiresToUse[i].Diameter,
+                        wiresToUse[i].Color,
+                        wiresToUse[i].Type,
+                        wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                        wiresToUse[i].Length,
+                        wiresToUse[i].Connector_2,
+                        wiresToUse[i].Port_2,
+                        wiresToUse[i].Term_2,
+                        wiresToUse[i].Seal_2,
+                        wiresToUse[i].Wire_connection,
+                        wiresToUse[i].Term_1,
+                        wiresToUse[i].Seal_1,
+                        wiresToUse[i].Connector_1,
+                        wiresToUse[i].Port_1,
+                        wiresToUse[i].Variant,
+                        wiresToUse[i].Bundle,
+                        wiresToUse[i].Loc_1,
+                        wiresToUse[i].Loc_2,
+                        wiresToUse[i].Temp_Class
+                    );
+
+                    string tempConnector = wiresToUse[i].Connector_1;
+                    string tempTerm = wiresToUse[i].Term_1;
+                    string tempSeal = wiresToUse[i].Seal_1;
+                    string tempPort = wiresToUse[i].Port_1;
+
+                    newWire.Connector_1 = wiresToUse[i].Connector_2;
+                    newWire.Term_1 = wiresToUse[i].Term_2;
+                    newWire.Seal_1 = wiresToUse[i].Seal_2;
+                    newWire.Port_1 = wiresToUse[i].Port_2;
+
+                    newWire.Connector_2 = tempConnector;
+                    newWire.Term_2 = tempTerm;
+                    newWire.Seal_2 = tempSeal;
+                    newWire.Port_2 = tempPort;
+
+                    wiresToUse.Add(newWire);
+                }
+
+                //Create the master sheet
+                CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
+
+                //Create the separate sheets as in the original tool
+                foreach (Bundle bundle in selectedBundles)
+                {
+                    //Create templist to give to CreateIndividualSheet
+                    List<Bundle> tempList = new List<Bundle>
+                    {
+                        bundle
+                    };
+
+                    CreateIndividualSheet(excelPackage, wires, tempList, RC_Profile);
+                }
+
+                // Save the Excel package
+                excelPackage.Save();
+
+                // Open the Excel file using its default application
+                Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });
+            }
         }
 
         private void CreateIndividualSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
         {
             List<iConverted_Wire> wiresToUse = wires;
             string bundleNumber = bundles[0].VariantNumber;
+            string sheetName = sheetProfile.Name + "_" + bundleNumber;
 
-            var wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetProfile.Name + "_" + bundleNumber);
+            // Check if the worksheet already exists
+            var wireWorksheet = excelPackage.Workbook.Worksheets[sheetName];
+            if (wireWorksheet != null)
+            {
+                // Clear existing worksheet content
+                wireWorksheet.Cells.Clear();
+            }
+            else
+            {
+                // Add new worksheet if it doesn't exist
+                wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetName);
+            }
 
             // Filter the wiresToUse collection to include only those wires 
             // where the Variant matches the given bundleNumber.
@@ -531,12 +579,12 @@ namespace Presentation
                 .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                 .ToList();
 
-
             // Write column headers for wires
             WriteHeaders(wireWorksheet, sheetProfile);
 
             // Write wire data
             WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
+
             AddAutoFilterButtons(wireWorksheet);
         }
 
@@ -544,8 +592,20 @@ namespace Presentation
         {
             List<iConverted_Wire> wiresToUse = wires;
             string bundleNumber = bundles[0].VariantNumber;
+            string sheetName = sheetProfile.Name + "_ALL";
 
-            var wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetProfile.Name + "_ALL");
+            // Check if the worksheet already exists
+            var wireWorksheet = excelPackage.Workbook.Worksheets[sheetName];
+            if (wireWorksheet != null)
+            {
+                // Clear existing worksheet content
+                wireWorksheet.Cells.Clear();
+            }
+            else
+            {
+                // Add new worksheet if it doesn't exist
+                wireWorksheet = excelPackage.Workbook.Worksheets.Add(sheetName);
+            }
 
             // Filter the wiresToUse collection to include only those wires 
             // where the Variant matches the given bundleNumber.
@@ -556,92 +616,100 @@ namespace Presentation
                 .ThenBy(wire => int.TryParse(wire.Port_1, out int port) ? port : int.MaxValue)
                 .ToList();
 
-
             // Write column headers for wires
             WriteHeaders(wireWorksheet, sheetProfile);
 
             // Write wire data
             WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
+
             AddAutoFilterButtons(wireWorksheet);
         }
 
-        public void CreateOC_Sheets(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        public void CreateOC_Sheets(string fileName, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
         {
-            //Prepare RC profile
-            List<string> OC_Profile_List = new List<string>();
-            string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
-                "", "Length table", "", "", "Weight (Kg)", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
-            OC_Profile_List.AddRange(stringsToAdd);
-
-            Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
-
-            
-
-            List<iConverted_Wire> wiresToUse = wires;
-
-            int originalCount = wiresToUse.Count;
-            for (int i = 0; i < originalCount; i++)
+            string fullPath = Path.Combine(directoryPath, fileName + "_OC.xlsx");
+            using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
-                Converted_Wire newWire = new Converted_Wire(
-                    wiresToUse[i].Wire,
-                    wiresToUse[i].Diameter,
-                    wiresToUse[i].Color,
-                    wiresToUse[i].Type,
-                    wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
-                    wiresToUse[i].Length,
-                    wiresToUse[i].Connector_2,
-                    wiresToUse[i].Port_2,
-                    wiresToUse[i].Term_2,
-                    wiresToUse[i].Seal_2,
-                    wiresToUse[i].Wire_connection,
-                    wiresToUse[i].Term_1,
-                    wiresToUse[i].Seal_1,
-                    wiresToUse[i].Connector_1,
-                    wiresToUse[i].Port_1,
-                    wiresToUse[i].Variant,
-                    wiresToUse[i].Bundle,
-                    wiresToUse[i].Loc_1,
-                    wiresToUse[i].Loc_2,
-                    wiresToUse[i].Temp_Class
+                //Prepare OC profile
+                List<string> OC_Profile_List = new List<string>();
+                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
+                "", "Length table", "", "", "Weight (Kg)", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
+                OC_Profile_List.AddRange(stringsToAdd);
+
+                Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
+
+                List<iConverted_Wire> wiresToUse = new List<iConverted_Wire>(wires);
+
+                int originalCount = wiresToUse.Count;
+                for (int i = 0; i < originalCount; i++)
+                {
+                    Converted_Wire newWire = new Converted_Wire(
+                        wiresToUse[i].Wire,
+                        wiresToUse[i].Diameter,
+                        wiresToUse[i].Color,
+                        wiresToUse[i].Type,
+                        wiresToUse[i].Code_no, // Assuming part_no corresponds to the Code_no property
+                        wiresToUse[i].Length,
+                        wiresToUse[i].Connector_2,
+                        wiresToUse[i].Port_2,
+                        wiresToUse[i].Term_2,
+                        wiresToUse[i].Seal_2,
+                        wiresToUse[i].Wire_connection,
+                        wiresToUse[i].Term_1,
+                        wiresToUse[i].Seal_1,
+                        wiresToUse[i].Connector_1,
+                        wiresToUse[i].Port_1,
+                        wiresToUse[i].Variant,
+                        wiresToUse[i].Bundle,
+                        wiresToUse[i].Loc_1,
+                        wiresToUse[i].Loc_2,
+                        wiresToUse[i].Temp_Class
                     );
 
-                string tempConnector = wiresToUse[i].Connector_1;
-                string tempTerm = wiresToUse[i].Term_1;
-                string tempSeal = wiresToUse[i].Seal_1;
-                string tempPort = wiresToUse[i].Port_1;
+                    string tempConnector = wiresToUse[i].Connector_1;
+                    string tempTerm = wiresToUse[i].Term_1;
+                    string tempSeal = wiresToUse[i].Seal_1;
+                    string tempPort = wiresToUse[i].Port_1;
 
-                newWire.Connector_1 = wiresToUse[i].Connector_2;
-                newWire.Term_1 = wiresToUse[i].Term_2;
-                newWire.Seal_1 = wiresToUse[i].Seal_2;
-                newWire.Port_1 = wiresToUse[i].Port_2;
+                    newWire.Connector_1 = wiresToUse[i].Connector_2;
+                    newWire.Term_1 = wiresToUse[i].Term_2;
+                    newWire.Seal_1 = wiresToUse[i].Seal_2;
+                    newWire.Port_1 = wiresToUse[i].Port_2;
 
-                newWire.Connector_2 = tempConnector;
-                newWire.Term_2 = tempTerm;
-                newWire.Seal_2 = tempSeal;
-                newWire.Port_2 = tempPort;
+                    newWire.Connector_2 = tempConnector;
+                    newWire.Term_2 = tempTerm;
+                    newWire.Seal_2 = tempSeal;
+                    newWire.Port_2 = tempPort;
 
-                wiresToUse.Add(newWire);
-            }
+                    wiresToUse.Add(newWire);
+                }
 
-            //Create the master sheet
-            CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
+                //Create the master sheet
+                CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
 
-            //Create the separate sheets as in the original tool
-            foreach (Bundle bundle in selectedBundles)
-            {
-                //Create templist to give to CreateIndividualSheet
-                List<Bundle> tempList = new List<Bundle>
+                //Create the separate sheets as in the original tool
+                foreach (Bundle bundle in selectedBundles)
                 {
-                    bundle
-                };
+                    //Create templist to give to CreateIndividualSheet
+                    List<Bundle> tempList = new List<Bundle>
+            {
+                bundle
+            };
 
-                CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile);
+                    CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile);
+                }
+
+                // Save the Excel package
+                excelPackage.Save();
+
+                // Open the Excel file using its default application
+                Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });
             }
         }
 
         public void CreateExcelReport(Dictionary<string, string> CombinedFailures, string fileName)
         {
-            string filePath = Path.Combine(directory, $"{fileName}_testresults.xlsx");
+            string filePath = Path.Combine(directoryPath, $"{fileName}_testresults.xlsx");
 
             // Delete the file if it exists
             if (File.Exists(filePath))
