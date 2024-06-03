@@ -249,7 +249,7 @@ namespace Presentation
                     fileHandler.WriteToFile(convertedWires.Cast<Data_Interfaces.iConverted_Wire>().ToList(), convertedComponents.Cast<Data_Interfaces.iConverted_Component>().ToList(), extractedBundles.Cast<Data_Interfaces.iBundle>().ToList(), bundleNumber, filePath);
                 }
 
-                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber, textFilePath);
+                ProfileChoiceForm pcForm = new ProfileChoiceForm(_logger, bundleNumber, textFilePath, false);
 
                 // Set the newProfileForm's TopLevel property to false
                 pcForm.TopLevel = false;

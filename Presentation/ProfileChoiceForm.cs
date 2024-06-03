@@ -34,8 +34,10 @@ namespace Presentation
         private List<DSI_Tube> tubesList;
         private List<Bundle> bundlesList;
 
+        private bool isProject;
+
         private string textFilePath;
-        public ProfileChoiceForm(Logger logger, string filename, string textfilepath)
+        public ProfileChoiceForm(Logger logger, string filename, string textfilepath, bool isproject)
         {
             _logger = logger;
             InitializeComponent();
@@ -43,7 +45,7 @@ namespace Presentation
             textFilePath = textfilepath;
             exporter = new ExcelExporter(logger);
             profileController = new ProfileController(new FileHandler(logger));
-
+            isProject = isproject;
             profileList = profileController.userProfiles;
             currentlyOpenedLabel.Text = "Opened: " + fileName;
             SetProfilesToComboBoxes();
@@ -106,43 +108,74 @@ namespace Presentation
 
         private void exportToExcelButton_Click(object sender, EventArgs e)
         {
-            // Get selected profile names from combo boxes
-            string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
-            string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
-            string selectedCustomSheetProfileName = customSheetComboBox.SelectedItem?.ToString();
-
-            // Find selected profiles from the profile list
-            Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
-            Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
-            Profile selectedCustomSheetProfile = profileList.FirstOrDefault(p => p.Name == selectedCustomSheetProfileName);
-
-            //If no user profiles have been selected use the defaults for bundles
-            if (selectedWireProfile == null)
+            if(isProject)
             {
-                //TODO: set these to names instead of index
-                selectedWireProfile = profileController.defaultProfiles[0];
-            }
+                // Get selected profile names from combo boxes
+                string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
+                string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
 
-            if (selectedComponentProfile == null)
+                // Find selected profiles from the profile list
+                Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
+                Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
+
+                //If no user profiles have been selected use the defaults for projects
+                if (selectedWireProfile == null)
+                {
+                    selectedWireProfile = profileController.defaultProfiles[1];
+                }
+
+                if (selectedComponentProfile == null)
+                {
+                    selectedComponentProfile = profileController.defaultProfiles[3];
+                }
+
+                // Create a list containing wires at index 0 and components at index 1
+                List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
+
+                // Call the method to export to Excel with the selected profiles
+                ExportProjectToExcel(selectedProfiles);
+            }
+            else
             {
-                //TODO: set these to names instead of index
-                selectedComponentProfile = profileController.defaultProfiles[2];
+                // Get selected profile names from combo boxes
+                string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
+                string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
+                string selectedCustomSheetProfileName = customSheetComboBox.SelectedItem?.ToString();
+
+                // Find selected profiles from the profile list
+                Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
+                Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
+                Profile selectedCustomSheetProfile = profileList.FirstOrDefault(p => p.Name == selectedCustomSheetProfileName);
+
+                //If no user profiles have been selected use the defaults for bundles
+                if (selectedWireProfile == null)
+                {
+                    //TODO: set these to names instead of index
+                    selectedWireProfile = profileController.defaultProfiles[0];
+                }
+
+                if (selectedComponentProfile == null)
+                {
+                    //TODO: set these to names instead of index
+                    selectedComponentProfile = profileController.defaultProfiles[2];
+                }
+
+                List<Bundle> selectedBundles = GetSelectedBundles();
+                _logger.Log("The following assemblies have been selected");
+                foreach (Bundle bundle in selectedBundles)
+                {
+                    _logger.Log(bundle.VariantNumber);
+                }
+
+                List<bool> selectedSheets = GetSelectedSheets();
+
+                // Create a list containing wires at index 0 and components at index 1, custom at 2
+                List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile, selectedCustomSheetProfile };
+
+                // Call the method to export to Excel with the selected profiles
+                ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
             }
-
-            List<Bundle> selectedBundles = GetSelectedBundles();
-            _logger.Log("The following assemblies have been selected");
-            foreach (Bundle bundle in selectedBundles)
-            {
-                _logger.Log(bundle.VariantNumber);
-            }
-
-            List<bool> selectedSheets = GetSelectedSheets();
-
-            // Create a list containing wires at index 0 and components at index 1, custom at 2
-            List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile, selectedCustomSheetProfile};
-
-            // Call the method to export to Excel with the selected profiles
-            ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
+            
         }
 
         private List<Bundle> GetSelectedBundles()
@@ -190,30 +223,7 @@ namespace Presentation
 
         private void exportProjectButton_Click(object sender, EventArgs e)
         {
-            // Get selected profile names from combo boxes
-            string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
-            string selectedComponentProfileName = componentProfilesComboBox.SelectedItem?.ToString();
-
-            // Find selected profiles from the profile list
-            Profile selectedWireProfile = profileList.FirstOrDefault(p => p.Name == selectedWireProfileName);
-            Profile selectedComponentProfile = profileList.FirstOrDefault(p => p.Name == selectedComponentProfileName);
-
-            //If no user profiles have been selected use the defaults for projects
-            if (selectedWireProfile == null)
-            {
-                selectedWireProfile = profileController.defaultProfiles[1];
-            }
-
-            if (selectedComponentProfile == null)
-            {
-                selectedComponentProfile = profileController.defaultProfiles[3];
-            }
-
-            // Create a list containing wires at index 0 and components at index 1
-            List<Profile> selectedProfiles = new List<Profile> { selectedWireProfile, selectedComponentProfile };
-
-            // Call the method to export to Excel with the selected profiles
-            ExportProjectToExcel(selectedProfiles);
+            
         }
 
         private void selectAllBundlesButton_Click(object sender, EventArgs e)

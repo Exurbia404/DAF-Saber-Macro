@@ -33,7 +33,6 @@
             wireProfilesComboBox = new ComboBox();
             componentProfilesComboBox = new ComboBox();
             exportToExcelButton = new Button();
-            exportProjectButton = new Button();
             bundlesListBox = new ListBox();
             selectAllBundlesButton = new Button();
             selectNoneBundlesButton = new Button();
@@ -92,16 +91,6 @@
             exportToExcelButton.Text = "Export";
             exportToExcelButton.UseVisualStyleBackColor = true;
             exportToExcelButton.Click += exportToExcelButton_Click;
-            // 
-            // exportProjectButton
-            // 
-            exportProjectButton.Location = new Point(93, 113);
-            exportProjectButton.Name = "exportProjectButton";
-            exportProjectButton.Size = new Size(101, 23);
-            exportProjectButton.TabIndex = 5;
-            exportProjectButton.Text = "ExportProject";
-            exportProjectButton.UseVisualStyleBackColor = true;
-            exportProjectButton.Click += exportProjectButton_Click;
             // 
             // bundlesListBox
             // 
@@ -230,7 +219,6 @@
             Controls.Add(selectNoneBundlesButton);
             Controls.Add(selectAllBundlesButton);
             Controls.Add(bundlesListBox);
-            Controls.Add(exportProjectButton);
             Controls.Add(exportToExcelButton);
             Controls.Add(componentProfilesComboBox);
             Controls.Add(wireProfilesComboBox);
@@ -250,7 +238,6 @@
         private ComboBox wireProfilesComboBox;
         private ComboBox componentProfilesComboBox;
         private Button exportToExcelButton;
-        private Button exportProjectButton;
         private ListBox bundlesListBox;
         private Button selectAllBundlesButton;
         private Button selectNoneBundlesButton;
