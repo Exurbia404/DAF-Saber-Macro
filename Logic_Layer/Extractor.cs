@@ -628,72 +628,98 @@ namespace Logic
 
         private List<List<string[]>> RetrieveSectionsFromFile()
         {
-            return new List<List<string[]>>
+            try
             {
-                GetSectionUsingMarkers("Section 1", "%Section 2"),
-                GetSectionUsingMarkers("%Section 2", "%Section 3"),
-                GetSectionUsingMarkers("%Section 3", "%Section 4"),
-                GetSectionUsingMarkers("%Section 4", "%Section 5"),
-                GetSectionUsingMarkers("%Section 5", "%Section 6"),
-                GetSectionUsingMarkers("%Section 6", "%Section 7"),
-                GetSectionUsingMarkers("%Section 7", "%Section 8"),
-                GetSectionUsingMarkers("%Section 8", "%Section 9"),
-                GetSectionUsingMarkers("%Section 9", "%Section 10"),
-                GetSectionUsingMarkers("%Section 10", "%Section 11"),
-                GetSectionUsingMarkers("%Section 11", "%Section 12"),
-                GetSectionUsingMarkers("%Section 12", "%Section 13"),
-                GetSectionUsingMarkers("%Section 13", "%Section 14"),
-                GetSectionUsingMarkers("%Section 14", "%Section 15"),
-                GetSectionUsingMarkers("%Section 15", "%Section 16"),
-                GetSectionUsingMarkers("%Section 16", "%Section 17"),
-                GetSectionUsingMarkers("%Section 18", "%End of File Marker"),
-            };
+                return new List<List<string[]>>
+                {
+                    GetSectionUsingMarkers("Section 1", "%Section 2"),
+                    GetSectionUsingMarkers("%Section 2", "%Section 3"),
+                    GetSectionUsingMarkers("%Section 3", "%Section 4"),
+                    GetSectionUsingMarkers("%Section 4", "%Section 5"),
+                    GetSectionUsingMarkers("%Section 5", "%Section 6"),
+                    GetSectionUsingMarkers("%Section 6", "%Section 7"),
+                    GetSectionUsingMarkers("%Section 7", "%Section 8"),
+                    GetSectionUsingMarkers("%Section 8", "%Section 9"),
+                    GetSectionUsingMarkers("%Section 9", "%Section 10"),
+                    GetSectionUsingMarkers("%Section 10", "%Section 11"),
+                    GetSectionUsingMarkers("%Section 11", "%Section 12"),
+                    GetSectionUsingMarkers("%Section 12", "%Section 13"),
+                    GetSectionUsingMarkers("%Section 13", "%Section 14"),
+                    GetSectionUsingMarkers("%Section 14", "%Section 15"),
+                    GetSectionUsingMarkers("%Section 15", "%Section 16"),
+                    GetSectionUsingMarkers("%Section 16", "%Section 17"),
+                    GetSectionUsingMarkers("%Section 18", "%End of File Marker"),
+                };
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(ex.Message);
+                return null;
+            }
+            
         }
 
         private List<string[]> GetSectionUsingMarkers(string startMarker, string endMarker)
         {
-            List<string[]> section = new List<string[]>();
-            bool isInDesiredSection = false;
-
-            foreach (string line in File.ReadLines(filePath))
+            try
             {
-                if (line.StartsWith(endMarker))
-                {
-                    // Exit the loop when reaching the end of Section 3
-                    break;
-                }
+                List<string[]> section = new List<string[]>();
+                bool isInDesiredSection = false;
 
-                if (isInDesiredSection)
+                foreach (string line in File.ReadLines(filePath))
                 {
-                    // Split the line by '::' to get individual parts
-                    string[] parts = line.Split(':');
-                    section.Add(parts);
-                }
+                    if (line.StartsWith(endMarker))
+                    {
+                        // Exit the loop when reaching the end of Section 3
+                        break;
+                    }
 
-                if (line.StartsWith(startMarker))
-                {
-                    // Start processing lines when entering Section 3
-                    isInDesiredSection = true;
+                    if (isInDesiredSection)
+                    {
+                        // Split the line by '::' to get individual parts
+                        string[] parts = line.Split(':');
+                        section.Add(parts);
+                    }
+
+                    if (line.StartsWith(startMarker))
+                    {
+                        // Start processing lines when entering Section 3
+                        isInDesiredSection = true;
+                    }
                 }
+                return section;
             }
-            return section;
+            catch(Exception ex)
+            {
+                _logger.Log(ex.Message);
+                return null;
+            }
         }
 
         public List<Project_Wire> Project_ExtractWiresFromWireFile(string filePath)
         {
-            List<Project_Wire> foundWires = new List<Project_Wire>();
-
-            // Read lines from the file and skip the first line
-            foreach (string line in File.ReadLines(filePath).Skip(1))
+            try
             {
-                Project_Wire wire = Project_ExtractWireFromString(line);
-                // Process lines between Section 3 and Section 4
-                if (wire != null)
+                List<Project_Wire> foundWires = new List<Project_Wire>();
+
+                // Read lines from the file and skip the first line
+                foreach (string line in File.ReadLines(filePath).Skip(1))
                 {
-                    foundWires.Add(wire);
+                    Project_Wire wire = Project_ExtractWireFromString(line);
+                    // Process lines between Section 3 and Section 4
+                    if (wire != null)
+                    {
+                        foundWires.Add(wire);
+                    }
                 }
+                return foundWires;
             }
-            return foundWires;
+            
+            catch(Exception ex)
+{
+                _logger.Log(ex.Message);
+                return null;
+            }
         }
 
         private Project_Wire Project_ExtractWireFromString(string inputString)
@@ -780,36 +806,45 @@ namespace Logic
 
         public List<DSI_Component> GetDSIComponents()
         {
-            List<DSI_Component> foundDSIComponents = new List<DSI_Component>();
-
-            foreach (string[] line in sections[3])
+            try
             {
-                foundDSIComponents.Add(new DSI_Component
-                {
-                    NodeName = line[0],
-                    CavityName = line[1],
-                    WireName = line[2],
-                    SequenceNumber = line[3],
-                    ComponentTypeCode = line[4],
-                    CircuitOption = line[5],
-                    ServiceFunction = line[6],
-                    Route = line[7],
-                    PartNumber1 = line[8],
-                    Quantity = line[9],
-                    CrossSectionalArea = line[10],
-                    PartNumber2 = line[11],
-                    PartNumber3 = line[12],
-                    SelectTerminal = line[13],
-                    Seal = line[14],
-                    Plugged = line[15],
-                    BlockNumber = line[16],
-                    TerminationMethod = line[17],
-                    MaterialCode = line[18],
-                    ComponentTypeCode2 = line[19]
-                });
-            }
+                List<DSI_Component> foundDSIComponents = new List<DSI_Component>();
 
-            return foundDSIComponents;
+                foreach (string[] line in sections[3])
+                {
+                    foundDSIComponents.Add(new DSI_Component
+                    {
+                        NodeName = line[0],
+                        CavityName = line[1],
+                        WireName = line[2],
+                        SequenceNumber = line[3],
+                        ComponentTypeCode = line[4],
+                        CircuitOption = line[5],
+                        ServiceFunction = line[6],
+                        Route = line[7],
+                        PartNumber1 = line[8],
+                        Quantity = line[9],
+                        CrossSectionalArea = line[10],
+                        PartNumber2 = line[11],
+                        PartNumber3 = line[12],
+                        SelectTerminal = line[13],
+                        Seal = line[14],
+                        Plugged = line[15],
+                        BlockNumber = line[16],
+                        TerminationMethod = line[17],
+                        MaterialCode = line[18],
+                        ComponentTypeCode2 = line[19]
+                    });
+                }
+
+                return foundDSIComponents;
+            }
+            
+            catch(Exception ex)
+            { 
+                _logger.Log(ex.Message);
+                return null;
+            }
         }
 
         public List<DSI_Wire> GetDSI_Wires()

@@ -17,20 +17,20 @@ namespace Presentation
         private Logger _logger;
         private int messageCounter;
         private MessageViewer messageViewerForm;
+        public Settings Settings;
 
 
-        private string version = "Beta 1.4";
-
-        public PanelForm(Logger logger)
+        public PanelForm(Logger logger, Settings settings)
         {
             InitializeComponent();
 
+            Settings = settings;
             _logger = logger;
             _logger.Log($"Computer Name: {Environment.MachineName}");
             _logger.LogEvent += Logger_LogEvent;
 
             messageCounter = 0;
-            versionLabel.Text = "Version: " + version;
+            versionLabel.Text = "Version: " + settings.Version;
 
             ChoiceForm choiceForm = new ChoiceForm(_logger, this);
             choiceForm.TopLevel = false;
@@ -112,6 +112,11 @@ namespace Presentation
                 // Adjust the size of the panelForm and the panel when ProfileCreator is present
                 this.Size = new Size(980, 691); // Adjust as needed
                 panel.Size = new Size(940, 540); // Adjust as needed
+            }
+            else if (e.Control is RefSetForm refsetForm)
+            {
+                this.Size = new Size(980, 691);
+                panel.Size = new Size(940, 540);
             }
             else
             {

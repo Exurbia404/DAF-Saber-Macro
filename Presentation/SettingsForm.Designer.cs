@@ -31,6 +31,9 @@
             goToProfilesButton = new Button();
             goToRefsetsButton = new Button();
             clearTempDataButton = new Button();
+            dafFileServerButton = new Button();
+            leylandFileServerButton = new Button();
+            label1 = new Label();
             SuspendLayout();
             // 
             // goToProfilesButton
@@ -63,18 +66,54 @@
             clearTempDataButton.UseVisualStyleBackColor = true;
             clearTempDataButton.Click += clearTempDataButton_Click;
             // 
+            // dafFileServerButton
+            // 
+            dafFileServerButton.Enabled = false;
+            dafFileServerButton.Location = new Point(12, 108);
+            dafFileServerButton.Name = "dafFileServerButton";
+            dafFileServerButton.Size = new Size(75, 23);
+            dafFileServerButton.TabIndex = 3;
+            dafFileServerButton.Text = "DAF";
+            dafFileServerButton.UseVisualStyleBackColor = true;
+            dafFileServerButton.Click += dafFileServerButton_Click;
+            // 
+            // leylandFileServerButton
+            // 
+            leylandFileServerButton.Enabled = false;
+            leylandFileServerButton.Location = new Point(12, 137);
+            leylandFileServerButton.Name = "leylandFileServerButton";
+            leylandFileServerButton.Size = new Size(75, 23);
+            leylandFileServerButton.TabIndex = 4;
+            leylandFileServerButton.Text = "Leyland";
+            leylandFileServerButton.UseVisualStyleBackColor = true;
+            leylandFileServerButton.Click += leylandFileServerButton_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 90);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 15);
+            label1.TabIndex = 5;
+            label1.Text = "Select server:";
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(944, 501);
+            ClientSize = new Size(380, 540);
+            Controls.Add(label1);
+            Controls.Add(leylandFileServerButton);
+            Controls.Add(dafFileServerButton);
             Controls.Add(clearTempDataButton);
             Controls.Add(goToRefsetsButton);
             Controls.Add(goToProfilesButton);
             FormBorderStyle = FormBorderStyle.None;
             Name = "SettingsForm";
             Text = "SettingsForm";
+            Load += SettingsForm_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -82,5 +121,8 @@
         private Button goToProfilesButton;
         private Button goToRefsetsButton;
         private Button clearTempDataButton;
+        private Button dafFileServerButton;
+        private Button leylandFileServerButton;
+        private Label label1;
     }
 }

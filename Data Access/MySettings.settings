@@ -2,10 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Data_Access" GeneratedClassName="MySettings">
   <Profiles />
   <Settings>
-    <Setting Name="RefSets" Type="System.String" Scope="User">
+    <Setting Name="UserProfiles" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UserProfiles" Type="System.String" Scope="User">
+    <Setting Name="RefSets" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

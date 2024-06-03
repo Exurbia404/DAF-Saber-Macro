@@ -232,11 +232,10 @@ public class SaberChecker
                 FailedComponents.Add((component, "DSI_08"));
             }
         }
-
         return testResult;
     }
-    //DSI_12 Wire length must be 0 (loopback) or larger than 0 (all others)
 
+    //DSI_12 Wire length must be 0 (loopback) or larger than 0 (all others)
     public bool DSI_12(List<DSI_Wire> wiresToCheck)
     {
         bool testResult = true;

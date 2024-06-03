@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,8 +21,8 @@ namespace Presentation
         private List<DSI_Reference> extractedReferences;
         private Logger _logger;
         private PanelForm panelForm;
-        
-        private string ProductionBuildOfMaterialsFolder = @"J:\SaberRelease\Production";
+
+        private string ProductionBuildOfMaterialsFolder;
 
 
         public ProjectForm(Logger logger, PanelForm panelform)
@@ -31,8 +33,26 @@ namespace Presentation
             panelForm = panelform;
 
             refsetHandler = new RefSetHandler(_logger);
+            if (Environment.MachineName == "EXURBIA")
+            {
+                ProductionBuildOfMaterialsFolder = panelForm.Settings.LocalProductionFolder;
+            }
+            else
+            {
+                ProductionBuildOfMaterialsFolder = panelForm.Settings.ProductionFolder;
+            }
 
             extractedReferences = LoadRefSets();
+            if (extractedReferences != null)
+            { 
+                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+                AddSchematicsToListBox(schematicNames);
+            }
+            else
+            {
+                _logger.Log("No references were found");
+            }
+
         }
 
         private List<DSI_Reference> LoadRefSets()
@@ -129,8 +149,14 @@ namespace Presentation
             }
             else if (IsRefSetNumber(selectedSchematic))
             {
-                _logger.Log("Loading following schematic :" + selectedSchematic);
-                OpenRefSetInExcel(TrimString(selectedSchematic));
+                // Trim the selectedSchematic to remove leading and trailing whitespace
+                string trimmedSchematic = selectedSchematic.Trim();
+
+                // Call TrimString to extract the part after '-' character
+                string bundleNumber = TrimString(trimmedSchematic);
+
+                _logger.Log("Loading following schematic :" + bundleNumber);
+                OpenRefSetInExcel(bundleNumber);
             }
         }
 
@@ -189,6 +215,15 @@ namespace Presentation
                     Project_ExtractAndOpenExcel(latestCompFile, latestWiresFile, selectedSchematic);
                     // Do something with the latest .txt file, for example, display its path
                 }
+                else
+                {
+                    _logger.Log("wire or comp files not found");
+                }
+
+            }
+            else
+            {
+                _logger.Log("Folder not found");
             }
         }
 
@@ -223,6 +258,11 @@ namespace Presentation
             {
 
             }
+        }
+
+        private void ProjectForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

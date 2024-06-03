@@ -9,6 +9,8 @@ namespace Presentation
 {
     public class Settings
     {
+        public string Version = "Beta 1.8";
+
         public enum FileServers
         {
             DAF,
@@ -20,14 +22,16 @@ namespace Presentation
         public string DesignerFolder {  get; private set; }
 
         public string LocalFolder;
-        private FolderPaths folderPaths;
+        public string LocalProductionFolder;
+        public FolderPaths FolderPaths;
         private Logger _logger;
 
         public Settings(Logger logger)
         {
             //Set default file server to DAF
-            folderPaths = new FolderPaths(logger);
-            LocalFolder = folderPaths.ExurbiaLocal;
+            FolderPaths = new FolderPaths(logger);
+            LocalFolder = FolderPaths.ExurbiaLocal;
+            LocalProductionFolder = FolderPaths.ExurbiaLocalProduction;
             SwitchFileServer(FileServers.DAF);
         }
 
@@ -36,21 +40,21 @@ namespace Presentation
             switch (name)
             {
                 case FileServers.DAF:
-                    ProductionFolder = folderPaths.DAF_Production;
-                    ReldasFolder = folderPaths.DAF_Reldas;
-                    DesignerFolder = folderPaths.DAF_Designer;
+                    ProductionFolder = FolderPaths.DAF_Production;
+                    ReldasFolder = FolderPaths.DAF_Reldas;
+                    DesignerFolder = FolderPaths.DAF_Designer;
                     break;
                 case FileServers.Leyland:
-                    ProductionFolder = folderPaths.LEY_Production;
-                    ReldasFolder = folderPaths.LEY_Reldas;
-                    DesignerFolder = folderPaths.LEY_Designer;
+                    ProductionFolder = FolderPaths.LEY_Production;
+                    ReldasFolder = FolderPaths.LEY_Reldas;
+                    DesignerFolder = FolderPaths.LEY_Designer;
                     break;
                 case FileServers.Other:
                     // Assign the folder paths for the "Other" file server here
                     // For now, let's assign them the same as DAF
-                    ProductionFolder = folderPaths.DAF_Production;
-                    ReldasFolder = folderPaths.DAF_Reldas;
-                    DesignerFolder = folderPaths.DAF_Designer;
+                    ProductionFolder = FolderPaths.DAF_Production;
+                    ReldasFolder = FolderPaths.DAF_Reldas;
+                    DesignerFolder = FolderPaths.DAF_Designer;
                     break;
                 default:
                     throw new ArgumentException("Invalid file server name");

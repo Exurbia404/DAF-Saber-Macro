@@ -201,12 +201,12 @@ namespace Presentation
             //If no user profiles have been selected use the defaults for projects
             if (selectedWireProfile == null)
             {
-                selectedWireProfile = profileController.defaultProfiles[2];
+                selectedWireProfile = profileController.defaultProfiles[1];
             }
 
             if (selectedComponentProfile == null)
             {
-                selectedComponentProfile = profileController.defaultProfiles[5];
+                selectedComponentProfile = profileController.defaultProfiles[3];
             }
 
             // Create a list containing wires at index 0 and components at index 1

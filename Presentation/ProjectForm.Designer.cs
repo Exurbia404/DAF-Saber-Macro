@@ -37,7 +37,7 @@
             // 
             // returnToProjectsButton
             // 
-            returnToProjectsButton.Location = new Point(292, 86);
+            returnToProjectsButton.Location = new Point(292, 40);
             returnToProjectsButton.Name = "returnToProjectsButton";
             returnToProjectsButton.Size = new Size(75, 23);
             returnToProjectsButton.TabIndex = 30;
@@ -49,7 +49,7 @@
             // 
             currentProjectLabel.AutoSize = true;
             currentProjectLabel.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            currentProjectLabel.Location = new Point(13, 86);
+            currentProjectLabel.Location = new Point(13, 40);
             currentProjectLabel.Name = "currentProjectLabel";
             currentProjectLabel.Size = new Size(100, 20);
             currentProjectLabel.TabIndex = 29;
@@ -58,7 +58,7 @@
             // schematicsSearchTextBox
             // 
             schematicsSearchTextBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            schematicsSearchTextBox.Location = new Point(13, 115);
+            schematicsSearchTextBox.Location = new Point(13, 69);
             schematicsSearchTextBox.Margin = new Padding(4, 3, 4, 3);
             schematicsSearchTextBox.Name = "schematicsSearchTextBox";
             schematicsSearchTextBox.Size = new Size(354, 23);
@@ -72,10 +72,11 @@
             schematicsListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             schematicsListBox.FormattingEnabled = true;
             schematicsListBox.ItemHeight = 16;
-            schematicsListBox.Location = new Point(13, 149);
+            schematicsListBox.Location = new Point(13, 103);
             schematicsListBox.Margin = new Padding(4, 3, 4, 3);
             schematicsListBox.Name = "schematicsListBox";
-            schematicsListBox.Size = new Size(354, 372);
+            schematicsListBox.ScrollAlwaysVisible = true;
+            schematicsListBox.Size = new Size(354, 212);
             schematicsListBox.TabIndex = 27;
             schematicsListBox.Click += schematicsListBox_Click;
             // 
@@ -103,6 +104,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "ProjectForm";
             Text = "ProjectForm";
+            Load += ProjectForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

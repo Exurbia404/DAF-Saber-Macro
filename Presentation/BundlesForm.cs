@@ -41,6 +41,10 @@ namespace Presentation
             panelForm = panelform;
             _logger = logger;
 
+            ProductionBuildOfMaterialsFolder = panelform.Settings.ProductionFolder;
+            ReldasBuildOfMaterialsFolder = panelform.Settings.ReldasFolder;
+            DesignerBuildOfMaterialsFolder = panelform.Settings.DesignerFolder;
+
             try
             {
                 if (Environment.MachineName == "EXURBIA")

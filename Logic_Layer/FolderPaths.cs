@@ -17,6 +17,7 @@ public class FolderPaths
 
     //My local drive!
     public string ExurbiaLocal = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
+    public string ExurbiaLocalProduction = @"C:\Users\tomvh\Documents\School\S5 - Internship\Production";
 
     public bool HasFoundDAF { get; private set; }
     public bool HasFoundLEY { get; private set; }
@@ -26,7 +27,8 @@ public class FolderPaths
     {
         _logger = logger;
 
-
+        HasFoundDAF = false;
+        HasFoundLEY = false;
 
         string dafNetworkPath = @"\\app-p-SABER.eu.paccar.com\Saber\DATA";
         string dafDriveLetter = GetDriveLetter(dafNetworkPath);
@@ -34,17 +36,16 @@ public class FolderPaths
         string leylandNetworkPath = @"\\eu.paccar.com\LEYLEY\Saber";
         string leylandDriveLetter = GetDriveLetter(leylandNetworkPath);
 
-        //HasFoundDAF = !dafDriveLetter.IsNullOrEmpty();
-        //HasFoundLEY = !leylandNetworkPath.IsNullOrEmpty();
-
-        if (dafDriveLetter != "")
+        if (dafDriveLetter != null)
         {
+            HasFoundDAF = true;
             DAF_Designer = ConcatenateStrings(dafDriveLetter, DAF_Designer);
             DAF_Production = ConcatenateStrings(dafDriveLetter, DAF_Production);
             DAF_Reldas = ConcatenateStrings(dafDriveLetter, DAF_Reldas);
         }
-        else if (leylandDriveLetter != "")
+        if (leylandDriveLetter != null)
         {
+            HasFoundLEY = true;
             LEY_Designer = ConcatenateStrings(leylandDriveLetter, LEY_Designer);
             LEY_Production = ConcatenateStrings(leylandDriveLetter, LEY_Production);
             LEY_Reldas = ConcatenateStrings(leylandDriveLetter, LEY_Reldas);

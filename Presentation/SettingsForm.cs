@@ -110,5 +110,27 @@ namespace Presentation
                 _logger.Log("Temp data directory does not exist");
             }
         }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            if (panelForm.Settings.FolderPaths.HasFoundDAF)
+            {
+                dafFileServerButton.Enabled = true;
+            }
+            if (panelForm.Settings.FolderPaths.HasFoundLEY)
+            {
+                leylandFileServerButton.Enabled = true;
+            }
+        }
+
+        private void dafFileServerButton_Click(object sender, EventArgs e)
+        {
+            panelForm.Settings.SwitchFileServer(Settings.FileServers.DAF);
+        }
+
+        private void leylandFileServerButton_Click(object sender, EventArgs e)
+        {
+            panelForm.Settings.SwitchFileServer(Settings.FileServers.Leyland);
+        }
     }
 }

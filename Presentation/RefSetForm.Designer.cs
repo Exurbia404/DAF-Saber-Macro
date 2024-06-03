@@ -49,7 +49,7 @@
             projectsListBox.ItemHeight = 21;
             projectsListBox.Location = new Point(12, 21);
             projectsListBox.Name = "projectsListBox";
-            projectsListBox.Size = new Size(200, 382);
+            projectsListBox.Size = new Size(200, 319);
             projectsListBox.TabIndex = 0;
             projectsListBox.DoubleClick += projectsListBox_DoubleClick;
             // 
@@ -60,41 +60,41 @@
             referencesListBox.ItemHeight = 21;
             referencesListBox.Location = new Point(237, 21);
             referencesListBox.Name = "referencesListBox";
-            referencesListBox.Size = new Size(515, 382);
+            referencesListBox.Size = new Size(515, 319);
             referencesListBox.TabIndex = 1;
             referencesListBox.DoubleClick += referencesListBox_DoubleClick;
             // 
             // yearWeekTextBox
             // 
-            yearWeekTextBox.Location = new Point(12, 433);
+            yearWeekTextBox.Location = new Point(12, 367);
             yearWeekTextBox.Name = "yearWeekTextBox";
             yearWeekTextBox.Size = new Size(140, 23);
             yearWeekTextBox.TabIndex = 2;
             // 
             // bundleNumberTextBox
             // 
-            bundleNumberTextBox.Location = new Point(158, 433);
+            bundleNumberTextBox.Location = new Point(158, 367);
             bundleNumberTextBox.Name = "bundleNumberTextBox";
             bundleNumberTextBox.Size = new Size(140, 23);
             bundleNumberTextBox.TabIndex = 3;
             // 
             // projectNameTextBox
             // 
-            projectNameTextBox.Location = new Point(304, 433);
+            projectNameTextBox.Location = new Point(304, 367);
             projectNameTextBox.Name = "projectNameTextBox";
             projectNameTextBox.Size = new Size(140, 23);
             projectNameTextBox.TabIndex = 4;
             // 
             // descriptionTextBox
             // 
-            descriptionTextBox.Location = new Point(450, 433);
+            descriptionTextBox.Location = new Point(450, 367);
             descriptionTextBox.Name = "descriptionTextBox";
             descriptionTextBox.Size = new Size(140, 23);
             descriptionTextBox.TabIndex = 5;
             // 
             // addReferenceButton
             // 
-            addReferenceButton.Location = new Point(596, 432);
+            addReferenceButton.Location = new Point(596, 366);
             addReferenceButton.Name = "addReferenceButton";
             addReferenceButton.Size = new Size(75, 24);
             addReferenceButton.TabIndex = 6;
@@ -104,7 +104,7 @@
             // 
             // deleteReferenceButton
             // 
-            deleteReferenceButton.Location = new Point(677, 432);
+            deleteReferenceButton.Location = new Point(677, 366);
             deleteReferenceButton.Name = "deleteReferenceButton";
             deleteReferenceButton.Size = new Size(75, 24);
             deleteReferenceButton.TabIndex = 7;
@@ -116,7 +116,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(12, 409);
+            label1.Location = new Point(12, 343);
             label1.Name = "label1";
             label1.Size = new Size(80, 21);
             label1.TabIndex = 8;
@@ -126,7 +126,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(158, 409);
+            label2.Location = new Point(158, 343);
             label2.Name = "label2";
             label2.Size = new Size(112, 21);
             label2.TabIndex = 9;
@@ -136,7 +136,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(304, 409);
+            label3.Location = new Point(304, 343);
             label3.Name = "label3";
             label3.Size = new Size(101, 21);
             label3.TabIndex = 10;
@@ -146,7 +146,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label4.Location = new Point(450, 409);
+            label4.Location = new Point(450, 343);
             label4.Name = "label4";
             label4.Size = new Size(89, 21);
             label4.TabIndex = 11;

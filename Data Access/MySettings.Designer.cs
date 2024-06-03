@@ -26,24 +26,24 @@ namespace Data_Access {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RefSets {
-            get {
-                return ((string)(this["RefSets"]));
-            }
-            set {
-                this["RefSets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string UserProfiles {
             get {
                 return ((string)(this["UserProfiles"]));
             }
             set {
                 this["UserProfiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RefSets {
+            get {
+                return ((string)(this["RefSets"]));
+            }
+            set {
+                this["RefSets"] = value;
             }
         }
     }

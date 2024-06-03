@@ -9,6 +9,8 @@ namespace Data_Access
     {
         private Logger _logger;
         private string filePath = @"W:\PD-Saber\5_PD_HD\Planning\Saber Tool Plus\Data\refset.json";
+        private string filePath_Alt = @"C:\Users\tomvh\Documents\Saber Tool Plus\Data\refset.json";
+
 
         public RefSetHandler(Logger logger) 
         {
@@ -19,7 +21,7 @@ namespace Data_Access
         {
             if(Environment.MachineName == "EXURBIA")
             {
-                SaveToSettings(references);
+                SaveToDisk_Alt(references);
             }
             else
             {
@@ -31,7 +33,15 @@ namespace Data_Access
         {
             if (Environment.MachineName == "EXURBIA")
             {
-                return LoadFromSettings();
+                //if(LoadFromSettings() != null)
+                //{
+                  //  return LoadFromSettings();
+                //}
+                //else
+                //{
+                    return LoadFromDisk_Alt();
+                //}
+                
             }
             else
             {
@@ -46,12 +56,34 @@ namespace Data_Access
             File.WriteAllText(filePath, json);
         }
 
+        private void SaveToDisk_Alt(List<DSI_Reference> references)
+        {
+            _logger.Log("Saved" + references.Count + " to disk");
+            string json = JsonConvert.SerializeObject(references, Formatting.Indented);
+            File.WriteAllText(filePath_Alt, json);
+        }
+
         private List<DSI_Reference> LoadFromDisk()
         {
 
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<List<DSI_Reference>>(json);
+            }
+            else
+            {
+                // Return an empty list if the file doesn't exist
+                return new List<DSI_Reference>();
+            }
+        }
+
+        private List<DSI_Reference> LoadFromDisk_Alt()
+        {
+
+            if (File.Exists(filePath_Alt))
+            {
+                string json = File.ReadAllText(filePath_Alt);
                 return JsonConvert.DeserializeObject<List<DSI_Reference>>(json);
             }
             else

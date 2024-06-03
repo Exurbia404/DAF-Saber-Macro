@@ -226,7 +226,7 @@ namespace Presentation
             worksheet.Cells["A1:" + worksheet.Dimension.End.Address].AutoFilter = true;
         }
 
-        private static void WriteHeaders(ExcelWorksheet worksheet, Profile profile)
+        private void WriteHeaders(ExcelWorksheet worksheet, Profile profile)
         {
             if (profile == null)
             {
@@ -249,7 +249,7 @@ namespace Presentation
             worksheet.View.FreezePanes(2, 1);
         }
 
-        private static void WriteHeaders_alt<T>(ExcelWorksheet worksheet, List<T> objects)
+        private void WriteHeaders_alt<T>(ExcelWorksheet worksheet, List<T> objects)
         {
             if (objects.Count == 0)
             {
@@ -438,8 +438,7 @@ namespace Presentation
 
             // Write wire data
             WriteDataToSheet(wireWorksheet, sortedWires, ALL_PE_Profile);
-            
-            
+                        
             AddAutoFilterButtons(wireWorksheet);
         }
 
