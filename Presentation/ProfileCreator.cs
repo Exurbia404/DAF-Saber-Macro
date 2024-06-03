@@ -57,73 +57,65 @@ namespace Presentation
 
         private void GenerateComboBoxes(int headerCount)
         {
-            int oldCount = comboBoxes.Count;
-
-            List<string> currentSelection = GetComboBoxesValues();
-
-            // If there are less comboBoxes required
-            while (headerCount < oldCount)
+            // Remove all existing ComboBoxes
+            foreach (ComboBox comboBox in comboBoxes)
             {
-                int index = oldCount - 1;
-                comboBoxes[index].Dispose();
-                comboBoxes.RemoveAt(index);
-                oldCount--;
+                comboBox.Dispose();
             }
+            comboBoxes.Clear();
 
             int verticalOffset = 80;
+            int rows = 0; // Counter for rows
+            int columns = 8; // Number of ComboBoxes in each row
 
-            if (headerCount > oldCount)
+            for (int i = 0; i < headerCount; i++)
             {
-                int rows = 0; // Counter for rows
-                int columns = 8; // Number of ComboBoxes in each row
+                // Calculate row and column indices
+                int row = i / columns;
+                int column = i % columns;
 
-                for (int i = comboBoxes.Count; i < headerCount; i++)
+                // Calculate x and y coordinates based on row and column
+                int x = initalXOffset + (horizontalOffset * column);
+                int y = 60 + (row * verticalOffset);
+
+                // Check if the ComboBox would be placed outside the form
+                if (x + horizontalOffset > this.ClientSize.Width)
                 {
-                    // Calculate row and column indices
-                    int row = i / columns;
-                    int column = i % columns;
+                    // Reset x-coordinate to initalXOffset
+                    x = initalXOffset;
 
-                    // Calculate x and y coordinates based on row and column
-                    int x = initalXOffset + (horizontalOffset * column);
-                    int y = 60 + (row * verticalOffset);
+                    // Increment row counter
+                    rows++;
 
-                    // Check if the ComboBox would be placed outside the form
-                    if (x + horizontalOffset > this.ClientSize.Width)
-                    {
-                        // Reset x-coordinate to initalXOffset
-                        x = initalXOffset;
+                    // Adjust y-coordinate based on the new row
+                    y = 60 + (rows * verticalOffset);
+                }
 
-                        // Increment row counter
-                        rows++;
-
-                        // Adjust y-coordinate based on the new row
-                        y = 60 + (rows * verticalOffset);
-                    }
-
-                    // Create a new ComboBox
-                    ComboBox comboBox = new ComboBox();
-
+                // Create a new ComboBox
+                ComboBox comboBox = new ComboBox
+                {
                     // Set ComboBox location
-                    comboBox.Location = new Point(x, y);
+                    Location = new Point(x, y),
 
                     // Set ComboBox size
-                    comboBox.Size = new Size(horizontalOffset, 25);
+                    Size = new Size(horizontalOffset, 25),
 
                     // Set ComboBox DropDownStyle to DropDownList
-                    comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
 
-                    // Add ComboBox to the list if headerCount < comboBox.Count
-                    comboBoxes.Add(comboBox);
+                // Add ComboBox to the list
+                comboBoxes.Add(comboBox);
 
-                    // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
-                    this.Controls.Add(comboBox);
-                    comboBox.Show();
-                }
+                // Add ComboBox to the appropriate container in your UI (e.g., a panel or form)
+                this.Controls.Add(comboBox);
+                comboBox.Show();
             }
 
+            // Generate labels and add options to ComboBoxes
             GenerateLabels(headerCount);
             AddOptionsToComboBoxes(profileController.defaultProfiles[0]);
-            LoadInProfile(currentSelection);
+            LoadInProfile(new List<string>()); // LoadInProfile with an empty list for the current selection
         }
 
         private void LoadInProfile(List<string> profile) 
@@ -250,10 +242,14 @@ namespace Presentation
                 else if (comboBox.SelectedItem == null)
                 {
                     int currentIndex = comboBoxes.IndexOf(comboBox);
-                    if (comboBoxes[currentIndex + 1] != null)
+                    if((currentIndex + 1) < comboBoxes.Count)
                     {
-                        count++;
+                        if (comboBoxes[currentIndex + 1] != null)
+                        {
+                            count++;
+                        }
                     }
+                    
                 }
             }
             return count;
@@ -295,7 +291,6 @@ namespace Presentation
                 if (loadedProfile != null)
                 {
                     //loadedProfile.Parameters.RemoveAt(headerCounter);
-                    comboBoxes.RemoveAt(comboBoxes.Count - 1);
                 }
                 GenerateComboBoxes(headerCounter);
 
@@ -305,7 +300,7 @@ namespace Presentation
 
         private void addHeaderButton_Click(object sender, EventArgs e)
         {
-            headerCounter = AmountOfSelectedComboBoxes();
+            headerCounter = comboBoxes.Count;
             //Here you can set the maximum amount of headers
             if (headerCounter < 26)
             {
@@ -453,6 +448,7 @@ namespace Presentation
                 {
                     MessageBox.Show("The number of values in the loaded profile does not match the number of ComboBoxes.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                headerCounter = comboBoxes.Count;
             }
         }
 
