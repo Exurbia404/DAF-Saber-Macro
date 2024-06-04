@@ -25,7 +25,7 @@ namespace MacroTests
             _logger = new Logger();
             extractor = new Extractor(_logger);
 
-            string DesignerBuildOfMaterialsFolder = new FolderPaths(_logger).ExurbiaLocal;
+            string DesignerBuildOfMaterialsFolder = new FolderPaths(_logger).Exurbia_Designer;
             folderPaths = GetImmediateSubfolders(DesignerBuildOfMaterialsFolder);
 
             foreach (string path in folderPaths)

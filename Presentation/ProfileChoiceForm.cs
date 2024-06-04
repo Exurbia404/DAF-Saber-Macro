@@ -22,7 +22,8 @@ namespace Presentation
         private ExcelExporter exporter;
         private ProfileController profileController;
         private List<Profile> profileList;
-
+        private FileHandler fileHandler;
+        private PanelForm panelForm;
         private string fileName;
 
         private List<Converted_Component> converted_components;
@@ -37,7 +38,7 @@ namespace Presentation
         private bool isProject;
 
         private string textFilePath;
-        public ProfileChoiceForm(Logger logger, string filename, string textfilepath, bool isproject)
+        public ProfileChoiceForm(Logger logger, string filename, string textfilepath, bool isproject, PanelForm panelform)
         {
             _logger = logger;
             InitializeComponent();
@@ -45,10 +46,34 @@ namespace Presentation
             textFilePath = textfilepath;
             exporter = new ExcelExporter(logger);
             profileController = new ProfileController(new FileHandler(logger));
+            panelForm = panelform;
             isProject = isproject;
             profileList = profileController.userProfiles;
             currentlyOpenedLabel.Text = "Opened: " + fileName;
+
+            fileHandler = new FileHandler(_logger);
             SetProfilesToComboBoxes();
+
+            if (isproject)
+            {
+                HideBundleControls();
+            }
+        }
+
+        private void HideBundleControls()
+        {
+            selectAllBundlesButton.Hide();
+            bundlesListBox.Hide();
+            createCustomCheckBox.Hide();
+            createOCCheckBox.Hide();
+            createPECheckBox.Hide();
+            createRCCheckBox.Hide();
+            customSheetComboBox.Hide();
+            saberCheckerButton.Hide();
+            testResultsTextBox.Hide();
+            selectNoneBundlesButton.Hide();
+            checkDataButton.Hide();
+            releaseBundleButton.Hide();
         }
 
         public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes, List<Bundle> bundles)
@@ -108,7 +133,7 @@ namespace Presentation
 
         private void exportToExcelButton_Click(object sender, EventArgs e)
         {
-            if(isProject)
+            if (isProject)
             {
                 // Get selected profile names from combo boxes
                 string selectedWireProfileName = wireProfilesComboBox.SelectedItem?.ToString();
@@ -175,7 +200,7 @@ namespace Presentation
                 // Call the method to export to Excel with the selected profiles
                 ExportBundleToExcel(selectedProfiles, selectedBundles, selectedSheets);
             }
-            
+
         }
 
         private List<Bundle> GetSelectedBundles()
@@ -223,7 +248,7 @@ namespace Presentation
 
         private void exportProjectButton_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void selectAllBundlesButton_Click(object sender, EventArgs e)
@@ -268,6 +293,40 @@ namespace Presentation
         private void createCustomCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             customSheetComboBox.Enabled = createCustomCheckBox.Checked;
+        }
+
+        private void checkDataButton_Click(object sender, EventArgs e)
+        {
+            string bsaFolder = panelForm.Settings.DesignerFolder.Replace(@"\boms", "", StringComparison.OrdinalIgnoreCase);
+            string bundleName = currentlyOpenedLabel.Text.Replace("Opened: ", "");
+            string bundleNumber = bundleName.Split("-")[0];
+            string issueNumber = bundleName.Split("-")[1];
+
+            _logger.Log("bsaFolder: " + bsaFolder);
+            _logger.Log("bundleNumber: " + bundleNumber);
+            _logger.Log("issueNumber: " + issueNumber);
+
+            if (fileHandler.SearchBeforeRelease(bundleNumber, issueNumber, bsaFolder))
+            {
+                _logger.Log("All data found, you can safely transfer");
+                releaseBundleButton.Enabled = true;
+            }
+            else
+            {
+                _logger.Log("Not all data found, check folders");
+            }
+        }
+
+        private void releaseBundleButton_Click(object sender, EventArgs e)
+        {
+            string bsaFolder = panelForm.Settings.DesignerFolder.Replace(@"\boms", "", StringComparison.OrdinalIgnoreCase);
+            string destinationFolder = panelForm.Settings.ReldasFolder.Replace(@"\boms", "", StringComparison.OrdinalIgnoreCase);
+            
+            string bundleName = currentlyOpenedLabel.Text.Replace("Opened: ", "");
+            string bundleNumber = bundleName.Split("-")[0];
+            string issueNumber = bundleName.Split("-")[1];
+
+            fileHandler.ReleaseBundle(bundleNumber, issueNumber, bsaFolder, destinationFolder);
         }
     }
 }

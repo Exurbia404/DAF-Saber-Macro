@@ -5,19 +5,21 @@ public class FolderPaths
 {
     //DAF file server
     public string DAF_Production = @"\SaberRelease\Production";
-    public string DAF_Reldas = @"\SaberRelease\Designer\Boms";
-    public string DAF_Designer = @"\SaberWiP\2_Users\designs\BSA\Boms";
+    public string DAF_Reldas = @"\SaberRelease\Designer\boms";
+    public string DAF_Designer = @"\SaberWiP\2_Users\designs\BSA\boms";
 
     //Leyland file server
     public string LEY_Production = @"\SaberRelease\Production";
-    public string LEY_Reldas = @"\SaberRelease\Designer\Boms";
-    public string LEY_Designer = @"\SaberWiP\2_Users\designs\BSA\Boms";
+    public string LEY_Reldas = @"\SaberRelease\Designer\";
+    public string LEY_Designer = @"\SaberWiP\2_Users\designs\BSA\";
 
     //I believe there is a third file server
 
     //My local drive!
-    public string ExurbiaLocal = @"C:\Users\tomvh\Documents\School\S5 - Internship\boms";
-    public string ExurbiaLocalProduction = @"C:\Users\tomvh\Documents\School\S5 - Internship\Production";
+    public string Exurbia_Production = @"C:\Users\tomvh\Documents\School\S5 - Internship\Data\SaberRelease\Production";
+    public string Exurbia_Reldas = @"C:\Users\tomvh\Documents\School\S5 - Internship\Data\SaberRelease\Designer\boms";
+    public string Exurbia_Designer = @"C:\Users\tomvh\Documents\School\S5 - Internship\Data\SaberWiP\2_Users\designs\BSA\Boms";
+
 
     public bool HasFoundDAF { get; private set; }
     public bool HasFoundLEY { get; private set; }

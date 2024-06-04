@@ -36,6 +36,7 @@
             lastMessageTextBox = new TextBox();
             settingsButton = new Button();
             homeButton = new Button();
+            releasePortalButton = new Button();
             SuspendLayout();
             // 
             // panel
@@ -93,7 +94,7 @@
             // 
             // settingsButton
             // 
-            settingsButton.Location = new Point(93, 4);
+            settingsButton.Location = new Point(174, 4);
             settingsButton.Name = "settingsButton";
             settingsButton.Size = new Size(75, 23);
             settingsButton.TabIndex = 0;
@@ -111,11 +112,22 @@
             homeButton.UseVisualStyleBackColor = true;
             homeButton.Click += homeButton_Click;
             // 
+            // releasePortalButton
+            // 
+            releasePortalButton.Location = new Point(93, 4);
+            releasePortalButton.Name = "releasePortalButton";
+            releasePortalButton.Size = new Size(75, 23);
+            releasePortalButton.TabIndex = 28;
+            releasePortalButton.Text = "Release ";
+            releasePortalButton.UseVisualStyleBackColor = true;
+            releasePortalButton.Visible = false;
+            // 
             // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(404, 612);
+            Controls.Add(releasePortalButton);
             Controls.Add(homeButton);
             Controls.Add(settingsButton);
             Controls.Add(label2);
@@ -141,5 +153,6 @@
         private TextBox lastMessageTextBox;
         private Button settingsButton;
         private Button homeButton;
+        private Button releasePortalButton;
     }
 }
