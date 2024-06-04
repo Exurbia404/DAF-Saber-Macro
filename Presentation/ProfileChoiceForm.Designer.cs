@@ -44,6 +44,8 @@
             testResultsTextBox = new TextBox();
             customSheetComboBox = new ComboBox();
             createCustomCheckBox = new CheckBox();
+            releaseBundleButton = new Button();
+            checkDataButton = new Button();
             SuspendLayout();
             // 
             // label1
@@ -166,9 +168,9 @@
             // saberCheckerButton
             // 
             saberCheckerButton.Enabled = false;
-            saberCheckerButton.Location = new Point(165, 347);
+            saberCheckerButton.Location = new Point(213, 250);
             saberCheckerButton.Name = "saberCheckerButton";
-            saberCheckerButton.Size = new Size(110, 23);
+            saberCheckerButton.Size = new Size(130, 23);
             saberCheckerButton.TabIndex = 16;
             saberCheckerButton.Text = "Perform checks";
             saberCheckerButton.UseVisualStyleBackColor = true;
@@ -176,10 +178,10 @@
             // 
             // testResultsTextBox
             // 
-            testResultsTextBox.Location = new Point(165, 377);
+            testResultsTextBox.Location = new Point(213, 279);
             testResultsTextBox.Name = "testResultsTextBox";
             testResultsTextBox.ReadOnly = true;
-            testResultsTextBox.Size = new Size(110, 23);
+            testResultsTextBox.Size = new Size(130, 23);
             testResultsTextBox.TabIndex = 17;
             // 
             // customSheetComboBox
@@ -189,7 +191,7 @@
             customSheetComboBox.FormattingEnabled = true;
             customSheetComboBox.Location = new Point(213, 221);
             customSheetComboBox.Name = "customSheetComboBox";
-            customSheetComboBox.Size = new Size(121, 23);
+            customSheetComboBox.Size = new Size(130, 23);
             customSheetComboBox.TabIndex = 18;
             // 
             // createCustomCheckBox
@@ -203,11 +205,34 @@
             createCustomCheckBox.UseVisualStyleBackColor = true;
             createCustomCheckBox.CheckedChanged += createCustomCheckBox_CheckedChanged;
             // 
+            // releaseBundleButton
+            // 
+            releaseBundleButton.Enabled = false;
+            releaseBundleButton.Location = new Point(180, 337);
+            releaseBundleButton.Name = "releaseBundleButton";
+            releaseBundleButton.Size = new Size(163, 23);
+            releaseBundleButton.TabIndex = 20;
+            releaseBundleButton.Text = " Release to designer";
+            releaseBundleButton.UseVisualStyleBackColor = true;
+            releaseBundleButton.Click += releaseBundleButton_Click;
+            // 
+            // checkDataButton
+            // 
+            checkDataButton.Location = new Point(180, 308);
+            checkDataButton.Name = "checkDataButton";
+            checkDataButton.Size = new Size(163, 23);
+            checkDataButton.TabIndex = 21;
+            checkDataButton.Text = "Check before release";
+            checkDataButton.UseVisualStyleBackColor = true;
+            checkDataButton.Click += checkDataButton_Click;
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(checkDataButton);
+            Controls.Add(releaseBundleButton);
             Controls.Add(createCustomCheckBox);
             Controls.Add(customSheetComboBox);
             Controls.Add(testResultsTextBox);
@@ -249,5 +274,7 @@
         private TextBox testResultsTextBox;
         private ComboBox customSheetComboBox;
         private CheckBox createCustomCheckBox;
+        private Button releaseBundleButton;
+        private Button checkDataButton;
     }
 }

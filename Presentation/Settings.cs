@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,9 +31,20 @@ namespace Presentation
         {
             //Set default file server to DAF
             FolderPaths = new FolderPaths(logger);
-            LocalFolder = FolderPaths.ExurbiaLocal;
-            LocalProductionFolder = FolderPaths.ExurbiaLocalProduction;
-            SwitchFileServer(FileServers.DAF);
+            LocalFolder = FolderPaths.Exurbia_Designer;
+            LocalProductionFolder = FolderPaths.Exurbia_Production;
+            _logger = logger;
+            
+            if(Environment.MachineName == "EXURBIA")
+            {
+                _logger.Log("Switching to local");
+                SwitchFileServer(FileServers.Other);
+            }
+            else
+            {
+                SwitchFileServer(FileServers.DAF);
+
+            }
         }
 
         public void SwitchFileServer(FileServers name)
@@ -52,9 +64,9 @@ namespace Presentation
                 case FileServers.Other:
                     // Assign the folder paths for the "Other" file server here
                     // For now, let's assign them the same as DAF
-                    ProductionFolder = FolderPaths.DAF_Production;
-                    ReldasFolder = FolderPaths.DAF_Reldas;
-                    DesignerFolder = FolderPaths.DAF_Designer;
+                    ProductionFolder = FolderPaths.Exurbia_Production;
+                    ReldasFolder = FolderPaths.Exurbia_Reldas;
+                    DesignerFolder = FolderPaths.Exurbia_Designer;
                     break;
                 default:
                     throw new ArgumentException("Invalid file server name");
