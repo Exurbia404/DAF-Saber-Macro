@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -76,22 +77,54 @@ namespace Logic
                         Bundle = GetBundlesForVariant(bundles, component.CircuitOption),
                         Description = "",
                         Location = "",
-                        EndText = GetEndTextForComponent(componentsToConvert, component.NodeName)
-
+                        EndText = GetEndTextForComponent(componentsToConvert, component.NodeName),
+                        BundleModularID = GetBundleIDForComponent(componentsToConvert, component.NodeName)
                         // Set other properties here as needed
                     };
-
-                    if(wCSPP_Component.Variant == "" || wCSPP_Component.Bundle == "")
+                    if (wCSPP_Component.Bundle == "")
+                    {              
+                        wCSPP_Component.Bundle = string.Join(" ", GetModuleNumbersForComponent(component.BlockNumber));
+                    }
+                    if (wCSPP_Component.Variant == "")
                     {
-                        wCSPP_Component.Bundle = GetModuleNumbersForComponent(component.BlockNumber)[0];
                         wCSPP_Component.Variant = GetVariantForModularizedComponent(wCSPP_Component.Bundle);
                     }
+                    
 
                     convertedList.Add(wCSPP_Component);
                 }
             }
 
             return convertedList.OrderBy(component => component.Name).ToList(); ;
+        }
+
+        private string GetBundleIDForComponent(List<DSI_Component> fullList, string componentName)
+        {
+            if(componentName == "G541")
+            {
+                string helloWorld = "";
+            }
+            // Filter components based on ComponentName and ServiceFunction, and PartNumber2 contains numbers
+            var filteredComponents = fullList
+                .Where(component =>
+                    component.NodeName == componentName &&
+                    component.ComponentTypeCode == "CONNECTOR" &&
+                    StartsWithNumber(component.PartNumber2) &&
+                    (component.PartNumber2.Length >= 7))
+                .ToList();
+
+            if(filteredComponents.Count == 0)
+            {
+                filteredComponents = fullList
+                .Where(component =>
+                    component.NodeName == componentName &&
+                    component.ComponentTypeCode == "CONNECTOR")
+                .ToList();
+            }
+
+            // Extract PartNumber2 and concatenate them with a space in between
+            string result = string.Join(" ", filteredComponents.Select(component => component.BlockNumber));
+            return result;
         }
 
         private List<string> GetModuleNumbersForComponent(string blockNumber)
@@ -159,23 +192,42 @@ namespace Logic
         }
 
 
-        private string GetVariantForModularizedComponent(string bundleNumber)
+        private string GetVariantForModularizedComponent(string bundleNumbers)
         {
-            foreach (string[] line in sections[2])
+            HashSet<string> uniqueNumbers = new HashSet<string>();
+
+            // Split the bundleNumbers string into individual numbers
+            string[] individualNumbers = bundleNumbers.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string num in individualNumbers)
             {
-                if (line[0] == bundleNumber)
+                foreach (string[] line in sections[2])
                 {
-                    return line[16];
+                    // Check if line[0] matches the current bundleNumber
+                    if (line[0] == num)
+                    {
+                        // Split the 16th value of the line and add each part to uniqueNumbers if not already added
+                        string[] parts = line[16].Split(new[] { " | " }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string part in parts)
+                        {
+                            if (!uniqueNumbers.Contains(part))
+                            {
+                                uniqueNumbers.Add(part);
+                            }
+                        }
+                    }
                 }
             }
-            return "";
+
+            // Join the unique numbers into a single string separated by " | "
+            return string.Join("/", uniqueNumbers);
         }
 
         private string GetVariantForComponent(DSI_Component component)
         {
             if (component.CircuitOption != "")
             {
-                return component.CircuitOption;
+                return component.CircuitOption.Replace(" | ", "/");
             }
             else
             {
@@ -283,30 +335,39 @@ namespace Logic
 
             foreach (string[] line in section6)
             {
-                // Create a new Component object and set its properties based on the fields
-                foundDSI_Components.Add(new DSI_Component
+                try
                 {
-                    NodeName = line[0],
-                    CavityName = line[1],
-                    WireName = line[2],
-                    SequenceNumber = line[3],
-                    ComponentTypeCode = line[4],
-                    CircuitOption = line[5],
-                    ServiceFunction = line[6],
-                    Route = line[7],
-                    PartNumber1 = line[8],
-                    Quantity = line[9],
-                    CrossSectionalArea = line[10],
-                    PartNumber2 = line[11],
-                    PartNumber3 = line[12],
-                    SelectTerminal = line[13],
-                    Seal = line[14],
-                    Plugged = line[15],
-                    BlockNumber = line[21],
-                    TerminationMethod = line[17],
-                    MaterialCode = line[18],
-                    ComponentTypeCode2 = line[29],
-                });
+                    // Create a new Component object and set its properties based on the fields
+                    foundDSI_Components.Add(new DSI_Component
+                    {
+                        NodeName = line[0],
+                        CavityName = line[1],
+                        WireName = line[2],
+                        SequenceNumber = line[3],
+                        ComponentTypeCode = line[4],
+                        CircuitOption = line[5],
+                        ServiceFunction = line[6],
+                        Route = line[7],
+                        PartNumber1 = line[8],
+                        Quantity = line[9],
+                        CrossSectionalArea = line[10],
+                        PartNumber2 = line[11],
+                        PartNumber3 = line[12],
+                        SelectTerminal = line[13],
+                        Seal = line[14],
+                        Plugged = line[15],
+                        BlockNumber = line[21],
+                        TerminationMethod = line[17],
+                        MaterialCode = line[18],
+                        ComponentTypeCode2 = line[29],
+                    });
+                }
+                catch(Exception e)
+                {
+                    _logger.Log(e.Message);
+                }
+                
+                
             }
 
             return foundDSI_Components;

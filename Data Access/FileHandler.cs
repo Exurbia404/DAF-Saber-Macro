@@ -3,6 +3,7 @@ using Data_Interfaces;
 using Logging;
 using Newtonsoft.Json;
 using System.Drawing.Text;
+using System.Diagnostics;
 
 namespace Data_Access
 {
@@ -12,7 +13,14 @@ namespace Data_Access
 
         private Logger _logger;
         private string profilesFolder;
-        
+
+        private string DSI_filePath = null;
+        private string DSI_Violations_filePath = null;
+        private string Parts_filePath = null;
+        private string WCSPP_filePath = null;
+        private string SVG_filePath = null;
+        private string TIF_filePath = null;
+
         public FileHandler(Logger logger)
         {
             _logger = logger;
@@ -65,15 +73,25 @@ namespace Data_Access
             // Create or overwrite the file
             using (StreamWriter writer = new StreamWriter(newFilePath))
             {
-                // Write the header line
-                writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,,,,,,,,,,,,,,,,,,,,");
+                // Determine if any component has a non-empty BundleModularID
+                bool hasBundleModularID = components.Any(wcsppComponent => !string.IsNullOrEmpty(wcsppComponent.BundleModularID));
+
+                // Write the appropriate header line based on the condition
+                if (hasBundleModularID)
+                {
+                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,BundleModularID,,,,,,,,,,,,,,,,,,,");
+                }
+                else
+                {
+                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,,,,,,,,,,,,,,,,,,,,");
+                }
 
                 // Write each WCSPP_Wire object to the file
                 foreach (var wcsppComponent in components)
                 {
                     // Format the line with object properties
                     string line = $"{wcsppComponent.Name},{wcsppComponent.Part_no},,{wcsppComponent.Passive},{wcsppComponent.Instruction},{wcsppComponent.Variant},{wcsppComponent.Bundle}," +
-                                $"{wcsppComponent.Description},{wcsppComponent.Location},,,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText}";
+                                $"{wcsppComponent.Description},{wcsppComponent.Location},{wcsppComponent.BundleModularID},,,,,,,,,,,,,,,,,,,{wcsppComponent.EndText}";
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
@@ -136,92 +154,41 @@ namespace Data_Access
 
         public bool SearchBeforeRelease(string bundleNumber, string issueNumber, string bsaFilePath)
         {
-            string DSI_filePath = null;
-            string DSI_Violations_filePath = null;
-            string Parts_filePath = null;
-            string WCSPP_filePath = null;
-            string SVG_filePath = null;
-            string TIF_filePath = null;
+            // Start the stopwatch for the entire process
+            Stopwatch totalStopwatch = Stopwatch.StartNew();
+
+            // Variables to hold time taken for each section
+            double timeToFindBundleDirectory = 0;
+            double timeToFindBomsFilePaths = 0;
+            double timeToFindDrawingsFilePaths = 0;
+
+            string searchName = bundleNumber + "-" + issueNumber;
 
             // Search for the files in Boms folder
             string bomsFolderPath = Path.Combine(bsaFilePath, "Boms");
+            string bundleDirectory = null;
+
             if (Directory.Exists(bomsFolderPath))
             {
-                // Recursively search through all subdirectories in Boms folder
-                string[] bomDirectories = Directory.GetDirectories(bomsFolderPath, "*", SearchOption.AllDirectories);
+                // Start the stopwatch for finding the bundle directory
+                Stopwatch bundleDirectoryStopwatch = Stopwatch.StartNew();
 
-                // Find the directory matching bundleNumber
-                string bundleDirectory = bomDirectories.FirstOrDefault(dir => Path.GetFileName(dir) == bundleNumber);
+                // Search for the directory matching the bundleNumber in the Boms folder (non-recursive)
+                string[] directories = Directory.GetDirectories(bomsFolderPath, bundleNumber, SearchOption.TopDirectoryOnly);
+                bundleDirectory = directories.FirstOrDefault();
+
+                // Stop the stopwatch for finding the bundle directory and log the time taken
+                bundleDirectoryStopwatch.Stop();
+                timeToFindBundleDirectory = bundleDirectoryStopwatch.Elapsed.TotalSeconds;
+
                 if (bundleDirectory != null)
                 {
+                    // Start the stopwatch for finding the Boms file paths
+                    Stopwatch bomsFilePathsStopwatch = Stopwatch.StartNew();
+
                     // Search for files matching the pattern "bundleNumber + issueNumber"
-                    string searchName = bundleNumber + "-" + issueNumber;
-                    string[] bundleFiles = Directory.GetFiles(bundleDirectory, $"{searchName}*", SearchOption.TopDirectoryOnly);
-
-                    // Assign file paths if found
-                    foreach (string file in bundleFiles)
-                    {
-                        if (file.EndsWith("_DSI.txt"))
-                            DSI_filePath = file;
-                        else if (file.EndsWith("_DSI.violations"))
-                            DSI_Violations_filePath = file;
-                        else if (file.EndsWith("_generated_parts.txt"))
-                            Parts_filePath = file;
-                        else if (file.EndsWith("_WCSPP.txt"))
-                            WCSPP_filePath = file;
-                    }
-                }
-            }
-
-            // Search for the files in Drawings folder
-            string drawingsFolderPath = Path.Combine(bsaFilePath, "Drawings");
-            if (Directory.Exists(drawingsFolderPath))
-            {
-                // Search for SVG and TIF files matching both bundleNumber and issueNumber
-                string[] svgFiles = Directory.GetFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.svg", SearchOption.TopDirectoryOnly);
-                if (svgFiles.Length > 0)
-                    SVG_filePath = svgFiles[0];
-
-                string[] tifFiles = Directory.GetFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.tif", SearchOption.TopDirectoryOnly);
-                if (tifFiles.Length > 0)
-                    TIF_filePath = tifFiles[0];
-            }
-
-            // Now you have the file paths for each file type
-            _logger.Log($"DSI_filePath: {DSI_filePath}");
-            _logger.Log($"DSI_Violations_filePath: {DSI_Violations_filePath}");
-            _logger.Log($"Parts_filePath: {Parts_filePath}");
-            _logger.Log($"WCSPP_filePath: {WCSPP_filePath}");
-            _logger.Log($"SVG_filePath: {SVG_filePath}");
-            _logger.Log($"TIF_filePath: {TIF_filePath}");
-
-
-            return (DSI_filePath != null && DSI_Violations_filePath != null && Parts_filePath != null && WCSPP_filePath != null && SVG_filePath != null && TIF_filePath != null);
-        }
-
-        public void ReleaseBundle(string bundleNumber, string issueNumber, string bsaFilePath, string destinationFilePath)
-        {
-            string DSI_filePath = null;
-            string DSI_Violations_filePath = null;
-            string Parts_filePath = null;
-            string WCSPP_filePath = null;
-            string SVG_filePath = null;
-            string TIF_filePath = null;
-
-            // Search for the files in Boms folder
-            string bomsFolderPath = Path.Combine(bsaFilePath, "Boms");
-            if (Directory.Exists(bomsFolderPath))
-            {
-                // Recursively search through all subdirectories in Boms folder
-                string[] bomDirectories = Directory.GetDirectories(bomsFolderPath, "*", SearchOption.AllDirectories);
-
-                // Find the directory matching bundleNumber
-                string bundleDirectory = bomDirectories.FirstOrDefault(dir => Path.GetFileName(dir) == bundleNumber);
-                if (bundleDirectory != null)
-                {
-                    // Search for files matching the pattern "bundleNumber + issueNumber"
-                    string searchName = bundleNumber + "-" + issueNumber;
-                    string[] bundleFiles = Directory.GetFiles(bundleDirectory, $"{searchName}*", SearchOption.TopDirectoryOnly);
+                    var bundleFiles = Directory.EnumerateFiles(bundleDirectory, $"{searchName}*", SearchOption.TopDirectoryOnly)
+                                                .AsParallel();
 
                     // Assign file paths if found
                     foreach (string file in bundleFiles)
@@ -234,7 +201,19 @@ namespace Data_Access
                             Parts_filePath = file;
                         else if (file.EndsWith("_generated_WCSPP.txt"))
                             WCSPP_filePath = file;
+                        else if (file.EndsWith("_parts.txt"))
+                            Parts_filePath = file;
+                        else if (file.EndsWith("_WCSPP.txt"))
+                            WCSPP_filePath = file;
+
+                        // Break early if all files are found
+                        if (DSI_filePath != null && DSI_Violations_filePath != null && Parts_filePath != null && WCSPP_filePath != null)
+                            break;
                     }
+
+                    // Stop the stopwatch for finding the Boms file paths and log the time taken
+                    bomsFilePathsStopwatch.Stop();
+                    timeToFindBomsFilePaths = bomsFilePathsStopwatch.Elapsed.TotalSeconds;
                 }
             }
 
@@ -242,17 +221,78 @@ namespace Data_Access
             string drawingsFolderPath = Path.Combine(bsaFilePath, "Drawings");
             if (Directory.Exists(drawingsFolderPath))
             {
-                // Search for SVG and TIF files matching both bundleNumber and issueNumber
-                string[] svgFiles = Directory.GetFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.svg", SearchOption.TopDirectoryOnly);
-                if (svgFiles.Length > 0)
-                    SVG_filePath = svgFiles[0];
+                // Start the stopwatch for finding the Drawings file paths
+                Stopwatch drawingsFilePathsStopwatch = Stopwatch.StartNew();
 
-                string[] tifFiles = Directory.GetFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.tif", SearchOption.TopDirectoryOnly);
-                if (tifFiles.Length > 0)
-                    TIF_filePath = tifFiles[0];
+                // Use parallel tasks to search for SVG and TIF files concurrently
+                var svgTask = Task.Run(() =>
+                {
+                    var svgFiles = Directory.EnumerateFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.svg", SearchOption.TopDirectoryOnly);
+                    SVG_filePath = svgFiles.FirstOrDefault();
+                });
+
+                var tifTask = Task.Run(() =>
+                {
+                    var tifFiles = Directory.EnumerateFiles(drawingsFolderPath, $"*{bundleNumber}-{issueNumber}-*.tif", SearchOption.TopDirectoryOnly);
+                    TIF_filePath = tifFiles.FirstOrDefault();
+                });
+
+                // Wait for both tasks to complete
+                Task.WaitAll(svgTask, tifTask);
+
+                // Stop the stopwatch for finding the Drawings file paths and log the time taken
+                drawingsFilePathsStopwatch.Stop();
+                timeToFindDrawingsFilePaths = drawingsFilePathsStopwatch.Elapsed.TotalSeconds;
             }
 
-            
+            // Stop the total stopwatch
+            totalStopwatch.Stop();
+            double totalExecutionTime = totalStopwatch.Elapsed.TotalSeconds;
+
+            // Log the times for each section and the total time
+            _logger.Log($"Time to find bundle directory: {timeToFindBundleDirectory} seconds");
+            _logger.Log($"Time to find Boms file paths: {timeToFindBomsFilePaths} seconds");
+            _logger.Log($"Time to find Drawings file paths: {timeToFindDrawingsFilePaths} seconds");
+            _logger.Log($"Total execution time: {totalExecutionTime} seconds");
+
+            // Log the file paths
+            _logger.Log($"DSI_filePath: {DSI_filePath}");
+            _logger.Log($"DSI_Violations_filePath: {DSI_Violations_filePath}");
+            _logger.Log($"Parts_filePath: {Parts_filePath}");
+            _logger.Log($"WCSPP_filePath: {WCSPP_filePath}");
+            _logger.Log($"SVG_filePath: {SVG_filePath}");
+            _logger.Log($"TIF_filePath: {TIF_filePath}");
+
+            // Return true if all required file paths are found
+            return (DSI_filePath != null && DSI_Violations_filePath != null && Parts_filePath != null && WCSPP_filePath != null && SVG_filePath != null && TIF_filePath != null);
+        }
+
+        private string FindBundleDirectory(string rootPath, string bundleNumber)
+        {
+            foreach (string dir in Directory.EnumerateDirectories(rootPath))
+            {
+                if (Path.GetFileName(dir) == bundleNumber)
+                {
+                    return dir;
+                }
+                string foundDir = FindBundleDirectory(dir, bundleNumber);
+                if (foundDir != null)
+                {
+                    return foundDir;
+                }
+            }
+            return null;
+        }
+
+        public void ReleaseBundle(string bundleNumber, string issueNumber, string bsaFilePath, string destinationFilePath)
+        {
+            //Check if any of the filePaths are empty
+            if(DSI_filePath == null || DSI_Violations_filePath == null || Parts_filePath == null || WCSPP_filePath == null || SVG_filePath == null || TIF_filePath == null)
+            {
+                return;
+            }
+
+
             // Create the destination directories if they don't exist
             string destinationBomsFolderPath = Path.Combine(destinationFilePath, "Boms", bundleNumber);
             string destinationDrawingsFolderPath = Path.Combine(destinationFilePath, "Drawings");

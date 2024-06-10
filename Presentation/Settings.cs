@@ -10,7 +10,7 @@ namespace Presentation
 {
     public class Settings
     {
-        public string Version = "Beta 1.8";
+        public string Version = "Beta 2.0";
 
         public enum FileServers
         {

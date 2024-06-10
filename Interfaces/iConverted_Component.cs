@@ -17,6 +17,7 @@ namespace Data_Interfaces
         public string Bundle { get; set; }
         public string Description { get; set; }
         public string Location { get; set; }
+        public string BundleModularID { get; set; }
 
         //9 spaces after this when writing ending with a ,
         public string EndText { get; set; }
