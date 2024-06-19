@@ -1,17 +1,18 @@
 ﻿using Logging;
 using System;
 using System.Management;
+using System.Configuration;
 public class FolderPaths
 {
     //DAF file server
-    public string DAF_Production = @"\SaberRelease\Production";
-    public string DAF_Reldas = @"\SaberRelease\Designer\boms";
-    public string DAF_Designer = @"\SaberWiP\2_Users\designs\BSA\boms";
+    public string DAF_Production;
+    public string DAF_Reldas;
+    public string DAF_Designer;
 
     //Leyland file server
-    public string LEY_Production = @"\SaberRelease\Production";
-    public string LEY_Reldas = @"\SaberRelease\Designer\";
-    public string LEY_Designer = @"\SaberWiP\2_Users\designs\BSA\";
+    public string LEY_Production;
+    public string LEY_Reldas;
+    public string LEY_Designer;
 
     //I believe there is a third file server
 
@@ -31,6 +32,14 @@ public class FolderPaths
 
         HasFoundDAF = false;
         HasFoundLEY = false;
+
+        DAF_Production = ConfigurationManager.AppSettings["DAF_Production"];
+        DAF_Reldas = ConfigurationManager.AppSettings["DAF_Reldas"];
+        DAF_Designer = ConfigurationManager.AppSettings["DAF_Designer"];
+
+        LEY_Production = ConfigurationManager.AppSettings["LEY_Production"];
+        LEY_Reldas = ConfigurationManager.AppSettings["LEY_Reldas"];
+        LEY_Designer = ConfigurationManager.AppSettings["LEY_Designer"];
 
         string dafNetworkPath = @"\\app-p-SABER.eu.paccar.com\Saber\DATA";
         string dafDriveLetter = GetDriveLetter(dafNetworkPath);
