@@ -419,63 +419,70 @@ namespace Logic
         private List<Converted_Wire> GetWiresFromSection(List<string[]> section5, List<Bundle> bundles)
         {
             List<Converted_Wire> foundWires = new List<Converted_Wire>();
-
-            foreach (string[] line in section5)
+            try
             {
-                Converted_Wire newWire = new Converted_Wire
+                foreach (string[] line in section5)
                 {
-                    Wire = line[0],
-                    Diameter = line[4],
-                    Color = line[3],
-                    Type = line[5],
-                    Code_no = GetValueFromInputString(line[19], 1),
-                    Length = GetValueFromInputString(line[19], 0),
-                    Connector_1 = line[8],
-                    Port_1 = line[10],
-                    Term_1 = "?",
-                    Seal_1 = "?",
-                    Wire_connection = "connection",
-                    Term_2 = "?",
-                    Seal_2 = "?",
-                    Connector_2 = line[12],
-                    Port_2 = line[14],
-                    Variant = GetWireVariants(line[1]),
-                    Bundle = GetBundlesForVariant(Bundles, line[1]),
-                    Loc_1 = "?",
-                    Loc_2 = "?",
-                    Temp_Class = GetValueFromInputString(line[19], 2)
-                };
+                    Converted_Wire newWire = new Converted_Wire
+                    {
+                        Wire = line[0],
+                        Diameter = line[4],
+                        Color = line[3],
+                        Type = line[5],
+                        Code_no = GetValueFromInputString(line[19], 1),
+                        Length = GetValueFromInputString(line[19], 0),
+                        Connector_1 = line[8],
+                        Port_1 = line[10],
+                        Term_1 = "?",
+                        Seal_1 = "?",
+                        Wire_connection = "connection",
+                        Term_2 = "?",
+                        Seal_2 = "?",
+                        Connector_2 = line[12],
+                        Port_2 = line[14],
+                        Variant = GetWireVariants(line[1]),
+                        Bundle = GetBundlesForVariant(Bundles, line[1]),
+                        Loc_1 = "?",
+                        Loc_2 = "?",
+                        Temp_Class = GetValueFromInputString(line[19], 2)
+                    };
 
-                //Set Connector 1 info
-                newWire.Term_1 = FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
-                newWire.Seal_1 = FindSealCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
+                    //Set Connector 1 info
+                    newWire.Term_1 = FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
+                    newWire.Seal_1 = FindSealCode(newWire.Connector_1, newWire.Port_1, newWire.Variant);
 
-                //Set Connector 2 info
-                newWire.Term_2 = FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
-                newWire.Seal_2 = FindSealCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
+                    //Set Connector 2 info
+                    newWire.Term_2 = FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
+                    newWire.Seal_2 = FindSealCode(newWire.Connector_2, newWire.Port_2, newWire.Variant);
 
-                if (line[6] != "") //Check if modularized
-                {
-                    newWire.Term_1 = Modularized_FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire);
-                    newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire);
-                    newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1);
-                    newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2);
+                    if (line[6] != "") //Check if modularized
+                    {
+                        newWire.Term_1 = Modularized_FindTerminalCode(newWire.Connector_1, newWire.Port_1, newWire);
+                        newWire.Term_2 = Modularized_FindTerminalCode(newWire.Connector_2, newWire.Port_2, newWire);
+                        newWire.Seal_1 = Modularized_FindSealCode(newWire.Connector_1, newWire.Port_1, newWire);
+                        newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2, newWire);
+                    }
+
+                    if (newWire.Variant == "" || newWire.Bundle == "")
+                    {
+                        string blockNumber = line[6];
+                        newWire.Bundle = GetModuleNumbersForComponent(blockNumber)[0];
+                        newWire.Variant = GetVariantForModularizedComponent(newWire.Bundle);
+                    }
+
+                    newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);
+
+                    foundWires.Add(newWire);
+
                 }
-
-                if (newWire.Variant == "" || newWire.Bundle == "")
-                {
-                    string blockNumber = line[6];
-                    newWire.Bundle = GetModuleNumbersForComponent(blockNumber)[0];
-                    newWire.Variant = GetVariantForModularizedComponent(newWire.Bundle);
-                }
-
-                newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);
-
-                foundWires.Add(newWire);
 
             }
-
+            catch(Exception ex)
+            {
+                _logger.Log(ex.Message);
+            }
             return foundWires;
+
         }
 
         private string Modularized_FindTerminalCode(string connector, string port_1, Converted_Wire wire)
@@ -589,8 +596,8 @@ namespace Logic
             return filteredComponents[0].PartNumber2;
         }
 
-        private string Modularized_FindSealCode(string connector, string port_1)
-        {
+        private string Modularized_FindSealCode(string connector, string port_1, Converted_Wire wire)
+        { 
             // Filter components based on Connector, Port_1, and ComponentTypeCode
             var filteredComponents = dsi_Components
                 .Where(component =>
@@ -607,7 +614,18 @@ namespace Logic
             {
                 foreach (DSI_Component component in filteredComponents)
                 {
-                    _logger.Log(component.ToString());
+                    //Get the list of blocknumbers for each component
+                    List<string> blockNumbers = GetModuleNumbersForComponent(component.BlockNumber);
+                    foreach (string blockNumber in blockNumbers)
+                    {
+                        _logger.Log(blockNumber);
+                        //See if the wire contains the component variant
+                        if (wire.Bundle.Contains(blockNumber))
+                        {
+                            _logger.Log("");
+                            return component.PartNumber2;
+                        }
+                    }
                 }
                 throw new InvalidOperationException("Multiple matching components found. Expected only one.");
             }
@@ -615,6 +633,7 @@ namespace Logic
             // Return the code of the found component
             return filteredComponents[0].PartNumber2;
         }
+
 
         private bool VariantIsPresent(string componentVariants, string wireVariants)
         {

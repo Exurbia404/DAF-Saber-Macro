@@ -30,6 +30,8 @@ namespace Logic
         public string Loc_1 { get; set; }
         public string Loc_2 { get; set; }
         public string Temp_Class { get; set; }
+        public string CC_T { get; set; }
+        public string CC_S { get; set; }
 
         public Converted_Wire(string code_no, string diameter, string color, string type, string part_no, string length,
                   string connector_1, string port_1, string term_1, string seal_1, string wire_connection,
@@ -56,6 +58,11 @@ namespace Logic
             Loc_1 = loc_1;
             Loc_2 = loc_2;
             Temp_Class = temp_Class;
+        }
+
+        public void SetCoCoData(string cc_t, string cc_s)
+        {
+            CC_T = cc_t; CC_S = cc_s;
         }
 
         public Converted_Wire()

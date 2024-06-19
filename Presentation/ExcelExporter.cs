@@ -473,11 +473,14 @@ namespace Presentation
         public void CreateRC_Sheets(string fileName, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
         {
             string fullPath = Path.Combine(directoryPath, fileName + "_RC.xlsx");
+            CoCoHandler cocoHandler = new CoCoHandler(_logger);
+
+
             using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
                 //Prepare RC profile
                 List<string> RC_Profile_List = new List<string>();
-                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "Temp_Class", "Type", "Code_no", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
+                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Wire_connection", "Diameter", "Color", "Length", "Term_1", "Seal_1", "CC_T", "CC_S", "Temp_Class", "Type", "Code_no", "Variant", "Bundle" }; //TODO: add CC_t and CC_s
                 RC_Profile_List.AddRange(stringsToAdd);
 
                 Profile RC_Profile = new Profile("RC", RC_Profile_List, Data_Interfaces.ProfileType.User);
@@ -524,12 +527,44 @@ namespace Presentation
                     newWire.Term_2 = tempTerm;
                     newWire.Seal_2 = tempSeal;
                     newWire.Port_2 = tempPort;
-
+                    
                     wiresToUse.Add(newWire);
                 }
 
+                int term1;
+                int term2;
+                int seal1;
+                int seal2;
+
+                foreach (iConverted_Wire wire in  wiresToUse)
+                {
+                    if(wire.Wire_connection == "113C:4 to G838.H:2")
+                    {
+                        int hello = 1;
+                    }
+                    // Attempt to parse Term_1
+                    if (!string.IsNullOrEmpty(wire.Term_1) && int.TryParse(wire.Term_1, out term1))
+                    {
+                        wire.CC_T = cocoHandler.GetTerminalIdFromLocalDatabase(term1);
+                    }
+                    if (string.IsNullOrEmpty(wire.CC_T) && !string.IsNullOrEmpty(wire.Term_2) && int.TryParse(wire.Term_2, out term2))
+                    {
+                        wire.CC_T = cocoHandler.GetTerminalIdFromLocalDatabase(term2);
+                    }
+
+                    // Attempt to parse Seal_1
+                    if (!string.IsNullOrEmpty(wire.Seal_1) && int.TryParse(wire.Seal_1, out seal1))
+                    {
+                        wire.CC_S = cocoHandler.GetScatIdFromLocalDatabase(seal1);
+                    }
+                    if (string.IsNullOrEmpty(wire.CC_S) && !string.IsNullOrEmpty(wire.Seal_2) && int.TryParse(wire.Seal_2, out seal2))
+                    {
+                        wire.CC_S = cocoHandler.GetTerminalIdFromLocalDatabase(seal2);
+                    }
+                }
+
                 //Create the master sheet
-                CreateMasterSheet(excelPackage, wires, selectedBundles, RC_Profile);
+                CreateMasterSheet(excelPackage, wiresToUse, selectedBundles, RC_Profile);
 
                 //Create the separate sheets as in the original tool
                 foreach (Bundle bundle in selectedBundles)
@@ -540,7 +575,7 @@ namespace Presentation
                         bundle
                     };
 
-                    CreateIndividualSheet(excelPackage, wires, tempList, RC_Profile);
+                    CreateIndividualSheet(excelPackage, wiresToUse, tempList, RC_Profile);
                 }
 
                 // Save the Excel package

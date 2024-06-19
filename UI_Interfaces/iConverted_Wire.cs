@@ -28,5 +28,7 @@ namespace UI_Interfaces
         public string Loc_1 { get; set; }
         public string Loc_2 { get; set; }
         public string Temp_Class { get; set; }
+        public string CC_T { get; set; }
+        public string CC_S { get; set; }
     }
 }
