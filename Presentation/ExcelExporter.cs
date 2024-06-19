@@ -7,6 +7,7 @@ using Logic;
 using UI_Interfaces;
 using Microsoft.Graph.Drives.Item.Bundles;
 using OfficeOpenXml.Table;
+using System.Data;
 
 
 namespace Presentation
@@ -147,7 +148,7 @@ namespace Presentation
                     WriteDataToSheet_alt(tubeWorksheet, tubes);
                     AddAutoFilterButtons(tubeWorksheet);
 
-                    CreateExtraSheets(fileName, wires, bundles, selectedSheets, profiles);
+                    CreateExtraSheets(fileName, wires, components, bundles, selectedSheets, profiles);
 
                     // Save the Excel package to a file
                     package.SaveAs(new FileInfo(Path.Combine(directoryPath, $"{fileName}.xlsx")));
@@ -173,7 +174,7 @@ namespace Presentation
             }
         }
 
-        private void CreateExtraSheets(string fileName, List<iConverted_Wire> wires, List<Bundle> bundles, List<bool> selectedSheets, List<Profile> profiles)
+        private void CreateExtraSheets(string fileName, List<iConverted_Wire> wires, List<iConverted_Component> components, List<Bundle> bundles, List<bool> selectedSheets, List<Profile> profiles)
         {
             //PE sheet
             if (selectedSheets[0])
@@ -185,13 +186,13 @@ namespace Presentation
             if (selectedSheets[1])
             {
                 _logger.Log("Creating RC sheet");
-                CreateRC_Sheets(fileName, wires, bundles);
+                CreateRC_Sheets(fileName, wires, components, bundles);
             }
             //OC sheet
             if (selectedSheets[2])
             {
                 _logger.Log("Creating OC sheet");
-                CreateOC_Sheets(fileName, wires, bundles);
+                CreateOC_Sheets(fileName, wires, components, bundles);
             }
             //Custom sheet
             if (selectedSheets[3])
@@ -470,7 +471,7 @@ namespace Presentation
             }
         }
 
-        public void CreateRC_Sheets(string fileName, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        public void CreateRC_Sheets(string fileName, List<iConverted_Wire> wires, List<iConverted_Component> components, List<Bundle> selectedBundles)
         {
             string fullPath = Path.Combine(directoryPath, fileName + "_RC.xlsx");
             CoCoHandler cocoHandler = new CoCoHandler(_logger);
@@ -564,7 +565,7 @@ namespace Presentation
                 }
 
                 //Create the master sheet
-                CreateMasterSheet(excelPackage, wiresToUse, selectedBundles, RC_Profile);
+                AddConnectorDataToSheet(CreateMasterSheet(excelPackage, wiresToUse, selectedBundles, RC_Profile), components);
 
                 //Create the separate sheets as in the original tool
                 foreach (Bundle bundle in selectedBundles)
@@ -575,8 +576,10 @@ namespace Presentation
                         bundle
                     };
 
-                    CreateIndividualSheet(excelPackage, wiresToUse, tempList, RC_Profile);
+                    AddConnectorDataToSheet(CreateIndividualSheet(excelPackage, wiresToUse, tempList, RC_Profile), components);
                 }
+                
+
 
                 // Save the Excel package
                 excelPackage.Save();
@@ -586,7 +589,7 @@ namespace Presentation
             }
         }
 
-        private void CreateIndividualSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
+        private ExcelWorksheet CreateIndividualSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
         {
             List<iConverted_Wire> wiresToUse = wires;
             string bundleNumber = bundles[0].VariantNumber;
@@ -621,9 +624,11 @@ namespace Presentation
             WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
 
             AddAutoFilterButtons(wireWorksheet);
+
+            return wireWorksheet;
         }
 
-        private void CreateMasterSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
+        private ExcelWorksheet CreateMasterSheet(ExcelPackage excelPackage, List<iConverted_Wire> wires, List<Bundle> bundles, Profile sheetProfile)
         {
             List<iConverted_Wire> wiresToUse = wires;
             string bundleNumber = bundles[0].VariantNumber;
@@ -658,9 +663,11 @@ namespace Presentation
             WriteDataToSheet(wireWorksheet, sortedWires, sheetProfile);
 
             AddAutoFilterButtons(wireWorksheet);
+
+            return wireWorksheet;
         }
 
-        public void CreateOC_Sheets(string fileName, List<iConverted_Wire> wires, List<Bundle> selectedBundles)
+        public void CreateOC_Sheets(string fileName, List<iConverted_Wire> wires, List<iConverted_Component> components, List<Bundle> selectedBundles)
         {
             string fullPath = Path.Combine(directoryPath, fileName + "_OC.xlsx");
             using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
@@ -720,18 +727,18 @@ namespace Presentation
                 }
 
                 //Create the master sheet
-                CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile);
+                AddConnectorDataToSheet(CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile), components);
 
                 //Create the separate sheets as in the original tool
                 foreach (Bundle bundle in selectedBundles)
                 {
                     //Create templist to give to CreateIndividualSheet
                     List<Bundle> tempList = new List<Bundle>
-            {
-                bundle
-            };
+                    {
+                        bundle
+                    };
 
-                    CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile);
+                    AddConnectorDataToSheet(CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile), components);
                 }
 
                 // Save the Excel package
@@ -741,6 +748,43 @@ namespace Presentation
                 Process.Start(new ProcessStartInfo(fullPath) { UseShellExecute = true });
             }
         }
+
+        private void AddConnectorDataToSheet(ExcelWorksheet worksheet, List<iConverted_Component> components)
+        {
+            int rowCount = worksheet.Dimension.Rows;
+            string previousConnector = null;
+
+            for (int i = 1; i <= rowCount; i++)
+            {
+                string currentConnector = worksheet.Cells[i, 1].Text;
+
+                // If the current connector is different from the previous one, add connector info
+                if (currentConnector != previousConnector)
+                {
+                    var matchingComponent = components.Find(comp => comp.Name == currentConnector);
+                    if (matchingComponent != null)
+                    {
+                        // Insert a new row after the current row
+                        worksheet.InsertRow(i + 1, 1);
+
+                        // Add connector information in the new row, in the cells right next to the current connector
+                        worksheet.Cells[i + 1, 1].Value = currentConnector;
+                        worksheet.Cells[i + 1, 2].Value = matchingComponent.Part_no;
+                        worksheet.Cells[i + 1, 3].Value = matchingComponent.EndText;
+
+                        // Insert an empty row after the connector data row
+                        worksheet.InsertRow(i + 2, 1);
+
+                        rowCount += 2; // Increment the row count since two new rows are added
+                        i += 2; // Skip the newly added rows
+                    }
+                }
+
+                previousConnector = currentConnector;
+            }
+        }
+
+
 
         public void CreateExcelReport(Dictionary<string, string> CombinedFailures, string fileName)
         {
