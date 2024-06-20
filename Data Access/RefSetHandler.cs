@@ -33,15 +33,8 @@ namespace Data_Access
         {
             if (Environment.MachineName == "EXURBIA")
             {
-                //if(LoadFromSettings() != null)
-                //{
-                  //  return LoadFromSettings();
-                //}
-                //else
-                //{
-                    return LoadFromDisk_Alt();
-                //}
-                
+                return LoadFromDisk_Alt();
+
             }
             else
             {

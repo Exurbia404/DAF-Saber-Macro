@@ -23,6 +23,9 @@ namespace Presentation
         private PanelForm panelForm;
 
         private string ProductionBuildOfMaterialsFolder;
+        private string WorkInProgressFolder;
+
+        private bool isInWiP;
 
 
         public ProjectForm(Logger logger, PanelForm panelform)
@@ -35,16 +38,20 @@ namespace Presentation
             refsetHandler = new RefSetHandler(_logger);
             if (Environment.MachineName == "EXURBIA")
             {
-                ProductionBuildOfMaterialsFolder = panelForm.Settings.LocalProductionFolder;
+                ProductionBuildOfMaterialsFolder = panelForm.Settings.FolderPaths.Exurbia_Production;
+                WorkInProgressFolder = panelForm.Settings.FolderPaths.Exurbia_Designer.Replace("\\BSA\\Boms", "");
             }
             else
             {
                 ProductionBuildOfMaterialsFolder = panelForm.Settings.ProductionFolder;
+                WorkInProgressFolder = panelForm.Settings.ProductionFolder.Replace("\\BSA\\Boms", "");
             }
 
             extractedReferences = LoadRefSets();
+            isInWiP = false;
+
             if (extractedReferences != null)
-            { 
+            {
                 List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
                 AddSchematicsToListBox(schematicNames);
             }
@@ -132,22 +139,38 @@ namespace Presentation
             // Get the selected ProjectName from schematicsListBox
             string selectedSchematic = schematicsListBox.SelectedItem?.ToString();
 
-            //Check if a project or a yearweek has been selected
-            if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
+            if (isInWiP)
             {
-                // Filter the extractedReferences based on the selected ProjectName
-                List<string> bundleNumbers = extractedReferences
-                .Where(reference => reference.ProjectName == selectedSchematic)
-                .Select(reference => $"{reference.YearWeek} - {reference.BundleNumber}")
-                .ToList();
+                string folderPath = Path.Combine(WorkInProgressFolder, selectedSchematic);
 
-                // Call AddSchematicsToListBox with the list of BundleNumbers
-                currentProjectLabel.Text = selectedSchematic;
-                _logger.Log("Loading project: " + selectedSchematic);
-
-                AddSchematicsToListBox(bundleNumbers);
+                // Check if the folder exists
+                if (Directory.Exists(folderPath))
+                {
+                    OpenRefSetInExcel(selectedSchematic);
+                }
             }
-            else if (IsRefSetNumber(selectedSchematic))
+            else
+            {
+                
+
+                //Check if a project or a yearweek has been selected
+                if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
+                {
+                    // Filter the extractedReferences based on the selected ProjectName
+                    List<string> bundleNumbers = extractedReferences
+                    .Where(reference => reference.ProjectName == selectedSchematic)
+                    .Select(reference => $"{reference.YearWeek} - {reference.BundleNumber}")
+                    .ToList();
+
+                    // Call AddSchematicsToListBox with the list of BundleNumbers
+                    currentProjectLabel.Text = selectedSchematic;
+                    _logger.Log("Loading project: " + selectedSchematic);
+
+                    AddSchematicsToListBox(bundleNumbers);
+                }
+            }
+            
+            if (IsRefSetNumber(selectedSchematic))
             {
                 // Trim the selectedSchematic to remove leading and trailing whitespace
                 string trimmedSchematic = selectedSchematic.Trim();
@@ -196,8 +219,18 @@ namespace Presentation
 
         private void OpenRefSetInExcel(string selectedSchematic)
         {
-            // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
-            string folderPath = Path.Combine(ProductionBuildOfMaterialsFolder, selectedSchematic);
+            string folderPath = "";
+            if(isInWiP)
+            {
+                // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
+                folderPath = Path.Combine(WorkInProgressFolder, selectedSchematic);
+            }
+            else
+            {
+                // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
+                folderPath = Path.Combine(ProductionBuildOfMaterialsFolder, selectedSchematic);
+            }
+            
 
             // Check if the folder exists
             if (Directory.Exists(folderPath))
@@ -254,9 +287,9 @@ namespace Presentation
 
                 pcForm.Show();
             }
-            catch
+            catch(Exception ex)
             {
-
+                _logger.Log(ex.Message);
             }
         }
 
@@ -264,5 +297,40 @@ namespace Presentation
         {
 
         }
+
+        private void workInProgressFolderButton_Click(object sender, EventArgs e)
+        {
+            isInWiP = true;
+            // The location to search for folders
+            string baseFolderPath = WorkInProgressFolder;
+
+            try
+            {
+                // Get all directories in the specified location
+                string[] directories = Directory.GetDirectories(baseFolderPath);
+
+                schematicsListBox.Items.Clear();
+                // Log each directory
+                foreach (string directory in directories)
+                {
+                    string folderName = Path.GetFileName(directory);
+                    //Filter out the BSA folder
+                    if (folderName == "BSA")
+                    {
+
+                    }
+                    else
+                    {
+                        schematicsListBox.Items.Add(folderName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log any exceptions that occur
+                _logger.Log($"An error occurred while retrieving directories: {ex.Message}");
+            }
+        }
+
     }
 }

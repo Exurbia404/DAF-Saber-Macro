@@ -539,10 +539,6 @@ namespace Presentation
 
                 foreach (iConverted_Wire wire in  wiresToUse)
                 {
-                    if(wire.Wire_connection == "113C:4 to G838.H:2")
-                    {
-                        int hello = 1;
-                    }
                     // Attempt to parse Term_1
                     if (!string.IsNullOrEmpty(wire.Term_1) && int.TryParse(wire.Term_1, out term1))
                     {
@@ -752,14 +748,14 @@ namespace Presentation
         private void AddConnectorDataToSheet(ExcelWorksheet worksheet, List<iConverted_Component> components)
         {
             int rowCount = worksheet.Dimension.Rows;
-            string previousConnector = null;
+            string nextConnector = worksheet.Cells[1, 1].Text;
 
             for (int i = 1; i <= rowCount; i++)
             {
                 string currentConnector = worksheet.Cells[i, 1].Text;
 
-                // If the current connector is different from the previous one, add connector info
-                if (currentConnector != previousConnector)
+                // Check if the current connector is the next occurrence (different from nextConnector)
+                if (currentConnector != nextConnector)
                 {
                     var matchingComponent = components.Find(comp => comp.Name == currentConnector);
                     if (matchingComponent != null)
@@ -780,9 +776,10 @@ namespace Presentation
                     }
                 }
 
-                previousConnector = currentConnector;
+                nextConnector = worksheet.Cells[i + 1, 1].Text; // Update nextConnector to currentConnector
             }
         }
+
 
 
 

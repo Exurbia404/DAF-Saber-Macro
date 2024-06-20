@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data_Interfaces", "Interfac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI_Interfaces", "UI_Interfaces\UI_Interfaces.csproj", "{E17B3F6B-FF3D-473E-9C1F-AD3E959DCC57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroTests", "MacroTests\MacroTests.csproj", "{D4D27DCD-0931-4FCD-8C67-CD1757425C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacroTests", "MacroTests\MacroTests.csproj", "{D4D27DCD-0931-4FCD-8C67-CD1757425C4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B60DBA4-2AAC-4031-8A78-F12588D5AA93}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

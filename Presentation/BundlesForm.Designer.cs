@@ -80,7 +80,7 @@
             productProtoButton.Name = "productProtoButton";
             productProtoButton.Size = new Size(97, 23);
             productProtoButton.TabIndex = 11;
-            productProtoButton.Text = "Production/Proto";
+            productProtoButton.Text = "Released";
             productProtoButton.UseVisualStyleBackColor = false;
             productProtoButton.Click += productProtoButton_Click;
             // 
@@ -95,7 +95,7 @@
             bundlesListLabel.TabIndex = 14;
             bundlesListLabel.Text = "Bundles:";
             // 
-            // BundleForm
+            // BundlesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -106,7 +106,7 @@
             Controls.Add(productProtoButton);
             Controls.Add(searchBundlesTextBox);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "BundleForm";
+            Name = "BundlesForm";
             Text = "BundleForm";
             ResumeLayout(false);
             PerformLayout();

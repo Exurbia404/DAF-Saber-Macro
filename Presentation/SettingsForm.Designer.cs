@@ -34,6 +34,9 @@
             dafFileServerButton = new Button();
             leylandFileServerButton = new Button();
             label1 = new Label();
+            openCacheFolderButton = new Button();
+            label2 = new Label();
+            selectNewFolderButton = new Button();
             SuspendLayout();
             // 
             // goToProfilesButton
@@ -58,7 +61,7 @@
             // 
             // clearTempDataButton
             // 
-            clearTempDataButton.Location = new Point(12, 41);
+            clearTempDataButton.Location = new Point(12, 282);
             clearTempDataButton.Name = "clearTempDataButton";
             clearTempDataButton.Size = new Size(96, 23);
             clearTempDataButton.TabIndex = 2;
@@ -97,11 +100,42 @@
             label1.TabIndex = 5;
             label1.Text = "Select server:";
             // 
+            // openCacheFolderButton
+            // 
+            openCacheFolderButton.Location = new Point(12, 253);
+            openCacheFolderButton.Name = "openCacheFolderButton";
+            openCacheFolderButton.Size = new Size(121, 23);
+            openCacheFolderButton.TabIndex = 6;
+            openCacheFolderButton.Text = "Open cache folder";
+            openCacheFolderButton.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 235);
+            label2.Name = "label2";
+            label2.Size = new Size(89, 15);
+            label2.TabIndex = 7;
+            label2.Text = "Cache location:";
+            // 
+            // selectNewFolderButton
+            // 
+            selectNewFolderButton.Location = new Point(139, 253);
+            selectNewFolderButton.Name = "selectNewFolderButton";
+            selectNewFolderButton.Size = new Size(117, 23);
+            selectNewFolderButton.TabIndex = 8;
+            selectNewFolderButton.Text = "Select new folder";
+            selectNewFolderButton.UseVisualStyleBackColor = true;
+            selectNewFolderButton.Click += selectNewFolderButton_Click;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(selectNewFolderButton);
+            Controls.Add(label2);
+            Controls.Add(openCacheFolderButton);
             Controls.Add(label1);
             Controls.Add(leylandFileServerButton);
             Controls.Add(dafFileServerButton);
@@ -124,5 +158,8 @@
         private Button dafFileServerButton;
         private Button leylandFileServerButton;
         private Label label1;
+        private Button openCacheFolderButton;
+        private Label label2;
+        private Button selectNewFolderButton;
     }
 }

@@ -10,7 +10,7 @@ namespace Logic
     public class ProfileController
     {
         //Default profiles, user can create their own based on these
-        private List<string> Wire_WCSPP_Profile_Options_List = new List<string>()
+        private readonly List<string> Wire_WCSPP_Profile_Options_List = new List<string>()
         {
             "Wire",
             "Diameter",
@@ -33,7 +33,7 @@ namespace Logic
             "Loc_2"
         };
 
-        private List<string> Wire_Profile_Options_List = new List<string>()
+        private readonly List<string> Wire_Profile_Options_List = new List<string>()
         {
             "WireName",
             "WireOption",
@@ -61,7 +61,7 @@ namespace Logic
             "MulticoreOption"
         };
 
-        private List<string> Wire_Project_Profile_Options_List = new List<string>()
+        private readonly List<string> Wire_Project_Profile_Options_List = new List<string>()
         {
             "Wire",
             "Diameter",
@@ -85,7 +85,7 @@ namespace Logic
             "Tag"
         };
 
-        private List<string> Component_WCSPP_Profile_Options_List = new List<string>()
+        private readonly List<string> Component_WCSPP_Profile_Options_List = new List<string>()
         {
             "Name",
             "Part_no",
@@ -98,7 +98,7 @@ namespace Logic
             "EndText"
         };
 
-        private List<string> Component_Profile_Options_List = new List<string>()
+        private readonly List<string> Component_Profile_Options_List = new List<string>()
         {
             "NodeName",
             "CavityName",
@@ -122,7 +122,7 @@ namespace Logic
             "ComponentTypeCode2"
         };
 
-        private List<string> Component_Project_Profile_Options_List = new List<string>()
+        private readonly List<string> Component_Project_Profile_Options_List = new List<string>()
         {
             "Type",
             "Ref",
@@ -178,7 +178,7 @@ namespace Logic
         {
             List<Profile> foundProfiles = new List<Profile>();
 
-            foreach (Profile loadedProfile in fileHandler.LoadProfiles()) 
+            foreach (Profile loadedProfile in fileHandler.LoadProfiles().Cast<Profile>()) 
             {
                 if(loadedProfile.Type == ProfileType.User)
                 {

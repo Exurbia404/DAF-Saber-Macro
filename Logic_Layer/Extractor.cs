@@ -40,7 +40,7 @@ namespace Logic
 
             //1 get the sections
             sections = RetrieveSectionsFromFile();
-
+            
             //4 Get the bundles
             Bundles = GetBundlesFromSection(sections[2]);
 

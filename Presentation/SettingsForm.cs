@@ -132,5 +132,17 @@ namespace Presentation
         {
             panelForm.Settings.SwitchFileServer(Settings.FileServers.Leyland);
         }
+
+        private void selectNewFolderButton_Click(object sender, EventArgs e)
+        {
+            using (var folderBrowserDialog = new FolderBrowserDialog())
+            {
+                DialogResult result = folderBrowserDialog.ShowDialog();
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
+                {
+                    
+                }
+            }
+        }
     }
 }

@@ -167,7 +167,6 @@
             // 
             // saberCheckerButton
             // 
-            saberCheckerButton.Enabled = false;
             saberCheckerButton.Location = new Point(213, 250);
             saberCheckerButton.Name = "saberCheckerButton";
             saberCheckerButton.Size = new Size(130, 23);

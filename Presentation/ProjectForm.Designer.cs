@@ -33,6 +33,7 @@
             schematicsSearchTextBox = new TextBox();
             schematicsListBox = new ListBox();
             schematicsListLabel = new Label();
+            workInProgressFolderButton = new Button();
             SuspendLayout();
             // 
             // returnToProjectsButton
@@ -72,7 +73,7 @@
             schematicsListBox.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
             schematicsListBox.FormattingEnabled = true;
             schematicsListBox.ItemHeight = 16;
-            schematicsListBox.Location = new Point(13, 103);
+            schematicsListBox.Location = new Point(13, 133);
             schematicsListBox.Margin = new Padding(4, 3, 4, 3);
             schematicsListBox.Name = "schematicsListBox";
             schematicsListBox.ScrollAlwaysVisible = true;
@@ -91,11 +92,22 @@
             schematicsListLabel.TabIndex = 26;
             schematicsListLabel.Text = "Projects:";
             // 
+            // workInProgressFolderButton
+            // 
+            workInProgressFolderButton.Location = new Point(293, 104);
+            workInProgressFolderButton.Name = "workInProgressFolderButton";
+            workInProgressFolderButton.Size = new Size(75, 23);
+            workInProgressFolderButton.TabIndex = 32;
+            workInProgressFolderButton.Text = "WiP";
+            workInProgressFolderButton.UseVisualStyleBackColor = true;
+            workInProgressFolderButton.Click += workInProgressFolderButton_Click;
+            // 
             // ProjectForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(workInProgressFolderButton);
             Controls.Add(returnToProjectsButton);
             Controls.Add(currentProjectLabel);
             Controls.Add(schematicsSearchTextBox);
@@ -116,5 +128,6 @@
         private TextBox schematicsSearchTextBox;
         private ListBox schematicsListBox;
         private Label schematicsListLabel;
+        private Button workInProgressFolderButton;
     }
 }
