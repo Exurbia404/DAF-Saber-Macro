@@ -151,7 +151,7 @@ namespace Presentation
             }
             else
             {
-                
+
 
                 //Check if a project or a yearweek has been selected
                 if ((selectedSchematic != null) && (!IsRefSetNumber(selectedSchematic)))
@@ -169,7 +169,7 @@ namespace Presentation
                     AddSchematicsToListBox(bundleNumbers);
                 }
             }
-            
+
             if (IsRefSetNumber(selectedSchematic))
             {
                 // Trim the selectedSchematic to remove leading and trailing whitespace
@@ -220,7 +220,7 @@ namespace Presentation
         private void OpenRefSetInExcel(string selectedSchematic)
         {
             string folderPath = "";
-            if(isInWiP)
+            if (isInWiP)
             {
                 // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
                 folderPath = Path.Combine(WorkInProgressFolder, selectedSchematic);
@@ -230,7 +230,7 @@ namespace Presentation
                 // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
                 folderPath = Path.Combine(ProductionBuildOfMaterialsFolder, selectedSchematic);
             }
-            
+
 
             // Check if the folder exists
             if (Directory.Exists(folderPath))
@@ -287,7 +287,7 @@ namespace Presentation
 
                 pcForm.Show();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(ex.Message);
             }
@@ -332,5 +332,17 @@ namespace Presentation
             }
         }
 
+        private void productionFolderButton_Click(object sender, EventArgs e)
+        {
+
+            extractedReferences = LoadRefSets();
+            isInWiP = false;
+
+            if (extractedReferences != null)
+            {
+                List<string> schematicNames = extractedReferences.Select(reference => reference.ProjectName).ToList();
+                AddSchematicsToListBox(schematicNames);
+            }
+        }
     }
 }

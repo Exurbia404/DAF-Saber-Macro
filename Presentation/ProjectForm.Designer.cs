@@ -34,6 +34,7 @@
             schematicsListBox = new ListBox();
             schematicsListLabel = new Label();
             workInProgressFolderButton = new Button();
+            productionFolderButton = new Button();
             SuspendLayout();
             // 
             // returnToProjectsButton
@@ -102,11 +103,22 @@
             workInProgressFolderButton.UseVisualStyleBackColor = true;
             workInProgressFolderButton.Click += workInProgressFolderButton_Click;
             // 
+            // productionFolderButton
+            // 
+            productionFolderButton.Location = new Point(13, 104);
+            productionFolderButton.Name = "productionFolderButton";
+            productionFolderButton.Size = new Size(75, 23);
+            productionFolderButton.TabIndex = 33;
+            productionFolderButton.Text = "Production";
+            productionFolderButton.UseVisualStyleBackColor = true;
+            productionFolderButton.Click += productionFolderButton_Click;
+            // 
             // ProjectForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(productionFolderButton);
             Controls.Add(workInProgressFolderButton);
             Controls.Add(returnToProjectsButton);
             Controls.Add(currentProjectLabel);
@@ -129,5 +141,6 @@
         private ListBox schematicsListBox;
         private Label schematicsListLabel;
         private Button workInProgressFolderButton;
+        private Button productionFolderButton;
     }
 }
