@@ -140,7 +140,29 @@ namespace Presentation
                 DialogResult result = folderBrowserDialog.ShowDialog();
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
                 {
-                    
+
+                }
+            }
+        }
+
+        private void setCompareItLocationButton_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select CompareIt Executable";
+                openFileDialog.Filter = "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*";
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Get the selected file path
+                    string selectedFilePath = openFileDialog.FileName;
+
+                    // Update the CompareItFilepath property (assuming CompareItFilepath is defined)
+                    panelForm.Settings.CompareItFilepath = selectedFilePath;
+
+                    // Optionally display the selected file path or perform other actions
+                    MessageBox.Show($"CompareIt location set to: {selectedFilePath}", "CompareIt Location Set", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }

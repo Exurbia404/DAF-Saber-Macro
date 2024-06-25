@@ -37,6 +37,7 @@
             openCacheFolderButton = new Button();
             label2 = new Label();
             selectNewFolderButton = new Button();
+            setCompareItLocationButton = new Button();
             SuspendLayout();
             // 
             // goToProfilesButton
@@ -128,11 +129,22 @@
             selectNewFolderButton.UseVisualStyleBackColor = true;
             selectNewFolderButton.Click += selectNewFolderButton_Click;
             // 
+            // setCompareItLocationButton
+            // 
+            setCompareItLocationButton.Location = new Point(139, 108);
+            setCompareItLocationButton.Name = "setCompareItLocationButton";
+            setCompareItLocationButton.Size = new Size(145, 23);
+            setCompareItLocationButton.TabIndex = 9;
+            setCompareItLocationButton.Text = "Set CompareIt Location";
+            setCompareItLocationButton.UseVisualStyleBackColor = true;
+            setCompareItLocationButton.Click += setCompareItLocationButton_Click;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(setCompareItLocationButton);
             Controls.Add(selectNewFolderButton);
             Controls.Add(label2);
             Controls.Add(openCacheFolderButton);
@@ -161,5 +173,6 @@
         private Button openCacheFolderButton;
         private Label label2;
         private Button selectNewFolderButton;
+        private Button setCompareItLocationButton;
     }
 }

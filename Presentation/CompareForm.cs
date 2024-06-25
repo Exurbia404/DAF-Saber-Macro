@@ -16,6 +16,7 @@ namespace Presentation
     public partial class CompareForm : Form
     {
         private Logger _logger;
+        private PanelForm panelForm;
 
         private string ProductionBuildOfMaterialsFolder;
         private string ReldasBuildOfMaterialsFolder;
@@ -29,6 +30,7 @@ namespace Presentation
             InitializeComponent();
 
             _logger = logger;
+            panelForm = panelform;
 
             //Released
             ProductionBuildOfMaterialsFolder = panelform.Settings.ProductionFolder;
@@ -38,6 +40,12 @@ namespace Presentation
             
             //WiP
             DesignerBuildOfMaterialsFolder = panelform.Settings.DesignerFolder;
+
+            // Check CompareIt executable path
+            if (!File.Exists(panelForm.Settings.CompareItFilepath))
+            {
+                MessageBox.Show("CompareIt executable not found or path is invalid.", "CompareIt Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
             try
             {
@@ -199,7 +207,7 @@ namespace Presentation
         {
             try
             {
-                string compareItPath = @"C:\Program Files (x86)\Compare It!\wincmp3.exe"; // Replace with the actual path to CompareIt!
+                string compareItPath = panelForm.Settings.CompareItFilepath; // Replace with the actual path to CompareIt!
 
                 // Ensure CompareIt! exists at the specified path
                 if (!File.Exists(compareItPath))

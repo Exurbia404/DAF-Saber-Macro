@@ -22,7 +22,21 @@ namespace Presentation
         public string ProductionFolder { get; private set; }
         public string ReldasFolder { get; private set; }
         public string DesignerFolder {  get; private set; }
-
+        public string CompareItFilepath
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["CompareItExePath"];
+            }
+            set
+            {
+                // Update the configuration file with the new value
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                config.AppSettings.Settings["CompareItExePath"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+        }
         public string LocalFolder;
         public string LocalProductionFolder;
         public FolderPaths FolderPaths;
