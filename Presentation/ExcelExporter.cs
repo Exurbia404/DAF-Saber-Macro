@@ -748,35 +748,31 @@ namespace Presentation
         private void AddConnectorDataToSheet(ExcelWorksheet worksheet, List<iConverted_Component> components)
         {
             int rowCount = worksheet.Dimension.Rows;
-            string nextConnector = worksheet.Cells[1, 1].Text;
+            string currentConnector = worksheet.Cells[1, 1].Text;
 
-            for (int i = 1; i <= rowCount; i++)
+            for (int i = 2; i <= rowCount; i++) // Start from the second row since we're comparing with the previous row
             {
-                string currentConnector = worksheet.Cells[i, 1].Text;
+                string nextConnector = worksheet.Cells[i, 1].Text;
 
-                // Check if the current connector is the next occurrence (different from nextConnector)
+                // Check if the current connector is different from the next one
                 if (currentConnector != nextConnector)
                 {
                     var matchingComponent = components.Find(comp => comp.Name == currentConnector);
                     if (matchingComponent != null)
                     {
                         // Insert a new row after the current row
-                        worksheet.InsertRow(i + 1, 1);
+                        worksheet.InsertRow(i, 1);
 
                         // Add connector information in the new row, in the cells right next to the current connector
-                        worksheet.Cells[i + 1, 1].Value = currentConnector;
-                        worksheet.Cells[i + 1, 2].Value = matchingComponent.Part_no;
-                        worksheet.Cells[i + 1, 3].Value = matchingComponent.EndText;
+                        worksheet.Cells[i, 1].Value = matchingComponent.Part_no;
+                        worksheet.Cells[i, 2].Value = matchingComponent.EndText;
 
-                        // Insert an empty row after the connector data row
-                        worksheet.InsertRow(i + 2, 1);
-
-                        rowCount += 2; // Increment the row count since two new rows are added
-                        i += 2; // Skip the newly added rows
+                        rowCount++; // Increment the row count since a new row is added
+                        i++; // Skip the newly added row
                     }
                 }
 
-                nextConnector = worksheet.Cells[i + 1, 1].Text; // Update nextConnector to currentConnector
+                currentConnector = worksheet.Cells[i, 1].Text; // Update currentConnector to nextConnector
             }
         }
 
