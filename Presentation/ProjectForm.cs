@@ -223,7 +223,7 @@ namespace Presentation
             if (isInWiP)
             {
                 // Construct the full path to the folder based on the ProductionBuildOfMaterialsFolder
-                folderPath = Path.Combine(WorkInProgressFolder, selectedSchematic);
+                folderPath = Path.Combine(WorkInProgressFolder, selectedSchematic, "schematics");
             }
             else
             {
@@ -236,8 +236,8 @@ namespace Presentation
             if (Directory.Exists(folderPath))
             {
                 // Search for _comp.txt and _wires.txt files in the folder
-                string[] compFilePaths = Directory.GetFiles(folderPath, "*_comp*.txt");
-                string[] wiresFilePaths = Directory.GetFiles(folderPath, "*_wires*.txt");
+                string[] compFilePaths = Directory.GetFiles(folderPath, "comp*.txt");
+                string[] wiresFilePaths = Directory.GetFiles(folderPath, "wires*.txt");
 
                 if ((compFilePaths.Length > 0) && (wiresFilePaths.Length > 0))
                 {
