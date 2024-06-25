@@ -135,5 +135,15 @@ namespace Presentation
             lastMessageTextBox.Top = FixedControlTop;
             versionLabel.Top = FixedControlTop;
         }
+
+        private void comparePortalButton_Click(object sender, EventArgs e)
+        {
+            CompareForm compareForm = new CompareForm(_logger, this);
+            compareForm.TopLevel = false;
+
+            panel.Controls.Clear();
+            panel.Controls.Add(compareForm);
+            compareForm.Show();
+        }
     }
 }
