@@ -4,12 +4,14 @@ using Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -44,7 +46,10 @@ namespace Presentation
             else
             {
                 ProductionBuildOfMaterialsFolder = panelForm.Settings.ProductionFolder;
-                WorkInProgressFolder = panelForm.Settings.ProductionFolder.Replace("\\BSA\\Boms", "");
+                string designerFolder = panelForm.Settings.DesignerFolder;
+                WorkInProgressFolder = Regex.Replace(designerFolder, @"\\BSA\\Boms", "", RegexOptions.IgnoreCase);
+                _logger.Log(WorkInProgressFolder);
+                _logger.Log(panelForm.Settings.DesignerFolder);
             }
 
             extractedReferences = LoadRefSets();
@@ -236,8 +241,9 @@ namespace Presentation
             if (Directory.Exists(folderPath))
             {
                 // Search for _comp.txt and _wires.txt files in the folder
-                string[] compFilePaths = Directory.GetFiles(folderPath, "comp*.txt");
-                string[] wiresFilePaths = Directory.GetFiles(folderPath, "wires*.txt");
+                string[] compFilePaths = Directory.GetFiles(folderPath, "*comp*.txt");
+                string[] wiresFilePaths = Directory.GetFiles(folderPath, "*wires*.txt");
+
 
                 if ((compFilePaths.Length > 0) && (wiresFilePaths.Length > 0))
                 {
@@ -315,11 +321,7 @@ namespace Presentation
                 {
                     string folderName = Path.GetFileName(directory);
                     //Filter out the BSA folder
-                    if (folderName == "BSA")
-                    {
-
-                    }
-                    else
+                    if (folderName.Contains("Saber"))
                     {
                         schematicsListBox.Items.Add(folderName);
                     }

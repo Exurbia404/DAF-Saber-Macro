@@ -74,6 +74,8 @@ namespace Presentation
             selectNoneBundlesButton.Hide();
             checkDataButton.Hide();
             releaseBundleButton.Hide();
+            label4.Hide();
+            label3.Hide();
         }
 
         public void SetBundleData(List<Converted_Wire> wires, List<Converted_Component> components, List<DSI_Tube> tubes, List<Bundle> bundles)

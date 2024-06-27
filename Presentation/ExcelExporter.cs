@@ -418,8 +418,6 @@ namespace Presentation
                         wiresToUse[i].Port_1,
                         wiresToUse[i].Variant,
                         wiresToUse[i].Bundle,
-                        wiresToUse[i].Loc_1,
-                        wiresToUse[i].Loc_2,
                         wiresToUse[i].Temp_Class
                     );
 
@@ -509,8 +507,6 @@ namespace Presentation
                         wiresToUse[i].Port_1,
                         wiresToUse[i].Variant,
                         wiresToUse[i].Bundle,
-                        wiresToUse[i].Loc_1,
-                        wiresToUse[i].Loc_2,
                         wiresToUse[i].Temp_Class
                     );
 
@@ -699,8 +695,6 @@ namespace Presentation
                         wiresToUse[i].Port_1,
                         wiresToUse[i].Variant,
                         wiresToUse[i].Bundle,
-                        wiresToUse[i].Loc_1,
-                        wiresToUse[i].Loc_2,
                         wiresToUse[i].Temp_Class
                     );
 
@@ -723,7 +717,7 @@ namespace Presentation
                 }
 
                 //Create the master sheet
-                AddConnectorDataToSheet(CreateMasterSheet(excelPackage, wires, selectedBundles, OC_Profile), components);
+                AddConnectorDataToSheet(CreateMasterSheet(excelPackage, wiresToUse, selectedBundles, OC_Profile), components);
 
                 //Create the separate sheets as in the original tool
                 foreach (Bundle bundle in selectedBundles)
@@ -734,7 +728,7 @@ namespace Presentation
                         bundle
                     };
 
-                    AddConnectorDataToSheet(CreateIndividualSheet(excelPackage, wires, tempList, OC_Profile), components);
+                    AddConnectorDataToSheet(CreateIndividualSheet(excelPackage, wiresToUse, tempList, OC_Profile), components);
                 }
 
                 // Save the Excel package
@@ -769,6 +763,9 @@ namespace Presentation
 
                         rowCount++; // Increment the row count since a new row is added
                         i++; // Skip the newly added row
+                        worksheet.InsertRow(i, 1);
+                        rowCount++;
+                        i++;
                     }
                 }
 

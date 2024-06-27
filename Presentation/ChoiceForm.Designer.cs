@@ -62,7 +62,7 @@
             goToProjectsButton.Name = "goToProjectsButton";
             goToProjectsButton.Size = new Size(120, 60);
             goToProjectsButton.TabIndex = 29;
-            goToProjectsButton.Text = "Projects";
+            goToProjectsButton.Text = "Dataset";
             goToProjectsButton.UseVisualStyleBackColor = true;
             goToProjectsButton.Click += goToProjectsButton_Click;
             // 

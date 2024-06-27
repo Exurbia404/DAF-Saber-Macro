@@ -39,7 +39,7 @@ namespace Data_Access
             fileName = fileName.Replace("_DSI", "");
 
             //Construct the new filePath
-            string newFileName = $"{fileName}_generated_WCSPP.txt";
+            string newFileName = $"{fileName}_WCSPP.txt";
             string newFilePath = Path.Combine(filePath, newFileName);
 
             _logger.Log("Writing to: " + newFilePath);
@@ -56,18 +56,17 @@ namespace Data_Access
                     // Format the line with object properties
                     string line = $"{wcsppWire.Wire},{wcsppWire.Diameter},{wcsppWire.Color},{wcsppWire.Type},{wcsppWire.Code_no},{wcsppWire.Length}," +
                                   $"{wcsppWire.Connector_1},{wcsppWire.Port_1},{wcsppWire.Term_1},{wcsppWire.Seal_1},{wcsppWire.Wire_connection}," +
-                                  $"{wcsppWire.Term_2},{wcsppWire.Seal_2},{wcsppWire.Connector_2},{wcsppWire.Port_2},{wcsppWire.Variant},{wcsppWire.Bundle}," +
-                                  $"{wcsppWire.Loc_1},{wcsppWire.Loc_2},";
+                                  $"{wcsppWire.Term_2},{wcsppWire.Seal_2},{wcsppWire.Connector_2},{wcsppWire.Port_2},{wcsppWire.Variant},{wcsppWire.Bundle},,,";
 
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
 
-                _logger.Log($"{fileName}_generated_WCSPP.txt generated");
+                _logger.Log($"{fileName}_WCSPP.txt generated");
             }
 
             //Generate the new filePath
-            newFileName = $"{fileName}_generated_parts.txt";
+            newFileName = $"{fileName}_parts.txt";
             newFilePath = Path.Combine(filePath, newFileName);
 
             // Create or overwrite the file
@@ -79,11 +78,11 @@ namespace Data_Access
                 // Write the appropriate header line based on the condition
                 if (hasBundleModularID)
                 {
-                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,BundleModularID,,,,,,,,,,,,,,,,,,,");
+                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,,BundleModularID,,,,,,,,,,,,,,,,,,,");
                 }
                 else
                 {
-                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,Lokation,,,,,,,,,,,,,,,,,,,,");
+                    writer.WriteLine("Name,Part_no,,Passive,Instruction,Variant,Bundle,Description,,,,,,,,,,,,,,,,,,,,,");
                 }
 
                 // Write each WCSPP_Wire object to the file
@@ -95,7 +94,7 @@ namespace Data_Access
                     // Write the formatted line to the file
                     writer.WriteLine(line);
                 }
-                _logger.Log($"{fileName}_generated_parts.txt generated");
+                _logger.Log($"{fileName}_parts.txt generated");
             }
         }
 
@@ -197,10 +196,6 @@ namespace Data_Access
                             DSI_filePath = file;
                         else if (file.EndsWith("_DSI.violations"))
                             DSI_Violations_filePath = file;
-                        else if (file.EndsWith("_generated_parts.txt"))
-                            Parts_filePath = file;
-                        else if (file.EndsWith("_generated_WCSPP.txt"))
-                            WCSPP_filePath = file;
                         else if (file.EndsWith("_parts.txt"))
                             Parts_filePath = file;
                         else if (file.EndsWith("_WCSPP.txt"))
@@ -286,12 +281,11 @@ namespace Data_Access
 
         public void ReleaseBundle(string bundleNumber, string issueNumber, string bsaFilePath, string destinationFilePath)
         {
-            //Check if any of the filePaths are empty
-            if(DSI_filePath == null || DSI_Violations_filePath == null || Parts_filePath == null || WCSPP_filePath == null || SVG_filePath == null || TIF_filePath == null)
+            // Check if any of the file paths are empty
+            if (DSI_filePath == null || DSI_Violations_filePath == null || Parts_filePath == null || WCSPP_filePath == null || SVG_filePath == null || TIF_filePath == null)
             {
                 return;
             }
-
 
             // Create the destination directories if they don't exist
             string destinationBomsFolderPath = Path.Combine(destinationFilePath, "Boms", bundleNumber);
@@ -300,24 +294,27 @@ namespace Data_Access
             if (!Directory.Exists(destinationBomsFolderPath))
                 Directory.CreateDirectory(destinationBomsFolderPath);
 
-            // Move the files to the destination folders
+            if (!Directory.Exists(destinationDrawingsFolderPath))
+                Directory.CreateDirectory(destinationDrawingsFolderPath);
+
+            // Copy the files to the destination folders
             if (DSI_filePath != null)
-                File.Move(DSI_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(DSI_filePath)));
+                File.Copy(DSI_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(DSI_filePath)), true);
 
             if (DSI_Violations_filePath != null)
-                File.Move(DSI_Violations_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(DSI_Violations_filePath)));
+                File.Copy(DSI_Violations_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(DSI_Violations_filePath)), true);
 
             if (Parts_filePath != null)
-                File.Move(Parts_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(Parts_filePath)));
+                File.Copy(Parts_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(Parts_filePath)), true);
 
             if (WCSPP_filePath != null)
-                File.Move(WCSPP_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(WCSPP_filePath)));
+                File.Copy(WCSPP_filePath, Path.Combine(destinationBomsFolderPath, Path.GetFileName(WCSPP_filePath)), true);
 
             if (SVG_filePath != null)
-                File.Move(SVG_filePath, Path.Combine(destinationDrawingsFolderPath, Path.GetFileName(SVG_filePath)));
+                File.Copy(SVG_filePath, Path.Combine(destinationDrawingsFolderPath, Path.GetFileName(SVG_filePath)), true);
 
             if (TIF_filePath != null)
-                File.Move(TIF_filePath, Path.Combine(destinationDrawingsFolderPath, Path.GetFileName(TIF_filePath)));
+                File.Copy(TIF_filePath, Path.Combine(destinationDrawingsFolderPath, Path.GetFileName(TIF_filePath)), true);
         }
     }
 }

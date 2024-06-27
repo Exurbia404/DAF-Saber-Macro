@@ -440,10 +440,8 @@ namespace Logic
                         Seal_2 = "?",
                         Connector_2 = line[12],
                         Port_2 = line[14],
-                        Variant = GetWireVariants(line[1]),
                         Bundle = GetBundlesForVariant(Bundles, line[1]),
-                        Loc_1 = "?",
-                        Loc_2 = "?",
+                        Variant = GetVariantForModularizedComponent(GetBundlesForVariant(Bundles, line[1])).Replace("/", " "),
                         Temp_Class = GetValueFromInputString(line[19], 2)
                     };
 
@@ -467,7 +465,7 @@ namespace Logic
                     {
                         string blockNumber = line[6];
                         newWire.Bundle = GetModuleNumbersForComponent(blockNumber)[0];
-                        newWire.Variant = GetVariantForModularizedComponent(newWire.Bundle);
+                        newWire.Variant = GetVariantForModularizedComponent(newWire.Bundle).Replace("/", " ");
                     }
 
                     newWire.Wire_connection = GetWireConnection(newWire.Connector_1, newWire.Port_1, newWire.Connector_2, newWire.Port_2);

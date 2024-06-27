@@ -27,8 +27,6 @@ namespace Logic
         public string Port_2 { get; set; }
         public string Variant {  get; set; }
         public string Bundle { get; set; }
-        public string Loc_1 { get; set; }
-        public string Loc_2 { get; set; }
         public string Temp_Class { get; set; }
         public string CC_T { get; set; }
         public string CC_S { get; set; }
@@ -36,7 +34,7 @@ namespace Logic
         public Converted_Wire(string code_no, string diameter, string color, string type, string part_no, string length,
                   string connector_1, string port_1, string term_1, string seal_1, string wire_connection,
                   string term_2, string seal_2, string connector_2, string port_2, string variant, string bundle,
-                  string loc_1, string loc_2, string temp_Class)
+                  string temp_Class)
         {
             Wire = code_no;
             Diameter = diameter;
@@ -55,8 +53,6 @@ namespace Logic
             Port_2 = port_2;
             Variant = variant;
             Bundle = bundle;
-            Loc_1 = loc_1;
-            Loc_2 = loc_2;
             Temp_Class = temp_Class;
         }
 

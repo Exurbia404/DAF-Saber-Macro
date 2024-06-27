@@ -46,6 +46,8 @@
             createCustomCheckBox = new CheckBox();
             releaseBundleButton = new Button();
             checkDataButton = new Button();
+            label3 = new Label();
+            label4 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -101,7 +103,7 @@
             bundlesListBox.Location = new Point(13, 171);
             bundlesListBox.Name = "bundlesListBox";
             bundlesListBox.SelectionMode = SelectionMode.MultiSimple;
-            bundlesListBox.Size = new Size(120, 199);
+            bundlesListBox.Size = new Size(120, 229);
             bundlesListBox.TabIndex = 6;
             // 
             // selectAllBundlesButton
@@ -116,7 +118,7 @@
             // 
             // selectNoneBundlesButton
             // 
-            selectNoneBundlesButton.Location = new Point(12, 376);
+            selectNoneBundlesButton.Location = new Point(12, 409);
             selectNoneBundlesButton.Name = "selectNoneBundlesButton";
             selectNoneBundlesButton.Size = new Size(121, 23);
             selectNoneBundlesButton.TabIndex = 8;
@@ -167,17 +169,17 @@
             // 
             // saberCheckerButton
             // 
-            saberCheckerButton.Location = new Point(213, 250);
+            saberCheckerButton.Location = new Point(180, 307);
             saberCheckerButton.Name = "saberCheckerButton";
             saberCheckerButton.Size = new Size(130, 23);
             saberCheckerButton.TabIndex = 16;
-            saberCheckerButton.Text = "Perform checks";
+            saberCheckerButton.Text = "Perform DRC ";
             saberCheckerButton.UseVisualStyleBackColor = true;
             saberCheckerButton.Click += saberCheckerButton_Click;
             // 
             // testResultsTextBox
             // 
-            testResultsTextBox.Location = new Point(213, 279);
+            testResultsTextBox.Location = new Point(180, 336);
             testResultsTextBox.Name = "testResultsTextBox";
             testResultsTextBox.ReadOnly = true;
             testResultsTextBox.Size = new Size(130, 23);
@@ -207,17 +209,17 @@
             // releaseBundleButton
             // 
             releaseBundleButton.Enabled = false;
-            releaseBundleButton.Location = new Point(180, 337);
+            releaseBundleButton.Location = new Point(180, 409);
             releaseBundleButton.Name = "releaseBundleButton";
             releaseBundleButton.Size = new Size(163, 23);
             releaseBundleButton.TabIndex = 20;
-            releaseBundleButton.Text = " Release to designer";
+            releaseBundleButton.Text = "Transfer to release portal";
             releaseBundleButton.UseVisualStyleBackColor = true;
             releaseBundleButton.Click += releaseBundleButton_Click;
             // 
             // checkDataButton
             // 
-            checkDataButton.Location = new Point(180, 308);
+            checkDataButton.Location = new Point(180, 380);
             checkDataButton.Name = "checkDataButton";
             checkDataButton.Size = new Size(163, 23);
             checkDataButton.TabIndex = 21;
@@ -225,11 +227,31 @@
             checkDataButton.UseVisualStyleBackColor = true;
             checkDataButton.Click += checkDataButton_Click;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(180, 362);
+            label3.Name = "label3";
+            label3.Size = new Size(84, 15);
+            label3.TabIndex = 22;
+            label3.Text = "Releasing files:";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(180, 289);
+            label4.Name = "label4";
+            label4.Size = new Size(107, 15);
+            label4.TabIndex = 23;
+            label4.Text = "Checking integrity:";
+            // 
             // ProfileChoiceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(label4);
+            Controls.Add(label3);
             Controls.Add(checkDataButton);
             Controls.Add(releaseBundleButton);
             Controls.Add(createCustomCheckBox);
@@ -275,5 +297,7 @@
         private CheckBox createCustomCheckBox;
         private Button releaseBundleButton;
         private Button checkDataButton;
+        private Label label3;
+        private Label label4;
     }
 }

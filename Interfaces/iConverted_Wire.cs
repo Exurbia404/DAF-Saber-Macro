@@ -25,8 +25,6 @@ namespace Data_Interfaces
         public string Port_2 { get; set; }
         public string Variant { get; set; }
         public string Bundle { get; set; }
-        public string Loc_1 { get; set; }
-        public string Loc_2 { get; set; }
         public string Temp_Class { get; set; }  
     }
 }

@@ -103,12 +103,14 @@
             // 
             // openCacheFolderButton
             // 
+            openCacheFolderButton.Enabled = false;
             openCacheFolderButton.Location = new Point(12, 253);
             openCacheFolderButton.Name = "openCacheFolderButton";
             openCacheFolderButton.Size = new Size(121, 23);
             openCacheFolderButton.TabIndex = 6;
             openCacheFolderButton.Text = "Open cache folder";
             openCacheFolderButton.UseVisualStyleBackColor = true;
+            openCacheFolderButton.Visible = false;
             // 
             // label2
             // 
@@ -121,12 +123,14 @@
             // 
             // selectNewFolderButton
             // 
+            selectNewFolderButton.Enabled = false;
             selectNewFolderButton.Location = new Point(139, 253);
             selectNewFolderButton.Name = "selectNewFolderButton";
             selectNewFolderButton.Size = new Size(117, 23);
             selectNewFolderButton.TabIndex = 8;
             selectNewFolderButton.Text = "Select new folder";
             selectNewFolderButton.UseVisualStyleBackColor = true;
+            selectNewFolderButton.Visible = false;
             selectNewFolderButton.Click += selectNewFolderButton_Click;
             // 
             // setCompareItLocationButton

@@ -87,7 +87,7 @@ public class SaberChecker
         TestResults.Add(DSI_08(components));
         TestResults.Add(DSI_12(wires));
         TestResults.Add(DSI_14(wires));
-        TestResults.Add(DSI_15(wires));
+        //TestResults.Add(DSI_15(wires));
         TestResults.Add(DSI_16(wires));
         TestResults.Add(DSI_19(components));
 
@@ -297,23 +297,16 @@ public class SaberChecker
         return testResult;
     }
 
-    //These checks are killing me!
-
     //DSI_15 Wire terminal must be present and have correct part number
 
-    public bool DSI_15(List<DSI_Wire> wiresToCheck)
+    public bool DSI_15(List<DSI_Component> componentsToCheck)
     {
         bool testResult = true;
 
-        foreach (DSI_Wire wire in wiresToCheck)
+        foreach (DSI_Component wire in componentsToCheck)
         {
-            FailedWires.Add((wire, "DSI_15"));
-            //If length is smaller than 100 false
-            //if (wire. == "" || wire.Term_2 == "")
-            //{
-                //TODO: DSI-15 write warning message to log
-            //    return false;
-            //}
+            //Look for TERMS
+            //Look if partnumber is 7 long and filled in
         }
 
         return testResult;
@@ -329,6 +322,7 @@ public class SaberChecker
         {
             FailedWires.Add((wire, "DSI_16"));
 
+            //and be 7 long 
             //if (wire.Code_no == "")
             //{
             //TODO: DSI-14 write warning message to log
@@ -340,7 +334,6 @@ public class SaberChecker
     }
 
     //DSI_19 Bundle must have identificiation label
-    //TODO: see if DSI_19 is fixable
     public bool DSI_19(List<DSI_Component> componentsToCheck)
     {
         bool testResult = false;
@@ -350,6 +343,7 @@ public class SaberChecker
             {
                 if (component != null)
                 {
+                    //1 should have "LABEL" in partnumber1 may be Label5 or label4
                     //Should probably check this for each individual component and generate a report which do and do not pass this test
                     if ((component.ComponentTypeCode == "PASSIVE") && (component.PartNumber1 == "LABEL") && component != null)
                     {
@@ -365,24 +359,20 @@ public class SaberChecker
 
 
     //DSI_20 Variants used on bundle components must be defined for a bundle
-    //TODO: psuedo code does not make a whole lot of sense c# wise, but checking if variants are defined is definetely doable.
-
+    //Get the variant for a component, see if it is present in any of the composite details line (section 3)
 
     //DSI_21 issue drawing must be equal at least to one issue assembly in DSI file
-    //TODO: psuedo code does not make a whole lot of sense c# wise, not sure what is expected here
+    //section 1 bundle issue number must be equal to the highest issue number present in section 3 composites
+    //Combine with DSI_22 and DSI_23
 
-    //DSI_22 assembly must have an issue
-    //TODO: what is an assembly and where are the issues defined?
-
-    //DSI_23 Issue assembly may not be higher than drawing issue
-    //TODO: psuedo code does not make sense
+    //Take 1 issue lower and check whether or not section 3 aren't lower than their previous versions
+    //Production folder first then proto
 
     //DSI_24 Bundle issue may not be lower than previous version
-    //TODO: cannot be done in this program
 
     //DSI_29 Branch length must be more than minimum
-    //TODO: is already checked by checking minimum length?
+    //Section 4 branch lengths must be longer than 0
 
     //DSI_30 Bundle issue may not be deleted until a new drawing is released
-    //TODO: also does not make a whole lot of sense for this program
+    //Composite details in section #3 all need to be present in DSI20
 }

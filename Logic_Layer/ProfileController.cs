@@ -29,8 +29,6 @@ namespace Logic
             "Port_2",
             "Variant",
             "Bundle",
-            "Loc_1",
-            "Loc_2"
         };
 
         private readonly List<string> Wire_Profile_Options_List = new List<string>()
