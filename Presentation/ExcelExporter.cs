@@ -180,7 +180,7 @@ namespace Presentation
             if (selectedSheets[0])
             {
                 _logger.Log("Creating PE sheet");
-                CreateALL_PE_sheet(fileName, wires);
+                CreateALL_PE_sheet(fileName, wires, components);
             }
             //RC sheet
             if (selectedSheets[1])
@@ -381,7 +381,7 @@ namespace Presentation
             return null;
         }
 
-        public void CreateALL_PE_sheet(string fileName, List<iConverted_Wire> wires)
+        public void CreateALL_PE_sheet(string fileName, List<iConverted_Wire> wires, List<iConverted_Component> components)
         {
             // Ensure unique file name
             string fullPath = Path.Combine(directoryPath, fileName + "_PE.xlsx");
@@ -461,6 +461,8 @@ namespace Presentation
 
                 AddAutoFilterButtons(wireWorksheet);
 
+                AddConnectorDataToSheet(wireWorksheet, components);
+
                 // Save the Excel package
                 excelPackage.Save();
 
@@ -474,6 +476,11 @@ namespace Presentation
             string fullPath = Path.Combine(directoryPath, fileName + "_RC.xlsx");
             CoCoHandler cocoHandler = new CoCoHandler(_logger);
 
+            // Delete the file if it already exists
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
 
             using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
@@ -662,12 +669,18 @@ namespace Presentation
         public void CreateOC_Sheets(string fileName, List<iConverted_Wire> wires, List<iConverted_Component> components, List<Bundle> selectedBundles)
         {
             string fullPath = Path.Combine(directoryPath, fileName + "_OC.xlsx");
+
+            // Delete the file if it already exists
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+
             using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(fullPath)))
             {
                 //Prepare OC profile
                 List<string> OC_Profile_List = new List<string>();
-                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1",
-                "", "Length table", "", "", "Weight (Kg)", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
+                string[] stringsToAdd = { "Connector_1", "Port_1", "Wire", "Diameter", "Color", "Type", "Code_no", "Term_1", "Seal_1", "Length", "Wire_connection", "Variant", "Bundle"}; //TODO: implement/find Weight KG
                 OC_Profile_List.AddRange(stringsToAdd);
 
                 Profile OC_Profile = new Profile("OC", OC_Profile_List, Data_Interfaces.ProfileType.User);
@@ -754,12 +767,17 @@ namespace Presentation
                     var matchingComponent = components.Find(comp => comp.Name == currentConnector);
                     if (matchingComponent != null)
                     {
+                        if(matchingComponent.Part_no == "1312604")
+                        {
+                            string hello = "";
+                        }
                         // Insert a new row after the current row
                         worksheet.InsertRow(i, 1);
 
                         // Add connector information in the new row, in the cells right next to the current connector
                         worksheet.Cells[i, 1].Value = matchingComponent.Part_no;
                         worksheet.Cells[i, 2].Value = matchingComponent.EndText;
+                        worksheet.Cells[i, 3].Value = matchingComponent.Passive;
 
                         rowCount++; // Increment the row count since a new row is added
                         i++; // Skip the newly added row
@@ -770,6 +788,18 @@ namespace Presentation
                 }
 
                 currentConnector = worksheet.Cells[i, 1].Text; // Update currentConnector to nextConnector
+            }
+
+            // Handle the last connector
+            var lastMatchingComponent = components.Find(comp => comp.Name == currentConnector);
+            if (lastMatchingComponent != null)
+            {
+                int lastRow = rowCount + 1;
+                worksheet.InsertRow(lastRow, 1);
+
+                worksheet.Cells[lastRow, 1].Value = lastMatchingComponent.Part_no;
+                worksheet.Cells[lastRow, 2].Value = lastMatchingComponent.EndText;
+                worksheet.Cells[lastRow, 3].Value = lastMatchingComponent.Passive;
             }
         }
 

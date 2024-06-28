@@ -38,6 +38,8 @@
             label2 = new Label();
             selectNewFolderButton = new Button();
             setCompareItLocationButton = new Button();
+            updateCocoDatabaseButton = new Button();
+            label3 = new Label();
             SuspendLayout();
             // 
             // goToProfilesButton
@@ -143,11 +145,32 @@
             setCompareItLocationButton.UseVisualStyleBackColor = true;
             setCompareItLocationButton.Click += setCompareItLocationButton_Click;
             // 
+            // updateCocoDatabaseButton
+            // 
+            updateCocoDatabaseButton.Location = new Point(12, 344);
+            updateCocoDatabaseButton.Name = "updateCocoDatabaseButton";
+            updateCocoDatabaseButton.Size = new Size(138, 23);
+            updateCocoDatabaseButton.TabIndex = 10;
+            updateCocoDatabaseButton.Text = "Update CoCo Database";
+            updateCocoDatabaseButton.UseVisualStyleBackColor = true;
+            updateCocoDatabaseButton.Click += updateCocoDatabaseButton_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(12, 326);
+            label3.Name = "label3";
+            label3.Size = new Size(78, 15);
+            label3.TabIndex = 11;
+            label3.Text = "Update CoCo";
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(380, 540);
+            Controls.Add(label3);
+            Controls.Add(updateCocoDatabaseButton);
             Controls.Add(setCompareItLocationButton);
             Controls.Add(selectNewFolderButton);
             Controls.Add(label2);
@@ -178,5 +201,7 @@
         private Label label2;
         private Button selectNewFolderButton;
         private Button setCompareItLocationButton;
+        private Button updateCocoDatabaseButton;
+        private Label label3;
     }
 }

@@ -175,6 +175,7 @@
             saberCheckerButton.TabIndex = 16;
             saberCheckerButton.Text = "Perform DRC ";
             saberCheckerButton.UseVisualStyleBackColor = true;
+            saberCheckerButton.Visible = false;
             saberCheckerButton.Click += saberCheckerButton_Click;
             // 
             // testResultsTextBox
@@ -244,6 +245,7 @@
             label4.Size = new Size(107, 15);
             label4.TabIndex = 23;
             label4.Text = "Checking integrity:";
+            label4.Visible = false;
             // 
             // ProfileChoiceForm
             // 

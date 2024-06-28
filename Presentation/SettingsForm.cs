@@ -166,5 +166,20 @@ namespace Presentation
                 }
             }
         }
+
+        private void updateCocoDatabaseButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CoCoHandler newCocohandler = new CoCoHandler(_logger);
+
+                newCocohandler.UpdateCoCoUsingExcel();
+                _logger.Log("CoCo database succesfully updated");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message);
+            }
+        }
     }
 }

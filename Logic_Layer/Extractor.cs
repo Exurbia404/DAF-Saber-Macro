@@ -461,6 +461,19 @@ namespace Logic
                         newWire.Seal_2 = Modularized_FindSealCode(newWire.Connector_2, newWire.Port_2, newWire);
                     }
 
+                    if (newWire.Connector_1 == "TX_N")
+                    {
+                        string hello = "";
+                    }
+                    if(newWire.Term_1 == "")
+                    {
+                        newWire.Term_1 = FindTerminalCodeBackup(newWire.Connector_1, newWire.Port_1, newWire.Variant);
+                    }
+                    if(newWire.Term_2 == "")
+                    {
+                        newWire.Term_2 = FindTerminalCodeBackup(newWire.Connector_2, newWire.Port_2, newWire.Variant);
+                    }
+
                     if (newWire.Variant == "" || newWire.Bundle == "")
                     {
                         string blockNumber = line[6];
@@ -564,6 +577,40 @@ namespace Logic
 
             // Return the code of the found component
             return filteredComponents[0].PartNumber2;
+        }
+
+        private string FindTerminalCodeBackup(string connector, string port_1, string wireVariants)
+        {
+            // Filter components based on Connector, Port_1, and ComponentTypeCode
+            var filteredComponents = dsi_Components
+                .Where(component =>
+                    component.NodeName == connector &&
+                    component.CavityName == port_1 &&
+                    component.ComponentTypeCode == "PASSIVES")
+                .ToList();
+
+            if (filteredComponents.Count == 0)
+            {
+                return "";
+            }
+            else if (filteredComponents.Count > 1)
+            {
+                foreach (DSI_Component component in filteredComponents)
+                {
+                    _logger.Log(component.ToString());
+                }
+                throw new InvalidOperationException("Multiple matching components found. Expected only one.");
+            }
+
+            // Return the code of the found component
+            if (filteredComponents[0].PartNumber2 == "2109507")
+            {
+                return filteredComponents[0].PartNumber2;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         private string FindSealCode(string connector, string port_1, string wireVariants)
